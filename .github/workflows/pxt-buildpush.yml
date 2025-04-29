@@ -41,14 +41,6 @@ jobs:
           sudo npm install -g pxt
           npm install
 
-      - name: Checkout pxt-arcade-sim
-        uses: actions/checkout@main
-        with:
-          repository: microsoft/pxt-arcade-sim
-          ref: v0.11.14
-          token: ${{ secrets.GH_TOKEN }}
-          path: node_modules/pxt-arcade-sim
-
       - name: pxt ci (without publish capability)
         run: |
           pxt ci
