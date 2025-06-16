@@ -1,0 +1,8 @@
+{
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/base",
+    "compileServiceVariant": "samd21",
+    "disablesVariants": [
+        "mbdal",
+        "mbcodal"
+    ]
+}
