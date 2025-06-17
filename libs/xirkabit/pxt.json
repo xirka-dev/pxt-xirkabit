@@ -9,7 +9,8 @@
     ],
     "core": true,
     "dependencies": {
-        "core---samd": "file:../core---samd"
+        "core---samd": "file:../core---samd",
+        "storage": "file:../storage"
     },
     "public": true,
     "dalDTS": {
