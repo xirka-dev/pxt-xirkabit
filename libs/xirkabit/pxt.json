@@ -2,7 +2,10 @@
     "name": "xirkabit",
     "description": "Support for xirka:bit",
     "files": [
-        "README.md"
+        "README.md",
+        "config.ts",
+        "device.d.ts",
+        "targetoverrides.d.ts"
     ],
     "core": true,
     "dependencies": {
@@ -13,9 +16,5 @@
         "corePackage": "../core---samd",
         "compileServiceVariant": "samd21"
     },
-    "compileServiceVariant": "samd21",
-    "disablesVariants": [
-        "mbdal",
-        "mbcodal"
-    ]
+    "compileServiceVariant": "samd21"
 }
