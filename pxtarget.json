@@ -8,6 +8,7 @@
     "bundleddirs": [
         "libs/base",
         "libs/core---samd",
+        "libs/storage",
         "libs/xirkabit"
     ],
     "cloud": {
