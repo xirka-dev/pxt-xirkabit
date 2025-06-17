@@ -26,19 +26,7 @@ pxt.editor.initExtensionsAsync = function (opts: pxt.editor.ExtensionOptions): P
         hexFileImporters: []
     };
 
-    pxt.usb.setFilters([{
-        vendorId: 0x0D28,
-        productId: 0x0204,
-        classCode: 0xff,
-        subclassCode: 0x03 // the ctrl pipe endpoint
-    }, {
-        vendorId: 0x0D28,
-        productId: 0x0204,
-        classCode: 0xff,
-        subclassCode: 0x00 // the custom CMSIS2 endpoint
-    }])
-
-    res.mkPacketIOWrapper = flash.mkDAPLinkPacketIOWrapper;
+    res.mkPacketIOWrapper = pxt.HF2.mkHF2PacketIOWrapper;
     res.blocklyPatch = patch.patchBlocks;
     res.showProgramTooLargeErrorAsync = dialogs.showProgramTooLargeErrorAsync;
     return Promise.resolve<pxt.editor.ExtensionResult>(res);
