@@ -5,7 +5,8 @@
         "README.md",
         "config.ts",
         "device.d.ts",
-        "targetoverrides.d.ts"
+        "targetoverrides.d.ts",
+        "basic.ts"
     ],
     "core": true,
     "dependencies": {
