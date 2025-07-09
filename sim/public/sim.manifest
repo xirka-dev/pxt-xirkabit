@@ -2,6 +2,7 @@ CACHE MANIFEST
 
 CACHE:
 /cdn/pxtsim.js
+/sim/common-sim.js
 /sim/sim.js
 
 /sim/sounds/giggle.wav
