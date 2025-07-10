@@ -6,6 +6,8 @@
         "config.ts",
         "device.d.ts",
         "targetoverrides.d.ts",
+        "board.json",
+        "board.svg",
         "basic.ts"
     ],
     "core": true,

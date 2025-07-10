@@ -15,5 +15,11 @@
             "scripthost",
             "es2017"
         ]
-    }
+    },
+    "include": [
+        "dalboard.ts",
+        "visuals/board.ts",
+        "visuals/boardview.ts",
+        "visuals/buttons.ts"
+    ]
 }
