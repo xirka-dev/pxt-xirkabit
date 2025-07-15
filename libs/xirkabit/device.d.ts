@@ -1,69 +1,39 @@
 declare namespace pins {
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_A0)
-    const A0: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_A1)
-    const A1: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_A2)
-    const A2: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_A3)
-    const A3: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_A4)
-    const A4: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_A5)
-    const A5: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P0)
+    const P0: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P1)
+    const P1: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P2)
+    const P2: PwmPin;
+    
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P5)
+    const P5: PwmPin;
 
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D0)
-    const D0: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D1)
-    const D1: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P8)
+    const P8: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P9)
+    const P9: PwmPin;
+    
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P11)
+    const P11: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P12)
+    const P12: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P13)
+    const P13: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P14)
+    const P14: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P15)
+    const P15: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P16)
+    const P16: PwmPin;
 
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P19)
+    const P19: PwmPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_P20)
+    const P20: PwmPin;
 
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D4)
-    const D4: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D5)
-    const D5: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D6)
-    const D6: PwmPin;
-
-
-
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D9)
-    const D9: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D10)
-    const D10: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D11)
-    const D11: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D12)
-    const D12: PwmPin;
-    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_D13)
-    const D13: PwmPin;
-
-}
-
-declare namespace pins {
-    //% fixedInstance shim=pxt::getPin(PIN_LED)
-    const LED: PwmOnlyPin;
-
-    //% fixedInstance shim=pxt::getPin(PIN_RX)
-    const RX: PwmPin;
-    //% fixedInstance shim=pxt::getPin(PIN_TX)
-    const TX: DigitalInOutPin;
-    //% fixedInstance shim=pxt::getPin(PIN_MISO)
-    const MISO: DigitalInOutPin;
-    //% fixedInstance shim=pxt::getPin(PIN_MOSI)
-    const MOSI: DigitalInOutPin;
-    //% fixedInstance shim=pxt::getPin(PIN_SCK)
-    const SCK: DigitalInOutPin;
-    //% fixedInstance shim=pxt::getPin(PIN_SCL)
-    const SCL: DigitalInOutPin;
-    //% fixedInstance shim=pxt::getPin(PIN_SDA)
-    const SDA: DigitalInOutPin;
-
-    // TODO only checked the following two for Metro M0
-    //% fixedInstance shim=pxt::getPin(PIN_RXLED)
-    const RXLED: DigitalInOutPin;
-    //% fixedInstance shim=pxt::getPin(PIN_TX)
-    const TXLED: DigitalInOutPin;
-    //% fixedInstance shim=pxt::getPin(PIN_NEOPIXEL)
-    const NEOPIXEL: DigitalInOutPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_BTN_A)
+    const BTN_A: DigitalInOutPin;
+    //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_BTN_B)
+    const BTN_B: DigitalInOutPin;
 }
