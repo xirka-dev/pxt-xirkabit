@@ -13,7 +13,8 @@
     "core": true,
     "dependencies": {
         "core---samd": "file:../core---samd",
-        "storage": "file:../storage"
+        "storage": "file:../storage",
+        "mixer---samd": "file:../mixer---samd"
     },
     "public": true,
     "dalDTS": {
