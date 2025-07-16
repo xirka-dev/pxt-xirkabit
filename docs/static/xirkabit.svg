@@ -42,17 +42,17 @@
     <path d="M98 195.24h8v6.64a1.42 1.42 0 01-1.42 1.42H99.5a1.42 1.42 0 01-1.42-1.42v-6.64z" id="path27" fill="#9ea4b3" stroke-width="2"/>
     <path d="M67.3 141.58h5.22a1.42 1.42 0 011.42 1.42v6.64h-8V143a1.42 1.42 0 011.36-1.42z" id="path28" fill="#9ea4b3" stroke-width="2"/>
     <path d="M99.5 141.58h5.22a1.42 1.42 0 011.42 1.42v6.64H98V143a1.42 1.42 0 011.5-1.42z" id="path29" fill="#9ea4b3" stroke-width="2"/>
-    <g id="BTN_A" stroke-width="2">
+    <g id="g29" stroke-width="2">
       <rect x="61.2" y="147.62" width="48.28" height="48.28" rx="3.58" id="rect29" fill="#ced2d9"/>
-      <circle cx="85.34" cy="171.76" r="12.08" id="circle29" fill="#6d778d"/>
+      <circle cx="85.34" cy="171.76" r="12.08" id="BTN_A" fill="#6d778d"/>
     </g>
     <path d="M389.9 195.24h8v6.64a1.42 1.42 0 01-1.42 1.42h-5.22a1.42 1.42 0 01-1.42-1.42v-6.64z" id="path30" fill="#9ea4b3" stroke-width="2"/>
     <path d="M422 195.24h8v6.64a1.42 1.42 0 01-1.42 1.42h-5.22a1.42 1.42 0 01-1.42-1.42v-6.64z" id="path31" fill="#9ea4b3" stroke-width="2"/>
     <path d="M391.3 141.58h5.22a1.42 1.42 0 011.42 1.42v6.64h-8V143a1.42 1.42 0 011.36-1.42z" id="path32" fill="#9ea4b3" stroke-width="2"/>
     <path d="M423.5 141.58h5.22a1.42 1.42 0 011.42 1.42v6.64h-8V143a1.42 1.42 0 011.36-1.42z" id="path33" fill="#9ea4b3" stroke-width="2"/>
-    <g id="BTN_B" stroke-width="2">
+    <g id="g33" stroke-width="2">
       <rect x="385.2" y="147.62" width="48.28" height="48.28" rx="3.58" id="rect33" fill="#ced2d9"/>
-      <circle cx="409.34" cy="171.76" r="12.08" id="circle33" fill="#6d778d"/>
+      <circle cx="409.34" cy="171.76" r="12.08" id="BTN_B" fill="#6d778d"/>
     </g>
     <path d="M51.14 286v26A22.82 22.82 0 0074 334.74h348.66A22.82 22.82 0 00445.48 312v-26z" id="path34" fill="#6d778d" fill-opacity="1" stroke-width="2"/>
     <path id="GND2" d="M431 333.162A22.82 22.82 0 00445.48 312v-26H431v47.162z" display="inline" fill="#f8c469" fill-opacity="1" stroke-width="2"/>
