@@ -122,6 +122,125 @@ namespace pxsim.visuals {
             const el = this.getView().el;
             this.addDefs(el);
 
+            const boardEl = el.getElementsByTagName("g");
+            while(boardEl.length > 0){
+                const boardG = boardEl[0];
+                const boardPinHovers = <HTMLCollectionOf<SVGElement>>boardG.getElementsByClassName("sim-board-pin-hover");
+                if(boardPinHovers.length == 0) break;
+
+                const pinMap = new Map();
+                pinMap.set("P0", svg.elt("path", {
+                    class: "sim-board-pin-hover",
+                    d: "M 76.380859,251.05469 V 210 a 13.5,13.5 0 0 0 -13.5,-13.5 13.5,13.5 0 0 0 -13.5,13.5 v 39.98047 a 17.115,17.115 0 0 0 6,1.07422 z"
+                }));
+                pinMap.set("P1", svg.elt("path", {
+                    class: "sim-board-pin-hover",
+                    d: "m 120.63086,196.5 a 13.5,13.5 0 0 0 -13.5,13.5 v 41.05469 h 27 V 210 a 13.5,13.5 0 0 0 -13.5,-13.5 z"
+                }));
+                pinMap.set("P2", svg.elt("path", {
+                    class: "sim-board-pin-hover",
+                    d: "m 185.88,196.49997 a 13.5,13.5 0 0 0 -13.5,13.5 v 41.05517 h 27 v -41.05517 a 13.5,13.5 0 0 0 -13.5,-13.5 z"
+                }));
+                pinMap.set("P3", svg.elt("path", {
+                    class: "sim-board-pin-hover",
+                    d: "M 48.630859,249.68164 V 214.5 H 38.234375 V 234 a 17.115,17.115 0 0 0 10.396484,15.68164 z"
+                }));
+                for(let i=0; i<4; i=i+1){
+                    pinMap.set(
+                        "P" + String(i+4),
+                        svg.elt("rect", {
+                            class: "sim-board-pin-hover",
+                            x: (77.13+i*7.5),
+                            y: 214.5,
+                            width: 6.75,
+                            height: 36.555
+                        })
+                    );
+                }
+                for(let i=0; i<5; i=i+1){
+                    pinMap.set(
+                        "P" + String(i+8),
+                        svg.elt("rect", {
+                            class: "sim-board-pin-hover",
+                            x: (134.88+i*7.5),
+                            y: 214.5,
+                            width: 6.75,
+                            height: 36.555
+                        })
+                    );
+                }
+                for(let i=0; i<5; i=i+1){
+                    let xi = 200.13+i*7.5;
+                    if(i>3) xi -= 0.75;
+                    let wi = (i==2) ? 6.00 : 6.75;
+                    let keyi = (i==4) ? "3V31" :
+                        ("P" + String(i+13));
+                    pinMap.set(
+                        keyi,
+                        svg.elt("rect", {
+                            class: "sim-board-pin-hover",
+                            x: xi,
+                            y: 214.5,
+                            width: wi,
+                            height: 36.555
+                        })
+                    );
+                }
+                pinMap.set("3V3", svg.elt("path", {
+                    class: "sim-board-pin-hover",
+                    transform: "translate(64.5)",
+                    d: "m 185.88,196.49997 a 13.5,13.5 0 0 0 -13.5,13.5 v 41.05517 h 27 v -41.05517 a 13.5,13.5 0 0 0 -13.5,-13.5 z"
+                }));
+                for(let i=0; i<4; i+=1){
+                    let xi = 264.63+i*7.5;
+                    if(i>2) xi += 0.75;
+                    let wi = (i==2) ? 7.5 : 6.75;
+                    let keyi = (i==0) ? "3V32" :
+                        (i==3) ? "GND1" :
+                        ("P" + String(i+18));
+                    pinMap.set(
+                        keyi,
+                        svg.elt("rect", {
+                            class: "sim-board-pin-hover",
+                            x: xi,
+                            y: 214.5,
+                            width: wi,
+                            height: 36.555
+                        })
+                    );
+                }
+                pinMap.set("GND", svg.elt("path", {
+                    class: "sim-board-pin-hover",
+                    d: "m 308.88,196.49997 a 13.5,13.5 0 0 0 -13.5,13.5 v 4.5 7.5 29.05517 h 21.49512 a 17.115,17.115 0 0 0 5.50488,-0.90966 v -28.14551 -7.5 -4.5 a 13.5,13.5 0 0 0 -13.5,-13.5 z"
+                }));
+                pinMap.set("GND2", svg.elt("path", {
+                    class: "sim-board-pin-hover",
+                    d: "m 323.13,249.87155 a 17.115,17.115 0 0 0 10.86035,-15.87158 v -19.5 H 323.13 Z"
+                }));
+                
+                for(const h of boardPinHovers){
+                    if(h.childElementCount < 1) continue;
+                    const tag = <SVGTitleElement>h.children[0];
+                    if(!tag) continue;
+                    const pinTitle = tag.textContent;
+                    if(!pinMap.has(pinTitle)) continue;
+                    const newH = pinMap.get(pinTitle);
+                    svg.title(newH, pinTitle);
+                    h.replaceWith(newH);
+                }
+
+                const transformMove = el.createSVGTransform();
+                transformMove.setTranslate(36, 0);
+
+                let pinLabels = Array.from(<HTMLCollectionOf<SVGGraphicsElement>>boardG.getElementsByClassName("sim-board-pin-lbl"));
+                pinLabels = pinLabels.concat(Array.from(<HTMLCollectionOf<SVGGraphicsElement>>boardG.getElementsByClassName("sim-board-pin-lbl-hover")));
+                for(const l of pinLabels){
+                    l.transform.baseVal.appendItem(transformMove);
+                }
+                break;
+            }
+
+
             this.onBoardLeds = []
             this.onBoardNeopixels = [];
             this.onBoardTouchPads = [];
