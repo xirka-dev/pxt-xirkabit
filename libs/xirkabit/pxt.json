@@ -8,6 +8,7 @@
         "targetoverrides.d.ts",
         "board.json",
         "board.svg",
+        "XirkaBitCompat.h",
         "basic.ts"
     ],
     "core": true,

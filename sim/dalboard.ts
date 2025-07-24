@@ -33,6 +33,7 @@ namespace pxsim {
         // state & update logic for component services
         viewHost: visuals.BoardHost;
         view: SVGElement;
+        ledMatrixState: LedMatrixState;
         edgeConnectorState: EdgeConnectorState;
         lightSensorState: AnalogSensorState;
         buttonState: CommonButtonState;
@@ -177,6 +178,10 @@ namespace pxsim {
             this.builtinParts["pixels"] = (pin: Pin) => { return this.neopixelState(!!this.neopixelPin && this.neopixelPin.id); };
             this.builtinVisuals["pixels"] = () => new visuals.NeoPixelView(parsePinString);
             this.builtinPartVisuals["pixels"] = (xy: visuals.Coord) => visuals.mkNeoPixelPart(xy);
+
+            this.builtinParts["ledmatrix"] = this.ledMatrixState = new LedMatrixState(runtime);
+            // this.builtinVisuals["ledmatrix"] = () => new visuals.LedMatrixView();
+            this.builtinPartVisuals["ledmatrix"] = (xy: visuals.Coord) => visuals.mkLedMatrixSvg(xy);
         }
 
         kill() {
@@ -249,6 +254,21 @@ namespace pxsim {
         let b = new DalBoard(msg.boardDefinition);
         runtime.board = b;
         runtime.postError = (e) => {
+            let img = board().ledMatrixState.image;
+            img.clear();
+            img.set(0, 4, 255);
+            img.set(1, 3, 255);
+            img.set(2, 3, 255);
+            img.set(3, 3, 255);
+            img.set(4, 4, 255);
+            img.set(0, 0, 255);
+            img.set(1, 0, 255);
+            img.set(0, 1, 255);
+            img.set(1, 1, 255);
+            img.set(3, 0, 255);
+            img.set(4, 0, 255);
+            img.set(3, 1, 255);
+            img.set(4, 1, 255);
             // TODO
             runtime.updateDisplay();
         }
@@ -256,6 +276,10 @@ namespace pxsim {
 
     if (!pxsim.initCurrentRuntime) {
         pxsim.initCurrentRuntime = initRuntimeWithDalBoard;
+    }
+
+    export function board(): DalBoard {
+        return runtime.board as DalBoard;
     }
 
     export function parsePinString(pinString: string): Pin {
