@@ -21,6 +21,7 @@ namespace pxsim.visuals {
     stroke-width: 2px;
     fill: none;
 }
+
 .sim-board-button {
     stroke: #aaa;
     stroke-width: 3px;
@@ -33,6 +34,18 @@ namespace pxsim.visuals {
     stroke-width: 4px;
     stroke: #ee0;
     cursor: pointer;
+}
+
+.sim-led-back:hover {
+    stroke:#a0a0a0;
+    stroke-width:3px;
+}
+.sim-led {
+    fill:rgb(200, 0, 0);
+}
+.sim-led:hover {
+    stroke:#ff7f7f;
+    stroke-width:3px;
 }
     `
 
@@ -107,6 +120,16 @@ namespace pxsim.visuals {
         disableTilt?: boolean;
     }
 
+    export interface LedMatrixSvg {
+        el: SVGGElement,
+        y: number,
+        x: number,
+        w: number,
+        h: number,
+        leds: SVGElement[],
+        ledsOuter: SVGElement[]
+    };
+
     export class MetroBoardSvg extends GenericBoardSvg {
 
         public board: pxsim.DalBoard;
@@ -115,6 +138,7 @@ namespace pxsim.visuals {
         private onBoardReset: BoardResetButton;
         private onBoardButtons: BoardButton[];
         private onBoardTouchPads: BoardTouchButton[];
+        private onBoardLedMatrix: LedMatrixSvg;
 
         constructor(public props: MetroBoardProps) {
             super(props);
@@ -122,6 +146,7 @@ namespace pxsim.visuals {
             const el = this.getView().el;
             this.addDefs(el);
 
+            // Create SVG element for pin hover effect
             const boardEl = el.getElementsByTagName("g");
             while(boardEl.length > 0){
                 const boardG = boardEl[0];
@@ -218,6 +243,7 @@ namespace pxsim.visuals {
                     d: "m 323.13,249.87155 a 17.115,17.115 0 0 0 10.86035,-15.87158 v -19.5 H 323.13 Z"
                 }));
                 
+                // Replace pin hover element
                 for(const h of boardPinHovers){
                     if(h.childElementCount < 1) continue;
                     const tag = <SVGTitleElement>h.children[0];
@@ -229,6 +255,7 @@ namespace pxsim.visuals {
                     h.replaceWith(newH);
                 }
 
+                // Move the invisible pin label above the pin element
                 const transformMove = el.createSVGTransform();
                 transformMove.setTranslate(36, 0);
 
@@ -293,11 +320,19 @@ namespace pxsim.visuals {
                 el.appendChild(tp.element);
             }
 
+            if (props && props.runtime)
+                this.board = this.props.runtime.board as pxsim.DalBoard;
+
+            // LED matrix
+            if(this.board.builtinPartVisuals["ledmatrix"]){
+                this.onBoardLedMatrix = <LedMatrixSvg>this.board.builtinPartVisuals["ledmatrix"]([135.810, 78.015]);
+                el.appendChild(this.onBoardLedMatrix.el);
+            }
+
             if (props && props.theme)
                 this.updateTheme();
 
             if (props && props.runtime) {
-                this.board = this.props.runtime.board as pxsim.DalBoard;
                 this.board.updateSubscribers.push(() => this.updateState());
                 this.updateState();
             }
@@ -320,6 +355,8 @@ namespace pxsim.visuals {
                     }
                 }
             }
+
+            this.updateLEDMatrix();
         }
 
         private addDefs(el: SVGElement) {
@@ -331,8 +368,44 @@ namespace pxsim.visuals {
             svg.child(neopixelmerge, "feMergeNode", { in: "coloredBlur" })
             svg.child(neopixelmerge, "feMergeNode", { in: "SourceGraphic" })
 
+            let ledglow = svg.child(defs, "filter", { id: "ledglow", x: "-75%", y: "-75%", width: "300%", height: "300%" });
+            svg.child(ledglow, "feMorphology", { operator: "dilate", radius: "4", in: "SourceAlpha", result: "thicken" });
+            svg.child(ledglow, "feGaussianBlur", { stdDeviation: "5", in: "thicken", result: "blurred" });
+            svg.child(ledglow, "feFlood", { "flood-color": "rgb(255, 17, 77)", result: "glowColor" });
+            svg.child(ledglow, "feComposite", { in: "glowColor", in2: "blurred", operator: "in", result: "ledglow_colored" });
+            let ledglowMerge = svg.child(ledglow, "feMerge", {});
+            svg.child(ledglowMerge, "feMergeNode", { in: "ledglow_colored" });
+            svg.child(ledglowMerge, "feMergeNode", { in: "SourceGraphic" });
+
             const style = svg.child(el, "style", {});
             style.textContent = STYLE;
+        }
+
+        private updateLEDMatrix() {
+            const state = this.board;
+            if (state.ledMatrixState.disabled) {
+                this.onBoardLedMatrix.leds.forEach((led, i) => {
+                    const sel = (<SVGStyleElement><any>led)
+                    sel.style.opacity = "0";
+                })
+            } else {
+                const bw = state.ledMatrixState.displayMode == pxsim.DisplayMode.bw
+                const img = state.ledMatrixState.image;
+                const br = state.ledMatrixState.brigthness != undefined ? state.ledMatrixState.brigthness : 255;
+                this.onBoardLedMatrix.leds.forEach((led, i) => {
+                    const sel = (<SVGStyleElement><any>led)
+                    let imgbr = bw ? (img.data[i] > 0 ? br : 0) : img.data[i];
+                    // correct brightness
+                    const opacity = imgbr > 0 ? imgbr / 255 * 155 + 100 : 0;
+                    const transfrom = imgbr > 0 ? imgbr / 255 * 0.4 + 0.6 : 0;
+                    sel.style.opacity = (opacity / 255) + "";
+                    if (transfrom > 0) {
+                        (sel.style as any).transformBox = 'fill-box';
+                        sel.style.transformOrigin = '50% 50%';
+                        sel.style.transform = `scale(${transfrom})`;
+                    }
+                })
+            }
         }
     }
 
@@ -486,5 +559,32 @@ namespace pxsim.visuals {
                 this.button.setPressed(false);
             })
         }
+    }
+
+    export function mkLedMatrixSvg(xy: Coord): LedMatrixSvg {
+        let result: LedMatrixSvg = {
+            el: <SVGGElement>svg.elt("g"),
+            x: xy[0],
+            y: xy[1],
+            w: 22.635,
+            h: 23.145,
+            leds: [],
+            ledsOuter: []
+        };
+        const left = result.x, top = result.y, ledoffw = result.w, ledoffh = result.h;
+
+        for (let i = 0; i < 5; ++i) {
+            let ledtop = i * ledoffh + top;
+            for (let j = 0; j < 5; ++j) {
+                let ledleft = j * ledoffw + left;
+                let k = i * 5 + j;
+                result.ledsOuter.push(svg.child(result.el, "rect", { class: "sim-led-back", x: ledleft, y: ledtop, width: 10.065, height: 14.085, rx: 2, ry: 2 }));
+                let led = svg.child(result.el, "rect", { class: "sim-led", x: ledleft - 2, y: ledtop - 2, width: 14.065, height: 18.085, rx: 3, ry: 3, title: `(${j},${i})` });
+                svg.filter(led, `url(#ledglow)`)
+                result.leds.push(led);
+            }
+        }
+
+        return result;
     }
 }

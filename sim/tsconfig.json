@@ -20,6 +20,8 @@
         "dalboard.ts",
         "visuals/board.ts",
         "visuals/boardview.ts",
-        "visuals/buttons.ts"
+        "visuals/buttons.ts",
+        "state/ledmatrix.ts",
+        "state/misc.ts"
     ]
 }

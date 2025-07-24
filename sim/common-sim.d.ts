@@ -264,7 +264,7 @@ declare namespace pxsim {
         buttonState: CommonButtonState;
         edgeConnectorState: EdgeConnectorState;
     }
-    function board(): CommonBoard;
+    // function board(): CommonBoard;
 }
 declare namespace pxsim.loops {
     let pause: typeof thread.pause;
@@ -785,8 +785,8 @@ declare namespace pxsim.PwmOnlyPinMethods {
 }
 declare namespace pxsim.pins {
     function pinByCfg(key: number): Pin;
-    function pulseDuration(): number;
-    function createBuffer(sz: number): RefBuffer;
+    // function pulseDuration(): number;
+    // function createBuffer(sz: number): RefBuffer;
     function createI2C(sda: DigitalInOutPin, scl: DigitalInOutPin): I2C;
     function createSPI(mosi: DigitalInOutPin, miso: DigitalInOutPin, sck: DigitalInOutPin): SPI;
 }
@@ -1224,12 +1224,12 @@ declare namespace pxsim {
 declare namespace pxsim.ImageMethods {
     function XX(x: number): number;
     function YY(x: number): number;
-    function width(img: RefImage): number;
-    function height(img: RefImage): number;
+    // function width(img: RefImage): number;
+    // function height(img: RefImage): number;
     function isMono(img: RefImage): boolean;
     function isStatic(img: RefImage): boolean;
     function revision(img: RefImage): number;
-    function setPixel(img: RefImage, x: number, y: number, c: number): void;
+    // function setPixel(img: RefImage, x: number, y: number, c: number): void;
     function getPixel(img: RefImage, x: number, y: number): number;
     function fill(img: RefImage, c: number): void;
     function fillRect(img: RefImage, x: number, y: number, w: number, h: number, c: number): void;
