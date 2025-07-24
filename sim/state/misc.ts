@@ -34,7 +34,7 @@ namespace pxsim.basic {
 
 namespace pxsim.control {
     export var inBackground = thread.runInBackground;
-
+/*
     export function onEvent(id: number, evid: number, handler: RefAction, flags: number) {
         if (id == DAL.MICROBIT_ID_BUTTON_AB) {
             const b = board().buttonPairState;
@@ -45,7 +45,7 @@ namespace pxsim.control {
         }
         pxtcore.registerWithDal(id, evid, handler, flags)
     }
-
+*/
     export function eventTimestamp() {
         return board().bus.getLastEventTime()
     }
@@ -72,14 +72,14 @@ namespace pxsim.pins {
     export function createBuffer(sz: number) {
         return pxsim.BufferMethods.createBuffer(sz)
     }
-
+/*
     export function pulseIn(name: number, value: number, maxDuration: number): number {
         let pin = getPin(name);
         if (!pin) return 0;
 
         return 5000;
     }
-
+*/
     export function spiWrite(value: number): number {
         // TODO
         return 0;
@@ -109,12 +109,12 @@ namespace pxsim.pins {
     export function i2cWriteBuffer(address: number, buf: RefBuffer, repeat?: boolean): void {
         // fake - noop
     }
-
+/*
     // this likely shouldn't be called
     export function getPinAddress(name: number) {
         return getPin(name)
     }
-
+*/
     export function setEvents(name: number, event: number) {
     }
 
@@ -169,25 +169,25 @@ namespace pxsim.bluetooth {
     export function startUartService(): void {
         // TODO
     }
-    export function uartWriteString(s: string): void {
+/*  export function uartWriteString(s: string): void {
         serial.writeString(s)
     }
 
     export function uartWriteBuffer(b: RefBuffer): void {
         serial.writeBuffer(b);
     }
-
+*/
     export function uartReadBuffer(): RefBuffer {
         return pins.createBuffer(0);
     }
-
+/*
     export function uartReadUntil(del: string): string {
         return serial.readUntil(del);
     }
     export function onUartDataReceived(delimiters: string, handler: RefAction) {
         let b = board();
         b.bus.listen(DAL.MICROBIT_ID_BLE_UART, DAL.MICROBIT_UART_S_EVT_DELIM_MATCH, handler);
-    }
+    } */
     export function onBluetoothConnected(a: RefAction) {
         // TODO
     }
