@@ -562,16 +562,16 @@ namespace pxsim.visuals {
     }
 
     export function mkLedMatrixSvg(xy: Coord): LedMatrixSvg {
+        const left = xy[0], top = xy[1], ledoffw = 22.635, ledoffh = 23.145;
         let result: LedMatrixSvg = {
             el: <SVGGElement>svg.elt("g"),
-            x: xy[0],
-            y: xy[1],
-            w: 22.635,
-            h: 23.145,
+            x: left,
+            y: top,
+            w: (left + 4*ledoffw + 10.065),
+            h: (top + 4*ledoffh + 14.085),
             leds: [],
             ledsOuter: []
         };
-        const left = result.x, top = result.y, ledoffw = result.w, ledoffh = result.h;
 
         for (let i = 0; i < 5; ++i) {
             let ledtop = i * ledoffh + top;
