@@ -22,5 +22,11 @@
         "corePackage": "../core---samd",
         "compileServiceVariant": "samd21"
     },
-    "compileServiceVariant": "samd21"
+    "compileServiceVariant": "samd21",
+    "yotta": {
+        "config": {
+            "USB_DEFAULT_VID": "0x239B", 
+            "USB_DEFAULT_PID": "0x0002"
+        }
+    }
 }
