@@ -1,0 +1,7 @@
+{
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/radio-broadcast",
+    "dependencies": {
+        "core---samd": "file:../core---samd",
+        "radio---samd": "file:../radio---samd"
+    }
+}

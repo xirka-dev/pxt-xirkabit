@@ -15,7 +15,8 @@
     "dependencies": {
         "core---samd": "file:../core---samd",
         "storage": "file:../storage",
-        "mixer---samd": "file:../mixer---samd"
+        "mixer---samd": "file:../mixer---samd",
+        "radio-broadcast---samd": "file:../radio-broadcast---samd"
     },
     "public": true,
     "dalDTS": {
