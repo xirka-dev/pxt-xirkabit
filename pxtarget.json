@@ -1,7 +1,7 @@
 {
     "id": "xirkabit",
     "nickname": "xirkabit",
-    "name": "makecode.microbit.org",
+    "name": "makecode.xirka.id",
     "title": "Microsoft MakeCode for xirka:bit",
     "description": "A Blocks / JavaScript code editor for the xirka:bit powered by Microsoft MakeCode.",
     "corepkg": "core---samd",
@@ -10,6 +10,8 @@
         "libs/core---samd",
         "libs/storage",
         "libs/mixer---samd",
+        "libs/radio---samd",
+        "libs/radio-broadcast---samd",
         "libs/xirkabit"
     ],
     "cloud": {
@@ -66,7 +68,7 @@
         "saveAsPNG": true,
         "deployDrives": ".*",
         "deployFileMarker": "INFO_UF2.TXT",
-        "driveName": "METROBOOT",
+        "driveName": "XIRKABIT",
         "openocdScript": "source [find interface/cmsis-dap.cfg]; set CHIPNAME at91samd21g18; source [find target/at91samdXX.cfg]",
         "openocdScriptAlt": "source [find interface/stlink-v2.cfg]; set CPUTAPID 0x0bc11477; set CHIPNAME at91samd21g18; source [find target/at91samdXX.cfg]",
         "flashChecksumAddr": 8372,
@@ -625,15 +627,15 @@
     },
     "appTheme": {
         "accentColor": "#5C005C",
-        "logoUrl": "https://microbit.org/",
+        "logoUrl": "https://xirka.id/",
         "logo": "./static/logo.xirkabit.png",
         "docsLogo": "./static/logo.square.white.svg",
         "portraitLogo": "./static/logo.square.white.svg",
         "footerLogo": "./static/logo.portrait.black.svg",
         "cardLogo": "./static/icons/apple-touch-icon.png",
         "appLogo": "./static/icons/apple-touch-icon.png",
-        "organization": "Microsoft MakeCode",
-        "organizationUrl": "https://makecode.com/",
+        "organization": "PT. Xirka Dama Persada",
+        "organizationUrl": "https://makecode.xirka.id/",
         "organizationLogo": "./static/xirka-icon-green.png",
         "organizationWideLogo": "./static/Xirka-logo_rgb.png",
         "homeScreenHero": {
@@ -644,15 +646,15 @@
             "cardType": "tutorial"
         },
         "homeScreenHeroGallery": "/hero-banner",
-        "homeUrl": "https://makecode.microbit.org/",
-        "embedUrl": "https://makecode.microbit.org/",
-        "shareUrl": "https://makecode.microbit.org/",
+        "homeUrl": "https://makecode.xirka.id/",
+        "embedUrl": "https://makecode.xirka.id/",
+        "shareUrl": "https://makecode.xirka.id/",
         "privacyUrl": "https://makecode.com/privacy",
         "termsOfUseUrl": "https://makecode.com/termsofuse",
-        "githubUrl": "https://github.com/Microsoft/pxt-microbit",
-        "boardName": "micro:bit",
-        "boardNickname": "micro:bit",
-        "driveDisplayName": "MICROBIT",
+        "githubUrl": "https://github.com/xirka-dev/pxt-xirkabit",
+        "boardName": "xirka:bit",
+        "boardNickname": "xirka:bit",
+        "driveDisplayName": "XIRKABIT",
         "appStoreID": "1092687276",
         "mobileSafariDownloadProtocol": "microbithex://?data",
         "crowdinProject": "makecode",
@@ -680,7 +682,7 @@
         ],
         "bluetoothUartFilters": [
             {
-                "namePrefix": "BBC micro:bit"
+                "namePrefix": "Xirka xirka:bit"
             }
         ],
         "docMenu": [
