@@ -65,4 +65,7 @@ namespace config {
     export const PIN_B22 = DAL.PB22;
     export const PIN_B23 = DAL.PB23;
     // additional pins to look for: SPI, I2C, Flash
+
+    export const PIN_TX = PIN_A4; // PIN_B22;
+    export const PIN_RX = PIN_A5; // PIN_B23;
 }
