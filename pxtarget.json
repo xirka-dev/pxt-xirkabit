@@ -12,6 +12,7 @@
         "libs/mixer---samd",
         "libs/radio---samd",
         "libs/radio-broadcast---samd",
+        "libs/serial",
         "libs/xirkabit"
     ],
     "cloud": {
