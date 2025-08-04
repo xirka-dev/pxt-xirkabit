@@ -68,4 +68,11 @@ namespace config {
 
     export const PIN_TX = PIN_A4; // PIN_B22;
     export const PIN_RX = PIN_A5; // PIN_B23;
+
+    export const PIN_SDA = PIN_A22;
+    export const PIN_SCL = PIN_A23;
+    
+    export const PIN_SCK  = PIN_B11;
+    export const PIN_MISO = PIN_A12;
+    export const PIN_MOSI = PIN_B10;
 }
