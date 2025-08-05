@@ -27,6 +27,7 @@
             "Microsoft/pxt-neopixel"
         ],
         "githubPackages": true,
+        "apiRoot": "https://www.makecode.com/api/",
         "cloudProviders": {
             "github": {
                 "id": "github",
