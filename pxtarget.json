@@ -77,7 +77,18 @@
         "flashCodeAlign": 256,
         "flashEnd": 262144,
         "uf2Family": "0x68ed2b88",
-        "patches": {}
+        "patches": {
+            "0.0.0 - *": [
+                {
+                    "type": "package",
+                    "map": {
+                        "core": "core---samd",
+                        "radio": "radio---samd",
+                        "microphone": "core---samd"
+                    }
+                }
+            ]
+        }
     },
     "compileService": {
         "buildEngine": "codal",
