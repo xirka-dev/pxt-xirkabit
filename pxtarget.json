@@ -2,7 +2,7 @@
     "id": "microbit",
     "nickname": "xirkabit",
     "name": "makecode.xirka.id",
-    "title": "Microsoft MakeCode for xirka:bit",
+    "title": "xirka:bit on Microsoft MakeCode",
     "description": "A Blocks / JavaScript code editor for the xirka:bit powered by Microsoft MakeCode.",
     "corepkg": "core---samd",
     "bundleddirs": [
@@ -63,7 +63,7 @@
         }
     },
     "compile": {
-        "isNative": true,
+        "isNative": false,
         "useUF2": true,
         "webUSB": true,
         "hasHex": true,
