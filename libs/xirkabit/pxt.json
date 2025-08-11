@@ -6,9 +6,15 @@
         "config.ts",
         "device.d.ts",
         "targetoverrides.d.ts",
+        "shims.d.ts",
+        "enums.d.ts",
         "board.json",
         "board.svg",
-        "basic.ts"
+        "basic.ts",
+        "pxtAddon.h",
+        "images.cpp",
+        "icons.ts",
+        "icons.jres"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
