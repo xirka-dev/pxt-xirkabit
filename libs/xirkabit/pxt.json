@@ -11,6 +11,7 @@
         "board.json",
         "board.svg",
         "basic.ts",
+        "XirkaBitCompat.h",
         "pxtAddon.h",
         "images.cpp",
         "icons.ts",

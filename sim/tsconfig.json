@@ -22,6 +22,7 @@
         "visuals/boardview.ts",
         "visuals/buttons.ts",
         "state/ledmatrix.ts",
-        "state/misc.ts"
+        "state/misc.ts",
+        "../libs/*/sim/*.ts"
     ]
 }

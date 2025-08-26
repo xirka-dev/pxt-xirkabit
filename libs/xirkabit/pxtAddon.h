@@ -1,15 +1,11 @@
 #ifndef PXTADDON_H
 #define PXTADDON_H
 
+#define DEBUG_IMAGES 1
+
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #include "XirkaBitCompat.h"
-
-#ifdef CODAL_CONFIG_H
-#define XIRKABIT_CODAL 1
-#else
-#define XIRKABIT_CODAL 0
-#endif
 
 namespace pxt {
 
@@ -31,12 +27,12 @@ static inline ImageData *imageBytes(ImageLiteral_ lit) {
     return (ImageData *)lit;
 }
 
-#if XIRKABIT_CODAL
-// avoid clashes with codal-defined classes
-#define Image MImage
-#endif
-
-typedef RefMImage *Image;
+typedef RefMImage *XirkabitImage;
 
 }
+
+namespace loops {
+  void pause(int);
+}
+
 #endif

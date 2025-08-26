@@ -14,7 +14,7 @@ declare namespace images {
     //% weight=75 help=images/create-image
     //% blockId=device_build_image block="create image"
     //% parts="ledmatrix" imageLiteral=1 shim=images::createImage
-    function createImage(leds: string): Image;
+    function createImage(leds: string): XirkabitImage;
 
     /**
      * Creates an image with 2 frames.
@@ -22,16 +22,16 @@ declare namespace images {
     //% weight=74 help=images/create-big-image
     //% blockId=device_build_big_image block="create big image" imageLiteral=2
     //% parts="ledmatrix" shim=images::createBigImage
-    function createBigImage(leds: string): Image;
+    function createBigImage(leds: string): XirkabitImage;
 }
 
 
-declare interface Image {
+declare interface XirkabitImage {
     /**
      * Plots the image at a given column to the screen
      */
     //% help=images/plot-image
-    //% parts="ledmatrix" xOffset.defl=0 shim=ImageMethods::plotImage
+    //% parts="ledmatrix" xOffset.defl=0 shim=XirkabitImageMethods::plotImage
     plotImage(xOffset?: int32): void;
 
     /**
@@ -42,7 +42,7 @@ declare interface Image {
     //% help=images/show-image weight=80 blockNamespace=images
     //% blockId=device_show_image_offset block="show image %sprite(myImage)|at offset %offset ||and interval (ms) %interval"
     //%
-    //% blockGap=8 parts="ledmatrix" async interval.defl=400 shim=ImageMethods::showImage
+    //% blockGap=8 parts="ledmatrix" async interval.defl=400 shim=XirkabitImageMethods::showImage
     showImage(xOffset: int32, interval?: int32): void;
 
     /**
@@ -50,7 +50,7 @@ declare interface Image {
      * @param xOffset column index to start displaying the image
      */
     //% help=images/plot-frame weight=80
-    //% parts="ledmatrix" shim=ImageMethods::plotFrame
+    //% parts="ledmatrix" shim=XirkabitImageMethods::plotFrame
     plotFrame(xOffset: int32): void;
 
     /**
@@ -61,40 +61,40 @@ declare interface Image {
     //% help=images/scroll-image weight=79 async blockNamespace=images
     //% blockId=device_scroll_image
     //% block="scroll image %sprite(myImage)|with offset %frameoffset|and interval (ms) %delay"
-    //% blockGap=8 parts="ledmatrix" shim=ImageMethods::scrollImage
+    //% blockGap=8 parts="ledmatrix" shim=XirkabitImageMethods::scrollImage
     scrollImage(frameOffset: int32, interval: int32): void;
 
     /**
      * Sets all pixels off.
      */
     //% help=images/clear
-    //% parts="ledmatrix" shim=ImageMethods::clear
+    //% parts="ledmatrix" shim=XirkabitImageMethods::clear
     clear(): void;
 
     /**
      * Sets a specific pixel brightness at a given position
      */
     //%
-    //% parts="ledmatrix" shim=ImageMethods::setPixelBrightness
+    //% parts="ledmatrix" shim=XirkabitImageMethods::setPixelBrightness
     setPixelBrightness(x: int32, y: int32, value: int32): void;
 
     /**
      * Gets the pixel brightness ([0..255]) at a given position
      */
     //%
-    //% parts="ledmatrix" shim=ImageMethods::pixelBrightness
+    //% parts="ledmatrix" shim=XirkabitImageMethods::pixelBrightness
     pixelBrightness(x: int32, y: int32): int32;
 
     /**
      * Gets the width in columns
      */
-    //% help=functions/width shim=ImageMethods::width
+    //% help=functions/width shim=XirkabitImageMethods::width
     width(): int32;
 
     /**
      * Gets the height in rows (always 5)
      */
-    //% shim=ImageMethods::height
+    //% shim=XirkabitImageMethods::height
     height(): int32;
 
     /**
@@ -104,7 +104,7 @@ declare interface Image {
      * @param value pixel state
      */
     //% help=images/set-pixel
-    //% parts="ledmatrix" shim=ImageMethods::setPixel
+    //% parts="ledmatrix" shim=XirkabitImageMethods::setPixel
     setPixel(x: int32, y: int32, value: boolean): void;
 
     /**
@@ -113,7 +113,7 @@ declare interface Image {
      * @param y pixel row
      */
     //% help=images/pixel
-    //% parts="ledmatrix" shim=ImageMethods::pixel
+    //% parts="ledmatrix" shim=XirkabitImageMethods::pixel
     pixel(x: int32, y: int32): boolean;
 
     /**
@@ -121,7 +121,7 @@ declare interface Image {
      * @param frame image frame to show
      */
     //% weight=70 help=images/show-frame
-    //% parts="ledmatrix" interval.defl=400 shim=ImageMethods::showFrame
+    //% parts="ledmatrix" async interval.defl=400 shim=XirkabitImageMethods::showFrame
     showFrame(frame: int32, interval?: int32): void;
 }
 
