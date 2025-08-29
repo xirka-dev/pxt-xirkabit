@@ -214,7 +214,7 @@ namespace images {
     //% weight=50 blockGap=8
     //% help=images/arrow-image
     //% blockId=builtin_arrow_image block="arrow image %i"
-    export function arrowImage(i: ArrowNames): XirkabitImage {
+    export function arrowImage(i: ArrowNames): BlocklyImage {
         switch (i) {
             // compass directions
             case ArrowNames.North: return images.createImage(`
@@ -282,7 +282,7 @@ namespace images {
     //% i.fieldOptions.columns="5"
     //% i.fieldOptions.width="380"
     //% i.fieldOptions.maxRows=4
-    export function iconImage(i: IconNames): XirkabitImage {
+    export function iconImage(i: IconNames): BlocklyImage {
         switch (i) {
             case IconNames.Heart: return images.createImage(`
                                         . # . # .

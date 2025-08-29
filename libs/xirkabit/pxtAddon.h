@@ -9,6 +9,7 @@
 
 namespace pxt {
 
+// Image handling
 class RefMImage : public RefObject {
   public:
     ImageData *img;
@@ -27,10 +28,11 @@ static inline ImageData *imageBytes(ImageLiteral_ lit) {
     return (ImageData *)lit;
 }
 
-typedef RefMImage *XirkabitImage;
+typedef RefMImage *BlocklyImage;
 
 }
 
+// MakeCode blocks
 namespace loops {
   void pause(int);
 }

@@ -44,7 +44,7 @@ namespace images {
 //% weight=75 help=images/create-image
 //% blockId=device_build_image block="create image"
 //% parts="ledmatrix"
-XirkabitImage createImage(ImageLiteral_ leds) {
+BlocklyImage createImage(ImageLiteral_ leds) {
 #if DEBUG_IMAGES
     static const char msg[] = "createImage\r\n";
     sendSerial(msg, sizeof(msg));
@@ -53,7 +53,7 @@ XirkabitImage createImage(ImageLiteral_ leds) {
     snprintf(msg2, 127, "Ptr: %0p Data: 0x%0X\r\n", leds, *(uint32_t*)leds);
     sendSerial(msg2, strlen(msg2));
 #endif
-    XirkabitImage img = NEW_GC(RefMImage, imageBytes(leds));
+    BlocklyImage img = NEW_GC(RefMImage, imageBytes(leds));
 #if DEBUG_IMAGES
     snprintf(msg2, 127, "Created: %0p\r\n", img);
     sendSerial(msg2, strlen(msg2));
@@ -67,7 +67,7 @@ XirkabitImage createImage(ImageLiteral_ leds) {
 //% weight=74 help=images/create-big-image
 //% blockId=device_build_big_image block="create big image" imageLiteral=2
 //% parts="ledmatrix"
-XirkabitImage createBigImage(ImageLiteral_ leds) {
+BlocklyImage createBigImage(ImageLiteral_ leds) {
     return createImage(leds);
 }
 
@@ -88,14 +88,14 @@ Buffer charCodeBuffer(int charCode) {
 
 } // namespace images
 
-namespace XirkabitImageMethods {
+namespace BlocklyImageMethods {
 
 /**
  * Plots the image at a given column to the screen
  */
 //% help=images/plot-image
 //% parts="ledmatrix"
-void plotImage(XirkabitImage sprite, int xOffset = 0) {
+void plotImage(BlocklyImage sprite, int xOffset = 0) {
     // uBit.display.print(MicroBitImage(i->img), -xOffset, 0, 0, 0);
 #if DEBUG_IMAGES
     static const char msg[] = "plotImage\r\n";
@@ -140,7 +140,7 @@ void plotImage(XirkabitImage sprite, int xOffset = 0) {
 //% blockId=device_show_image_offset block="show image %sprite(myImage)|at offset %offset ||and interval (ms) %interval"
 //% interval.defl=400
 //% blockGap=8 parts="ledmatrix" async
-void showImage(XirkabitImage sprite, int xOffset, int interval = 400) {
+void showImage(BlocklyImage sprite, int xOffset, int interval = 400) {
     // uBit.display.print(MicroBitImage(sprite->img), -xOffset, 0, 0, interval);
 #if DEBUG_IMAGES
     static const char msg[] = "showImage is ";
@@ -156,7 +156,7 @@ void showImage(XirkabitImage sprite, int xOffset, int interval = 400) {
  */
 //% help=images/plot-frame weight=80
 //% parts="ledmatrix"
-void plotFrame(XirkabitImage i, int xOffset) {
+void plotFrame(BlocklyImage i, int xOffset) {
     // TODO showImage() used in original implementation
 #if DEBUG_IMAGES
     static const char msg[] = "plotFrame is ";
@@ -166,7 +166,7 @@ void plotFrame(XirkabitImage i, int xOffset) {
 }
 
 /**
- * Scrolls an image .
+ * Scrolls an image.
  * @param frameOffset x offset moved on each animation step, eg: 1, 2, 5
  * @param interval time between each animation step in milli seconds, eg: 200
  */
@@ -174,7 +174,7 @@ void plotFrame(XirkabitImage i, int xOffset) {
 //% blockId=device_scroll_image
 //% block="scroll image %sprite(myImage)|with offset %frameoffset|and interval (ms) %delay"
 //% blockGap=8 parts="ledmatrix"
-void scrollImage(XirkabitImage id, int frameOffset, int interval) {
+void scrollImage(BlocklyImage id, int frameOffset, int interval) {
 #if DEBUG_IMAGES
     static const char msg[] = "scrollImage\r\n";
     sendSerial(msg, sizeof(msg));
@@ -188,7 +188,7 @@ void scrollImage(XirkabitImage id, int frameOffset, int interval) {
  */
 //% help=images/clear
 //% parts="ledmatrix"
-void clear(XirkabitImage i) {
+void clear(BlocklyImage i) {
     i->makeWritable();
     MicroBitImage(i->img).clear();
 }
@@ -198,7 +198,7 @@ void clear(XirkabitImage i) {
  */
 //%
 //% parts="ledmatrix"
-void setPixelBrightness(XirkabitImage i, int x, int y, int value) {
+void setPixelBrightness(BlocklyImage i, int x, int y, int value) {
     i->makeWritable();
     MicroBitImage(i->img).setPixelValue(x, y, value);
 }
@@ -208,7 +208,7 @@ void setPixelBrightness(XirkabitImage i, int x, int y, int value) {
  */
 //%
 //% parts="ledmatrix"
-int pixelBrightness(XirkabitImage i, int x, int y) {
+int pixelBrightness(BlocklyImage i, int x, int y) {
     int pix = MicroBitImage(i->img).getPixelValue(x, y);
     if (pix < 0)
         return 0;
@@ -219,7 +219,7 @@ int pixelBrightness(XirkabitImage i, int x, int y) {
  * Gets the width in columns
  */
 //% help=functions/width
-int width(XirkabitImage i) {
+int width(BlocklyImage i) {
     return i->img->width;
 }
 
@@ -227,7 +227,7 @@ int width(XirkabitImage i) {
  * Gets the height in rows (always 5)
  */
 //%
-int height(XirkabitImage i) {
+int height(BlocklyImage i) {
     return i->img->height;
 }
 
@@ -239,7 +239,7 @@ int height(XirkabitImage i) {
  */
 //% help=images/set-pixel
 //% parts="ledmatrix"
-void setPixel(XirkabitImage i, int x, int y, bool value) {
+void setPixel(BlocklyImage i, int x, int y, bool value) {
     setPixelBrightness(i, x, y, value ? 255 : 0);
 }
 
@@ -250,7 +250,7 @@ void setPixel(XirkabitImage i, int x, int y, bool value) {
  */
 //% help=images/pixel
 //% parts="ledmatrix"
-bool pixel(XirkabitImage i, int x, int y) {
+bool pixel(BlocklyImage i, int x, int y) {
     return pixelBrightness(i, x, y) > 0;
 }
 
@@ -260,11 +260,11 @@ bool pixel(XirkabitImage i, int x, int y) {
  */
 //% weight=70 help=images/show-frame
 //% parts="ledmatrix" async
-void showFrame(XirkabitImage i, int frame, int interval = 400) {
+void showFrame(BlocklyImage i, int frame, int interval = 400) {
 #if DEBUG_IMAGES
     static const char msg[] = "showFrame is ";
     sendSerial(msg, sizeof(msg));
 #endif
     showImage(i, frame * i->img->height, interval);
 }
-} // namespace XirkabitImageMethods
+} // namespace BlocklyImageMethods
