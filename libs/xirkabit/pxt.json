@@ -15,7 +15,10 @@
         "pxtAddon.h",
         "images.cpp",
         "icons.ts",
-        "icons.jres"
+        "icons.jres",
+        "DoNotInclude.h",
+        "images.h",
+        "basic.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
