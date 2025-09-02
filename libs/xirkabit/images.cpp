@@ -108,27 +108,54 @@ void plotImage(BlocklyImage sprite, int xOffset = 0) {
         sprite->img->data
     );
     sendSerial(msg2, strlen(msg2));
+#endif
+    XirkaBitImage image = {};
     for(int i=0; i < 5; i++){
+#if DEBUG_IMAGES
         msg2[0] = '\0';
+#endif
         if(i >= sprite->img->height){
+#if DEBUG_IMAGES
             snprintf(msg2, 127, ". . . . .\r\n");
             sendSerial(msg2, strlen(msg2));
+#endif
             continue;
         }
 
         for(int j=0; j < 5; j++){
+#if DEBUG_IMAGES
             char msg3[3] = "  ";
-            msg3[0] = 
-                ((j+xOffset) >= sprite->img->width) ? '.' :
-                sprite->img->data[i*sprite->img->width + j + xOffset] ? '#' : '.'
-            ;
+#endif
+            if((j+xOffset) >= sprite->img->width){
+#if DEBUG_IMAGES
+                msg3[0] = '.';
+#endif
+            } else if(sprite->img->data[i*sprite->img->width + j + xOffset]){
+#if DEBUG_IMAGES
+                msg3[0] = '#';
+#endif
+                image.data[i] |= (1<<(4-j));
+            }
+#if DEBUG_IMAGES
+            else msg3[0] = '.';
             strncat(msg2, msg3, 128-strlen(msg2));
+#endif
         }
+#if DEBUG_IMAGES
         strncat(msg2, "\r\n", 128-strlen(msg2));
         sendSerial(msg2, strlen(msg2));
-
-    }
 #endif
+    }
+
+    char jsonData[128];
+    snprintf(jsonData, 127, "[%u,%u,%u,%u,%u]",
+        image.data[0],
+        image.data[1],
+        image.data[2],
+        image.data[3],
+        image.data[4]
+    );
+    serialXirkabit::sendCommand("LMTRX", jsonData);
 }
 
 /**

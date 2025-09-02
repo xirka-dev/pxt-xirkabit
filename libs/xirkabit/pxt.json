@@ -18,7 +18,8 @@
         "icons.jres",
         "DoNotInclude.h",
         "images.h",
-        "basic.cpp"
+        "basic.cpp",
+        "serialXirkabit.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",

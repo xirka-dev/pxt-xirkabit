@@ -2,12 +2,19 @@
 #define PXTADDON_H
 
 #define DEBUG_IMAGES 1
+#define DEBUG_ATTINY 1
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #include "XirkaBitCompat.h"
+#include "serial-target.h"
 
 namespace pxt {
+
+// Serial comms to ATtiny on board
+namespace serialXirkabit {
+  void sendCommand(const char *cmd, const char *value);
+}
 
 // Image handling
 class RefMImage : public RefObject {
@@ -30,11 +37,21 @@ static inline ImageData *imageBytes(ImageLiteral_ lit) {
 
 typedef RefMImage *BlocklyImage;
 
+struct XirkaBitImage {
+  uint8_t data[5];
+};
+
 }
 
 // MakeCode blocks
 namespace loops {
   void pause(int);
+}
+namespace pins {
+  DigitalInOutPin pinByCfg(int key);
+}
+namespace serial {
+  SerialDevice internalCreateSerialDevice(DigitalInOutPin tx, DigitalInOutPin rx, int id);
 }
 
 #endif
