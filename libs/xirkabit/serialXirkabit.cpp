@@ -24,13 +24,16 @@ namespace pxt::serialXirkabit {
     return true;
   }
   
-  void sendCommand(const char *cmd, const char *value){
+  void sendCommand(const char *cmd, const char *value, bool addQuote){
     if(!initSerial()) return;
 
     char msg[128];
 
     if(value == nullptr){
       snprintf(msg, 127, "{\"CMD\":\"%s\"}", cmd);
+    }
+    else if(addQuote){
+      snprintf(msg, 127, "{\"CMD\":\"%s\",\"DATA\":\"%s\"}", cmd, value);
     }
     else {
       snprintf(msg, 127, "{\"CMD\":\"%s\",\"DATA\":%s}", cmd, value);

@@ -13,7 +13,7 @@ namespace pxt {
 
 // Serial comms to ATtiny on board
 namespace serialXirkabit {
-  void sendCommand(const char *cmd, const char *value);
+  void sendCommand(const char *cmd, const char *value, bool addQuote = false);
 }
 
 // Image handling

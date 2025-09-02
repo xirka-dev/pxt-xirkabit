@@ -15,8 +15,6 @@ namespace basic {
   //% help=basic/plot-leds weight=80
   //% parts="ledmatrix"
   void plotLeds(ImageLiteral_ leds) {
-    // MicroBitImage i(imageBytes(leds));
-    // uBit.display.print(i, 0, 0, 0, 0);
     BlocklyImageMethods::plotImage(images::createImage(leds));
   }
 
@@ -32,9 +30,18 @@ namespace basic {
   //% block="show leds" icon="\uf00a"
   //% parts="ledmatrix"
   void showLeds(ImageLiteral_ leds, int interval = 400) {
-    // uBit.display.print(MicroBitImage(imageBytes(leds)), 0, 0, 0, interval);
     plotLeds(leds);
     loops::pause(interval);
+  }
+
+  /**
+   * Turn off all LEDs
+   */
+  //% help=basic/clear-screen weight=79
+  //% blockId=device_clear_display block="clear screen"
+  //% parts="ledmatrix"
+  void clearScreen() {
+    serialXirkabit::sendCommand("ICON", "\"BLANK\"");
   }
 
   /**
@@ -54,23 +61,16 @@ namespace basic {
       interval = 1;
     int l = text ? text->getUTF8Size() : 0;
     if (l == 0) {
-      // uBit.display.clear();
+      clearScreen();
       fiber_sleep(interval * 5);
-    } else if (l > 1) {
+    // } else if (l > 1) {
       // uBit.display.scroll(MSTR(text), interval);
     } else {
       // uBit.display.printChar(text->getUTF8Data()[0], interval * 5);
+      serialXirkabit::sendCommand("STR", PXT_STRING_DATA(text), true);
+      int length = PXT_STRING_DATA_LENGTH(text);
+      loops::pause(interval * length * 5);
     }
-  }
-
-  /**
-   * Turn off all LEDs
-   */
-  //% help=basic/clear-screen weight=79
-  //% blockId=device_clear_display block="clear screen"
-  //% parts="ledmatrix"
-  void clearScreen() {
-    // uBit.display.image.clear();
   }
 
   /**

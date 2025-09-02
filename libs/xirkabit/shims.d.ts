@@ -157,6 +157,14 @@ declare namespace basic {
     function showLeds(leds: string, interval?: int32): void;
 
     /**
+     * Turn off all LEDs
+     */
+    //% help=basic/clear-screen weight=79
+    //% blockId=device_clear_display block="clear screen"
+    //% parts="ledmatrix" shim=basic::clearScreen
+    function clearScreen(): void;
+
+    /**
      * Display text on the display, one character at a time. If the string fits on the screen (i.e. is one letter), does not scroll.
      * @param text the text to scroll on the screen, eg: "Hello!"
      * @param interval how fast to shift characters; eg: 150, 100, 200, -100
@@ -169,14 +177,6 @@ declare namespace basic {
     //% parts="ledmatrix"
     //% text.shadowOptions.toString=true interval.defl=150 shim=basic::showString
     function showString(text: string, interval?: int32): void;
-
-    /**
-     * Turn off all LEDs
-     */
-    //% help=basic/clear-screen weight=79
-    //% blockId=device_clear_display block="clear screen"
-    //% parts="ledmatrix" shim=basic::clearScreen
-    function clearScreen(): void;
 
     /**
      * Shows a sequence of LED screens as an animation.
