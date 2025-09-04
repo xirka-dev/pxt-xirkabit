@@ -19,7 +19,8 @@
         "DoNotInclude.h",
         "images.h",
         "basic.cpp",
-        "serialXirkabit.cpp"
+        "serialXirkabit.cpp",
+        "pinscompat.ts"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
