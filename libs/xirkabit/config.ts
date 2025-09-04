@@ -75,4 +75,6 @@ namespace config {
     export const PIN_SCK  = PIN_B11;
     export const PIN_MISO = PIN_A12;
     export const PIN_MOSI = PIN_B10;
+
+    export const PIN_SPEAKER_AMP = PIN_A18;
 }

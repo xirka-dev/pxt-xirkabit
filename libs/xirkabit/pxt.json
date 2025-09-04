@@ -24,9 +24,12 @@
     "dependencies": {
         "core---samd": "file:../core---samd",
         "storage": "file:../storage",
-        "mixer---samd": "file:../mixer---samd",
+        "music---pwm": "file:../music---pwm",
         "radio-broadcast---samd": "file:../radio-broadcast---samd",
         "serial": "file:../serial"
+    },
+    "cppDependencies": {
+        "music---pwm": "file:../music---pwm"
     },
     "public": true,
     "dalDTS": {

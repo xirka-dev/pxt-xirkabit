@@ -4,8 +4,5 @@
     "disablesVariants": [
         "mbdal",
         "mbcodal"
-    ],
-    "cppDependencies": {
-        "mixer---samd": "file:../mixer---samd"
-    }
+    ]
 }
