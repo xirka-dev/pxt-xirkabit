@@ -77,4 +77,5 @@ namespace config {
     export const PIN_MOSI = PIN_B10;
 
     export const PIN_SPEAKER_AMP = PIN_A18;
+    export const SPEAKER_VOLUME = 512;
 }
