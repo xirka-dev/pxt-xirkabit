@@ -9,7 +9,7 @@
         "libs/base",
         "libs/core---samd",
         "libs/storage",
-        "libs/mixer---samd",
+        "libs/mixer---pwm",
         "libs/radio---samd",
         "libs/radio-broadcast---samd",
         "libs/serial",

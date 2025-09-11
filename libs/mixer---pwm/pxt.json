@@ -1,0 +1,7 @@
+{
+    "name": "mixer---pwm",
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/mixer",
+    "dependencies": {
+        "core---samd": "file:../core---samd"
+    }
+}
