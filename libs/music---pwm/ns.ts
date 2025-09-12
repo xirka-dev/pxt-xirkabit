@@ -83,24 +83,6 @@ namespace music {
         }
     }
 
-    export class BuiltInMelodyPlayable extends Playable {
-        constructor(public sound: string) {
-            super();
-        }
-
-        _play(playbackMode: PlaybackMode) {
-            if (playbackMode === PlaybackMode.InBackground) {
-                music.playSound(this.sound)
-            }
-            else if (playbackMode === PlaybackMode.UntilDone) {
-                music.playSoundUntilDone(this.sound)
-            }
-            else {
-                this.loop();
-            }
-        }
-    }
-
     /**
      * Play a song, melody, or other sound. The music plays until finished or can play as a
      * background task.
@@ -166,22 +148,6 @@ namespace music {
     //% help=music/tone-playable
     export function tonePlayable(note: number, duration: number): Playable {
         return new TonePlayable(note, duration);
-    }
-
-    /**
-     * Play a built-in melody
-     * @param melody the melody to play
-     */
-    //% blockId="music_sound_playable"
-    //% block="melody $melody"
-    //% weight=60
-    //% group="Melody Advanced"
-    //% toolboxParent=music_playable_play_default_bkg
-    //% toolboxParentArgument=toPlay
-    //% duplicateShadowOnDrag
-    //% melody.shadow=music_sounds
-    export function builtInMelodyPlayable(melody: string): Playable {
-        return new BuiltInMelodyPlayable(melody);
     }
 
     export function _stopPlayables() {
