@@ -187,5 +187,33 @@ declare namespace basic {
     //% parts="ledmatrix" interval.defl=400 shim=basic::showAnimation
     function showAnimation(leds: string, interval?: int32): void;
 }
+declare namespace control {
+
+    /**
+     * Schedules code that run in the background.
+     */
+    //% help=control/in-background blockAllowMultiple=1 afterOnStart=true
+    //% blockId="control_in_background" block="run in background" blockGap=8 shim=control::inBackground
+    function inBackground(a: () => void): void;
+
+    /**
+     * Returns the major version of the microbit
+     */
+    //% help=control/hardware-version shim=control::hardwareVersion
+    function hardwareVersion(): string;
+}
+
+
+declare interface DigitalInOutPin {}
+declare namespace pins {
+
+    /**
+     * Sets the digital pin status
+     * @param pin
+     * @param value 
+     */
+    //% deprecated=1 shim=pins::digitalWritePin
+    function digitalWritePin(pin: int32, value: int32): void;
+}
 
 // Auto-generated. Do not edit. Really.

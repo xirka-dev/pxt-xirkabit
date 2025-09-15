@@ -218,13 +218,6 @@ declare interface PwmOnlyPin {
 declare namespace control {
 
     /**
-     * Schedules code that run in the background.
-     */
-    //% help=control/in-background blockAllowMultiple=1 afterOnStart=true
-    //% blockId="control_in_background" block="run in background" blockGap=8 shim=control::inBackground
-    function inBackground(a: () => void): void;
-
-    /**
      * Announce that an event happened to registered handlers.
      * @param src ID of the MicroBit Component that generated the event
      * @param value Component specific code indicating the cause of the event.
@@ -246,12 +239,6 @@ declare namespace control {
      */
     //% help=control/allocate-notify-event shim=control::allocateNotifyEvent
     function allocateNotifyEvent(): int32;
-
-    /**
-     * Returns the major version of the microbit
-     */
-    //% help=control/hardware-version shim=control::hardwareVersion
-    function hardwareVersion(): string;
 
     /** Write a message to DMESG debugging buffer. */
     //% shim=control::dmesg

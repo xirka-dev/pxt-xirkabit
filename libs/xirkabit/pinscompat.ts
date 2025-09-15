@@ -59,17 +59,17 @@ namespace pins {
             p.setPull(mode);
     }
 
-    /**
-     * Sets the digital pin status
-     * @param pin
-     * @param value 
-     */
-    //% deprecated=1
-    export function digitalWritePin(pin: DigitalPin, value: number) {
-        const p = pins.pinByCfg(pin);
-        if (p)
-            p.digitalWrite(!!value);
-    }
+//    /**
+//     * Sets the digital pin status
+//     * @param pin
+//     * @param value 
+//     */
+//    //% deprecated=1
+//    export function digitalWritePin(pin: DigitalPin, value: number) {
+//        const p = pins.pinByCfg(pin);
+//        if (p)
+//            p.digitalWrite(!!value);
+//    }
 
     /**
      * Reads the pin status
