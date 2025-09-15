@@ -1,26 +1,28 @@
 // this type alias is required for backward compatibility
 // it gets overriden in microbit (DigitalPin is an enum over there)
-enum DigitalPin {
-    P0 = DAL.CFG_PIN_P0,
-    P1 = DAL.CFG_PIN_P1,
-    P2 = DAL.CFG_PIN_P2,
-    P3 = DAL.CFG_PIN_P3,
-    P4 = DAL.CFG_PIN_P4,
-    P5 = DAL.CFG_PIN_P5,
-    P6 = DAL.CFG_PIN_P6,
-    P7 = DAL.CFG_PIN_P7,
-    P8 = DAL.CFG_PIN_P8,
-    P9 = DAL.CFG_PIN_P9,
-    P10 = DAL.CFG_PIN_P10,
-    P11 = DAL.CFG_PIN_P11,
-    P12 = DAL.CFG_PIN_P12,
-    P13 = DAL.CFG_PIN_P13,
-    P14 = DAL.CFG_PIN_P14,
-    P15 = DAL.CFG_PIN_P15,
-    P16 = DAL.CFG_PIN_P16,
-    P19 = DAL.CFG_PIN_P19,
-    P20 = DAL.CFG_PIN_P20
-}
+
+//declare const enum DigitalPin {
+//    P0 = DAL.CFG_PIN_P0,
+//    P1 = DAL.CFG_PIN_P1,
+//    P2 = DAL.CFG_PIN_P2,
+//    P3 = DAL.CFG_PIN_P3,
+//    P4 = DAL.CFG_PIN_P4,
+//    P5 = DAL.CFG_PIN_P5,
+//    P6 = DAL.CFG_PIN_P6,
+//    P7 = DAL.CFG_PIN_P7,
+//    P8 = DAL.CFG_PIN_P8,
+//    P9 = DAL.CFG_PIN_P9,
+//    P10 = DAL.CFG_PIN_P10,
+//    P11 = DAL.CFG_PIN_P11,
+//    P12 = DAL.CFG_PIN_P12,
+//    P13 = DAL.CFG_PIN_P13,
+//    P14 = DAL.CFG_PIN_P14,
+//    P15 = DAL.CFG_PIN_P15,
+//    P16 = DAL.CFG_PIN_P16,
+//    P19 = DAL.CFG_PIN_P19,
+//    P20 = DAL.CFG_PIN_P20
+//}
+
 
 enum AnalogPin {
     P0 = DAL.CFG_PIN_P0,

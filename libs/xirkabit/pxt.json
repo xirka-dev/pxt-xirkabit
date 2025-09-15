@@ -20,6 +20,7 @@
         "images.h",
         "basic.cpp",
         "serialXirkabit.cpp",
+        "pinscompat.cpp",
         "pinscompat.ts"
     ],
     "dependencies": {
