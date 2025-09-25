@@ -1,14 +1,6 @@
 // Auto-generated. Do not edit.
 declare namespace images {
 }
-
-
-    declare const enum XirkabitButton {
-    A = 1,  // MICROBIT_ID_BUTTON_A
-    B = 2,  // MICROBIT_ID_BUTTON_B
-    //% block="A+B"
-    AB = 3,  // MICROBIT_ID_BUTTON_AB
-    }
 declare namespace input {
 }
 declare namespace basic {

@@ -141,7 +141,7 @@ declare namespace input {
     //% help=input/on-button-pressed weight=85 blockGap=16
     //% blockId=device_button_event block="on button|%NAME|pressed"
     //% parts="buttonpair" shim=input::onButtonPressed
-    function onButtonPressed(button: XirkabitButton, body: () => void): void;
+    function onButtonPressed(button: Button, body: () => void): void;
 }
 
 
