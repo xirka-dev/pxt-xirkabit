@@ -3,6 +3,8 @@ namespace config {
     
     export const PIN_BTN_A = DAL.PA21;
     export const PIN_BTN_B = DAL.PA16;
+    export const DEFAULT_BUTTON_MODE = DAL.BUTTON_ACTIVE_LOW_PULL_UP;
+
     export const PIN_P20 = DAL.PA22; // PwmOnlyPin
     export const PIN_P19 = DAL.PA23; // PwmOnlyPin
     export const PIN_P16 = DAL.PA14; // PwmOnlyPin
