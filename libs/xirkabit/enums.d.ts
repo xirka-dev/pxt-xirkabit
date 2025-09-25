@@ -13,6 +13,8 @@ declare namespace input {
 }
 declare namespace basic {
 }
+declare namespace input {
+}
 
 
     declare const enum DigitalPin {

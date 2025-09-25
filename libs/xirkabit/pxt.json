@@ -23,6 +23,7 @@
         "serialXirkabit.cpp",
         "control.cpp",
         "control.ts",
+        "input.cpp",
         "pinscompat.cpp",
         "pinscompat.ts"
     ],
@@ -31,7 +32,8 @@
         "storage": "file:../storage",
         "mixer---samd": "file:../mixer---samd",
         "radio-broadcast---samd": "file:../radio-broadcast---samd",
-        "serial": "file:../serial"
+        "serial": "file:../serial",
+        "buttons": "file:../buttons"
     },
     "public": true,
     "dalDTS": {

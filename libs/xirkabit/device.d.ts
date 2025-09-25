@@ -37,3 +37,27 @@ declare namespace pins {
     //% fixedInstance shim=pxt::getPinCfg(CFG_PIN_BTN_B)
     const BTN_B: DigitalInOutPin;
 }
+
+declare namespace input {
+    /**
+     * Left button.
+     */
+    //% indexedInstanceNS=input indexedInstanceShim=pxt::getButton
+    //% block="button A" weight=95 fixedInstance
+    //% shim=pxt::getButton(0)
+    const buttonA: Button;
+
+    /**
+     * Right button.
+     */
+    //% block="button B" weight=94 fixedInstance
+    //% shim=pxt::getButton(1)
+    const buttonB: Button;
+
+    /**
+     * Left and Right button.
+     */
+    //% block="buttons A+B" weight=93 fixedInstance
+    //% shim=pxt::getButton(2)
+    const buttonsAB: Button;
+}
