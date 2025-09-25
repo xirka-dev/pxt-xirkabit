@@ -129,6 +129,22 @@ declare interface BlocklyImage {
 }
 
 
+
+    //% color=#D400D4 weight=111 icon="\uf192"
+declare namespace input {
+
+    /**
+     * Do something when a button (A, B or both A+B) is pushed down and released again.
+     * @param button the button that needs to be pressed
+     * @param body code to run when event is raised
+     */
+    //% help=input/on-button-pressed weight=85 blockGap=16
+    //% blockId=device_button_event block="on button|%NAME|pressed"
+    //% parts="buttonpair" shim=input::onButtonPressed
+    function onButtonPressed(button: XirkabitButton, body: () => void): void;
+}
+
+
     /**
      * Provides access to basic micro:bit functionality.
      */

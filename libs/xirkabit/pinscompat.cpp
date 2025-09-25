@@ -1,6 +1,9 @@
 #include "pxt.h"
 
 
+//#undef Button               // need to get codal Button back in scope here
+//#include "XirkaBitCompat.h"
+
 enum class DigitalPin {
     //% blockIdentity="pins._digitalPin"
     P0 = CFG_PIN_P0,
