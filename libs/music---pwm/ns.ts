@@ -1,4 +1,16 @@
 
+enum MelodyOptions {
+    //% block="once"
+    Once = 1,
+    //% block="forever"
+    Forever = 2,
+    //% block="once in background"
+    OnceInBackground = 4,
+    //% block="forever in background"
+    ForeverInBackground = 8
+}
+
+
 /**
  * Generation of music tones.
  */
@@ -43,15 +55,15 @@ namespace music {
         }
     }
 
-    // export class StringArrayPlayable extends Playable {
-    //     constructor(private notes: string[], private tempo: number) {
-    //         super();
-    //     }
+    export class StringArrayPlayable extends Playable {
+        constructor(private notes: string[], private tempo: number) {
+            super();
+        }
 
-    //     _play(playbackMode: PlaybackMode) {
-    //         if(this.tempo) {
-    //             music.setTempo(this.tempo);
-    //         }
+        _play(playbackMode: PlaybackMode) {
+            if(this.tempo) {
+                music.setTempo(this.tempo);
+            }
     //         if (playbackMode == PlaybackMode.InBackground) {
     //             startMelodyInternal(this.notes, MelodyOptions.OnceInBackground);
     //         }
@@ -62,8 +74,8 @@ namespace music {
     //             startMelodyInternal(this.notes, MelodyOptions.Once);
     //             waitForMelodyEnd();
     //         }
-    //     }
-    // }
+        }
+    }
 
     export class TonePlayable extends Playable {
         constructor(public pitch: number, public duration: number) {
@@ -150,6 +162,20 @@ namespace music {
         return new TonePlayable(note, duration);
     }
 
+    /**
+     * Gets the melody array of a built-in melody.
+     * @param melody the melody name
+     */
+    //% weight=60 help=music/built-in-playable-melody
+    //% blockId=device_builtin_melody_playable block="melody $melody"
+    //% toolboxParent=music_playable_play_default_bkg
+    //% toolboxParentArgument=toPlay
+    //% duplicateShadowOnDrag
+    //% group="Melody Advanced"
+    export function builtInPlayableMelody(melody: Melodies): StringArrayPlayable {
+        return new StringArrayPlayable(getMelody(melody), undefined);
+    }
+
     export function _stopPlayables() {
         if (!looping) return;
 
@@ -157,5 +183,49 @@ namespace music {
             p.stopped = true;
         }
         looping = undefined;
+    }
+
+    export function _bufferToMelody(melody: Buffer) {
+        if (!melody) return [];
+
+        let currentDuration = 4;
+        let currentOctave = -1;
+        const out: string[] = [];
+
+        const notes = "c#d#ef#g#a#b"
+        let current = "";
+
+        // The buffer format is 2 bytes per note. First note byte is midi
+        // note number, second byte is duration in quarter beats. The note
+        // number 0 is reserved for rests
+        for (let i = 0; i < melody.length; i += 2) {
+            let octave = 4;
+            const note = melody[i] % 12;
+            if (melody[i] === 0) {
+                current = "r"
+            }
+            else {
+                current = notes.charAt(note);
+                if (current === "#") current = notes.charAt(note - 1) + current
+
+                octave = Math.idiv((melody[i] - 24), 12)
+            }
+
+            const duration = melody[i + 1];
+
+            if (octave !== currentOctave) {
+                current += octave
+                currentOctave = octave;
+            }
+
+            if (duration !== currentDuration) {
+                current += ":" + duration;
+                currentDuration = duration;
+            }
+
+            out.push(current);
+        }
+
+        return out;
     }
 }
