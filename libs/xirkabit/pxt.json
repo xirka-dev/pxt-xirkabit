@@ -25,16 +25,35 @@
         "core---samd": "file:../core---samd",
         "storage": "file:../storage",
         "music---pwm": "file:../music---pwm",
+        "microbit-soundexpression": "file:../microbit-soundexpression",
         "radio-broadcast---samd": "file:../radio-broadcast---samd",
         "serial": "file:../serial"
     },
     "cppDependencies": {
-        "music---pwm": "file:../music---pwm"
+        "music---pwm": "file:../music---pwm",
+        "microbit-soundexpression": "file:../microbit-soundexpression"
     },
     "public": true,
     "dalDTS": {
         "corePackage": "../core---samd",
-        "compileServiceVariant": "samd21"
+        "compileServiceVariant": "samd21",
+        "excludePrefix": [
+            "JD_",
+            "USB_",
+            "REQUEST_",
+            "LIS3DH_",
+            "FXOS8700_",
+            "HF2_",
+            "PXT_REF_TAG_",
+            "MS_",
+            "SCSI_",
+            "MAG_",
+            "MAG3",
+            "MPU6",
+            "MADCTL",
+            "MMA8",
+            "DEBUG"
+        ]
     },
     "compileServiceVariant": "samd21",
     "yotta": {

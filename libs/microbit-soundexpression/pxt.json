@@ -1,0 +1,14 @@
+{
+  "name": "microbit-soundexpression",
+  "description": "SoundExpression library imported from micro:bit core",
+  "files": [
+    "shims.d.ts",
+    "SoundEmojiSynthesizer.h",
+    "soundexpressions.cpp",
+    "soundexpressions.ts"
+  ],
+  "dependencies": {
+    "music---pwm": "file:../music---pwm"
+  },
+  "public": true
+}
