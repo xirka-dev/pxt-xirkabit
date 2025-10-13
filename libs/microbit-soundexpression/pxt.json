@@ -5,7 +5,11 @@
     "shims.d.ts",
     "SoundEmojiSynthesizer.h",
     "soundexpressions.cpp",
-    "soundexpressions.ts"
+    "soundexpressions.ts",
+    "SoundSynthesizerEffects.h",
+    "SoundExpressions.h",
+    "SoundExpressionsCodal.cpp",
+    "SoundEmojiSynthesizer.cpp"
   ],
   "dependencies": {
     "music---pwm": "file:../music---pwm"

@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "SoundExpressions.h"
 
-#include "NRF52PWM.h"
+// #include "NRF52PWM.h"
 #include "Synthesizer.h"
 #include "SoundEmojiSynthesizer.h"
 #include "SoundSynthesizerEffects.h"

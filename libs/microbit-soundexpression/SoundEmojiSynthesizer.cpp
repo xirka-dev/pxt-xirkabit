@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalFiber.h"
 #include "CodalUtil.h"
 #include "ErrorNo.h"
-#include "MicroBitAudio.h"
+// #include "MicroBitAudio.h"
 
 using namespace codal;
 
@@ -79,10 +79,10 @@ bool SoundEmojiSynthesizer::isConnected()
 /**
  *  Determine the data format of the buffers streamed out of this component.
  */
-int SoundEmojiSynthesizer::getFormat()
-{
-    return DATASTREAM_FORMAT_16BIT_UNSIGNED;
-}
+// int SoundEmojiSynthesizer::getFormat()
+// {
+//     return DATASTREAM_FORMAT_16BIT_UNSIGNED;
+// }
 
 /**
 * Define the size of the audio buffer to hold. The larger the buffer, the lower the CPU overhead, but the longer the delay.
@@ -106,14 +106,14 @@ int SoundEmojiSynthesizer::setBufferSize(int size)
 int SoundEmojiSynthesizer::play(ManagedBuffer sound)
 {
     // Enable audio pipeline if needed.
-    MicroBitAudio::requestActivation();
+    // MicroBitAudio::requestActivation();
 
     // Validate inputs
     if (sound.length() < (int) sizeof(SoundEffect))
         return DEVICE_INVALID_PARAMETER;
 
     // If a playout is already in progress, block until it has been scheduled.
-    lock.wait();
+    // lock.wait();
 
     // Store the requested sequence of sound effects.
     effectBuffer = sound;
@@ -164,7 +164,7 @@ bool SoundEmojiSynthesizer::nextSoundEffect()
         // if we have an effect with a negative duration, reset the buffer (unless there is an update pending)
         effect = (SoundEffect *) &effectBuffer[0];
 
-        if (effect->duration >= 0 || lock.getWaitCount() > 0)
+        if (effect->duration >= 0) // || lock.getWaitCount() > 0)
         {
             effect = NULL;
             effectBuffer = emptyBuffer;
@@ -254,7 +254,7 @@ ManagedBuffer SoundEmojiSynthesizer::fillOutputBuffer()
                     status &= ~EMOJI_SYNTHESIZER_STATUS_STOPPING;
                     playbackCompleteIn = CONFIG_EMOJI_SYNTHESIZER_OUTPUT_BUFFER_DEPTH+2;
                     Event(id, DEVICE_SOUND_EMOJI_SYNTHESIZER_EVT_DONE);
-                    lock.notify();
+                    // lock.notify();
                 }
             }
         }
