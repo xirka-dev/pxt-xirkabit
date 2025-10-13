@@ -3,6 +3,7 @@
 
 #include "SoundEmojiSynthesizer.h"
 #include "SoundExpressions.h"
+#include "PwmDac.h"
 
 namespace codal {
 
@@ -32,7 +33,8 @@ public:
 
 private:
   SoundEmojiSynthesizer synth;       // Synthesizer used for SoundExpressions
-  static XirkaBitSound *instance;
+  static XirkaBitSound *instance;    // Primary instance of XirkaBitSound, on demand activated.
+  PwmDac *pwmDac;                    // PWM driver used for sound generation (mixer output)
 };
 
 }

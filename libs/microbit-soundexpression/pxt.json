@@ -10,6 +10,8 @@
     "SoundExpressions.h",
     "SoundExpressionsCodal.cpp",
     "SoundEmojiSynthesizer.cpp",
+    "PwmDac.h",
+    "PwmDac.cpp",
     "XirkaBitSound.h",
     "XirkaBitSound.cpp"
   ],

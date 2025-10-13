@@ -1,16 +1,23 @@
 #include "pxt.h"
 #include "XirkaBitSound.h"
 
+#undef MSTR
+#define MSTR(s) ManagedString((s)->getUTF8Data(), (s)->getUTF8Size())
+
+namespace pxt {
+    extern codal::XirkaBitSound sound;
+}
+
 namespace music {
     /**
      * Internal use only
      **/
     //% async
     void __playSoundExpression(String nodes, bool waitTillDone) {
-        // if (waitTillDone)
-        //     uBit.audio.soundExpressions.play(MSTR(nodes));
-        // else
-        //     uBit.audio.soundExpressions.playAsync(MSTR(nodes));
+        if (waitTillDone)
+            sound.soundExpressions.play(MSTR(nodes));
+        else
+            sound.soundExpressions.playAsync(MSTR(nodes));
     }
 
     /**
@@ -18,7 +25,7 @@ namespace music {
     */
     //% 
     void __stopSoundExpressions() {
-        // uBit.audio.soundExpressions.stop();
+        sound.soundExpressions.stop();
     }
 }
 
