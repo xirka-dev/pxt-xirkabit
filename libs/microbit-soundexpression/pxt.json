@@ -9,7 +9,9 @@
     "SoundSynthesizerEffects.h",
     "SoundExpressions.h",
     "SoundExpressionsCodal.cpp",
-    "SoundEmojiSynthesizer.cpp"
+    "SoundEmojiSynthesizer.cpp",
+    "XirkaBitSound.h",
+    "XirkaBitSound.cpp"
   ],
   "dependencies": {
     "music---pwm": "file:../music---pwm"

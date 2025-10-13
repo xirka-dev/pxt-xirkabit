@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalFiber.h"
 #include "CodalUtil.h"
 #include "ErrorNo.h"
-// #include "MicroBitAudio.h"
+#include "XirkaBitSound.h"
 
 using namespace codal;
 
@@ -106,7 +106,7 @@ int SoundEmojiSynthesizer::setBufferSize(int size)
 int SoundEmojiSynthesizer::play(ManagedBuffer sound)
 {
     // Enable audio pipeline if needed.
-    // MicroBitAudio::requestActivation();
+    XirkaBitSound::requestActivation();
 
     // Validate inputs
     if (sound.length() < (int) sizeof(SoundEffect))

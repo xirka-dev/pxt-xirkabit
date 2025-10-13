@@ -1,4 +1,5 @@
 #include "pxt.h"
+#include "XirkaBitSound.h"
 
 namespace music {
     /**
@@ -19,4 +20,8 @@ namespace music {
     void __stopSoundExpressions() {
         // uBit.audio.soundExpressions.stop();
     }
+}
+
+namespace pxt {
+    codal::XirkaBitSound sound;
 }
