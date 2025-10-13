@@ -12,6 +12,7 @@
     "SoundEmojiSynthesizer.cpp",
     "PwmDac.h",
     "PwmDac.cpp",
+    "SoundSynthesizerEffects.cpp",
     "XirkaBitSound.h",
     "XirkaBitSound.cpp"
   ],
