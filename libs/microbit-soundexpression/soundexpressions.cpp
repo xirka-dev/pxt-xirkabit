@@ -15,7 +15,8 @@ namespace music {
     //% async
     void __playSoundExpression(String nodes, bool waitTillDone) {
         if (waitTillDone)
-            sound.soundExpressions.play(MSTR(nodes));
+            // sound.soundExpressions.play(MSTR(nodes));
+            sound.dummySource.play();
         else
             sound.soundExpressions.playAsync(MSTR(nodes));
     }

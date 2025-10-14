@@ -27,6 +27,14 @@ DEALINGS IN THE SOFTWARE.
 
 #include "DataStream.h"
 
+#define DATASTREAM_FORMAT_UNKNOWN           0 
+#define DATASTREAM_FORMAT_8BIT_UNSIGNED     1
+#define DATASTREAM_FORMAT_8BIT_SIGNED       2
+#define DATASTREAM_FORMAT_16BIT_UNSIGNED    3
+#define DATASTREAM_FORMAT_16BIT_SIGNED      4
+#define DATASTREAM_SAMPLE_RATE_UNKNOWN      0.0f
+#define DATASTREAM_FORMAT_BYTES_PER_SAMPLE(x) ((x+1)/2)
+
 #ifndef CONFIG_MIXER_BUFFER_SIZE
 #define CONFIG_MIXER_BUFFER_SIZE 512
 #endif
@@ -113,7 +121,7 @@ public:
         this->rate = rate;
         this->skip = 0.0f;
         if( this->rate == DATASTREAM_SAMPLE_RATE_UNKNOWN )
-            this->rate = stream->getSampleRate();
+            this->rate = CONFIG_MIXER_DEFAULT_CHANNEL_SAMPLERATE; //stream->getSampleRate();
     }
 
     /**

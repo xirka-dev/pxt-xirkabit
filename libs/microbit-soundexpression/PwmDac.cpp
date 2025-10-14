@@ -5,6 +5,25 @@
 #include "samd/timers.h"
 
 namespace codal {
+extern const uint16_t sin2k7Hz[256];
+const uint16_t sin2k7Hz[] = {
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544,
+  751, 928, 1046, 1087, 1046, 928, 751, 544, 336, 159, 41, 0, 41, 159, 336, 544
+};
 
   PwmDac::PwmDac(ZPin &pin, DataSource &source, long sampleRate) :
     upstream(source),
@@ -14,7 +33,13 @@ namespace codal {
     dataReady(0),
     active(false)
   {
-    pinPwm.setAnalogPeriodUs(1000000/sampleRate);
+    {
+      int samplePeriodUs = 1000000/sampleRate;
+      char msg[128];
+      snprintf(msg, sizeof(msg), "Setting period to %d us.\r\n", samplePeriodUs);
+      sendSerial(msg, strlen(msg));
+      pinPwm.setAnalogPeriodUs(samplePeriodUs);
+    }
 
     const pin_timer_t *pwmTimer = pinPwm.getPwmCfg()->timer;
 
@@ -65,20 +90,22 @@ namespace codal {
 
     if(pwmTimer->is_tc){
       pwmRegister = &(tc_insts[pwmTimer->index]->COUNT16.CC[pwmTimer->wave_output].reg);
-      periodRegister = tc_insts[pwmTimer->index]->COUNT16.CC[0].reg;
+      periodRegister = (volatile uint32_t*)&(tc_insts[pwmTimer->index]->COUNT16.CC[0].reg);
     }
     else {
       uint8_t channel = pwmTimer->wave_output % tcc_cc_num[pwmTimer->index];
       pwmRegister = &(tcc_insts[pwmTimer->index]->CCB[channel].reg);
-      periodRegister = tcc_insts[pwmTimer->index]->PER.reg;
+      periodRegister = &(tcc_insts[pwmTimer->index]->PER.reg);
     }
+
+    *periodRegister = ((CODAL_CPU_MHZ*1000000UL*2)/sampleRate - 1)/2;
     {
       char msg1[128];
       snprintf(msg1, sizeof(msg1), "PWM reg is at %p\r\n", pwmRegister);
       sendSerial(msg1, strlen(msg1));
       snprintf(msg1, sizeof(msg1), "TCC.CTRLA is 0x%08X\r\n", tcc_insts[pwmTimer->index]->CTRLA.reg);
       sendSerial(msg1, strlen(msg1));
-      snprintf(msg1, sizeof(msg1), "Period reg is %u\r\n", periodRegister);
+      snprintf(msg1, sizeof(msg1), "Period count is %u\r\n", *periodRegister);
       sendSerial(msg1, strlen(msg1));
     }
 
@@ -93,16 +120,16 @@ namespace codal {
   }
 
   int PwmDac::pullRequest(void){
-    {
-      static const char msg[] = "Pull requested from upstream!\r\n";
-      sendSerial(msg, sizeof(msg)-1);
-    }
+    // {
+    //   static const char msg[] = "Pull requested from upstream!\r\n";
+    //   sendSerial(msg, sizeof(msg)-1);
+    // }
     
     dataReady++;
 
     if(active){
-      static const char msg[] = "Already pulling data! Aborting...\r\n";
-      sendSerial(msg, sizeof(msg)-1);
+      // static const char msg[] = "Already pulling data! Aborting...\r\n";
+      // sendSerial(msg, sizeof(msg)-1);
       return DEVICE_OK;
     }
 
@@ -118,11 +145,11 @@ namespace codal {
     bool alreadyActive = active;
     active = true;
     nextBuffer = upstream.pull();
-    {
-      char msg1[64];
-      snprintf(msg1, 64, "Retrieved %d bytes.\r\n", nextBuffer.length());
-      sendSerial(msg1, strlen(msg1));
-    }
+    // {
+    //   char msg1[64];
+    //   snprintf(msg1, 64, "Retrieved %d bytes.\r\n", nextBuffer.length());
+    //   sendSerial(msg1, strlen(msg1));
+    // }
     
     if(!alreadyActive) active = false;
   }
@@ -131,25 +158,26 @@ namespace codal {
     if (!nextBuffer.length())
       prefill();
 
-    // buffer = nextBuffer;
-    buffer = ManagedBuffer(nextBuffer.length());
-    for(int i=0; i < nextBuffer.length(); i=i+2){
-      uint16_t value = *(uint16_t*)&nextBuffer[i];
-      value = ((uint32_t)value * periodRegister) >> OUTPUT_BITS;
-      *(uint16_t*)&buffer[i] = value;
-      // char msg[8];
-      // snprintf(msg, sizeof(msg), "%u\r\n", value);
-      // sendSerial(msg, strlen(msg));
-    }
+    buffer = nextBuffer;
+    // buffer = ManagedBuffer(nextBuffer.length());
+    // for(int i=0; i < nextBuffer.length(); i=i+2){
+    //   uint16_t value = *(uint16_t*)&nextBuffer[i];
+    //   value = ((uint32_t)value * periodRegister) >> OUTPUT_BITS;
+    //   *(uint16_t*)&buffer[i] = value;
+    //   // char msg[8];
+    //   // snprintf(msg, sizeof(msg), "%u\r\n", value);
+    //   // sendSerial(msg, strlen(msg));
+    // }
 
     nextBuffer = ManagedBuffer();
 
     if (buffer.length()) {
-      char msg1[64];
-      snprintf(msg1, 64, "Processing %d bytes of data.\r\n", buffer.length());
-      sendSerial(msg1, strlen(msg1));
+      // char msg1[64];
+      // snprintf(msg1, 64, "Processing %d bytes of data.\r\n", buffer.length());
+      // sendSerial(msg1, strlen(msg1));
 
       dmaInstance->transfer(&buffer[0], nullptr, buffer.length());
+      // dmaInstance->transfer(sin2k7Hz, nullptr, sizeof(sin2k7Hz));
     }
     else {
       dataReady = 0;
@@ -164,8 +192,8 @@ namespace codal {
   }
 
   void PwmDac::dmaTransferComplete(DmaCode c){
-    const char msg[] = "DMA transfer completed.\r\n";
-    sendSerial(msg, sizeof(msg)-1);
+    // const char msg[] = "DMA transfer completed.\r\n";
+    // sendSerial(msg, sizeof(msg)-1);
     if (!dataReady){
         active = false;
         return;

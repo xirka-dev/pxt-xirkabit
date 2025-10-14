@@ -22,6 +22,7 @@ class PwmDac : public CodalComponent, public DmaComponent, public DataSink {
 public:
   PwmDac(ZPin &pin, DataSource &source, long sampleRate = 44100);
   long getSampleRate(void){ return sampleRate; }
+  long getSampleRange(void){ return *periodRegister; }
   int pullRequest(void) override;
 
   /**
@@ -35,7 +36,7 @@ private:
   volatile void *pwmRegister;
   DmaInstance* dmaInstance;
   PwmDacPin pinPwm;
-  uint32_t periodRegister;
+  volatile uint32_t *periodRegister;
   long sampleRate;
   ManagedBuffer buffer, nextBuffer;
   int dataReady;

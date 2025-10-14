@@ -60,19 +60,19 @@ Mixer2::Mixer2(float sampleRate, int sampleRange, int format)
 
 Mixer2::~Mixer2()
 {
-    while (channels)
-    {
-        MixerChannel *n = channels;
-        channels = n->next;
-        n->stream->disconnect();
-        delete n;
-    }
+    // while (channels)
+    // {
+    //     MixerChannel *n = channels;
+    //     channels = n->next;
+    //     n->stream->disconnect();
+    //     delete n;
+    // }
 }
 
 void Mixer2::configureChannel(MixerChannel *c)
 {
     c->volume = 1.0f;
-    c->format = c->stream->getFormat();
+    c->format = DATASTREAM_FORMAT_16BIT_UNSIGNED; // c->stream->getFormat();
     c->bytesPerSample = DATASTREAM_FORMAT_BYTES_PER_SAMPLE(c->format);
     c->gain = CONFIG_MIXER_INTERNAL_RANGE / (float) c->range;
     c->skip = c->rate / outputRate;
@@ -94,7 +94,7 @@ MixerChannel *Mixer2::addChannel(DataSource &stream, float sampleRate, int sampl
     MixerChannel *c = new MixerChannel();
     c->stream = &stream;
     c->range = sampleRange;
-    c->rate = sampleRate ? sampleRate : stream.getSampleRate();
+    c->rate = sampleRate ? sampleRate : CONFIG_MIXER_DEFAULT_CHANNEL_SAMPLERATE; // stream.getSampleRate();
     c->pullRequests = 0;
     c->in = NULL;
     c->end = NULL;
@@ -174,7 +174,8 @@ ManagedBuffer Mixer2::pull()
             {
                 d = ch->in + (int)(ch->position * ch->bytesPerSample);
 
-                float v = StreamNormalizer::readSample[inputFormat](d);
+                // float v = StreamNormalizer::readSample[inputFormat](d);
+                float v = *(uint16_t*)d;
                 v += ch->offset;
                 v *= ch->gain;    
                 v *= ch->volume;    
@@ -259,7 +260,8 @@ ManagedBuffer Mixer2::pull()
         s |= orMask;
 
         // Write out the sample.
-        StreamNormalizer::writeSample[outputFormat](w, s);
+        // StreamNormalizer::writeSample[outputFormat](w, s);
+        *(uint16_t*)w = (uint16_t)s;
         w += bytesPerSampleOut;
         r++;
     }
