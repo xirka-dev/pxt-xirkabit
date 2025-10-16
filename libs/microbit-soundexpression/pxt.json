@@ -1,0 +1,25 @@
+{
+  "name": "microbit-soundexpression",
+  "description": "SoundExpression library imported from micro:bit core",
+  "files": [
+    "shims.d.ts",
+    "SoundEmojiSynthesizer.h",
+    "soundexpressions.cpp",
+    "soundexpressions.ts",
+    "SoundSynthesizerEffects.h",
+    "SoundExpressions.h",
+    "SoundExpressionsCodal.cpp",
+    "SoundEmojiSynthesizer.cpp",
+    "PwmDac.h",
+    "PwmDac.cpp",
+    "SoundSynthesizerEffects.cpp",
+    "DummySource.h",
+    "DummySource.cpp",
+    "XirkaBitSound.h",
+    "XirkaBitSound.cpp"
+  ],
+  "dependencies": {
+    "music---pwm": "file:../music---pwm"
+  },
+  "public": true
+}
