@@ -15,8 +15,6 @@
     "SoundSynthesizerEffects.cpp",
     "DummySource.h",
     "DummySource.cpp",
-    "Mixer2.h",
-    "Mixer2.cpp",
     "XirkaBitSound.h",
     "XirkaBitSound.cpp"
   ],

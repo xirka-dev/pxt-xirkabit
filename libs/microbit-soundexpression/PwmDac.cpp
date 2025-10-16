@@ -120,12 +120,13 @@ const uint16_t sin2k7Hz[] = {
   }
 
   int PwmDac::pullRequest(void){
+    dataReady++;
     // {
-    //   static const char msg[] = "Pull requested from upstream!\r\n";
-    //   sendSerial(msg, sizeof(msg)-1);
+    //   char msg[128];
+    //   int len = snprintf(msg, sizeof(msg), "Pull requested (%d) from upstream!\r\n", dataReady);
+    //   sendSerial(msg, len);
     // }
     
-    dataReady++;
 
     if(active){
       // static const char msg[] = "Already pulling data! Aborting...\r\n";
@@ -146,8 +147,8 @@ const uint16_t sin2k7Hz[] = {
     active = true;
     nextBuffer = upstream.pull();
     // {
-    //   char msg1[64];
-    //   snprintf(msg1, 64, "Retrieved %d bytes.\r\n", nextBuffer.length());
+    //   char msg1[128];
+    //   snprintf(msg1, sizeof(msg1), "Retrieved %d bytes, due %d more.\r\n", nextBuffer.length(), dataReady);
     //   sendSerial(msg1, strlen(msg1));
     // }
     
@@ -160,13 +161,19 @@ const uint16_t sin2k7Hz[] = {
 
     buffer = nextBuffer;
     // buffer = ManagedBuffer(nextBuffer.length());
-    // for(int i=0; i < nextBuffer.length(); i=i+2){
-    //   uint16_t value = *(uint16_t*)&nextBuffer[i];
-    //   value = ((uint32_t)value * periodRegister) >> OUTPUT_BITS;
-    //   *(uint16_t*)&buffer[i] = value;
-    //   // char msg[8];
-    //   // snprintf(msg, sizeof(msg), "%u\r\n", value);
-    //   // sendSerial(msg, strlen(msg));
+    // static int countDown = 4;
+    // if(countDown){
+    //   countDown--;
+    //   for(int i=0; i < buffer.length(); i=i+2){
+    //     if((i & 15) == 0) sendSerial("\r\n", 2);
+    //     uint16_t value = *(uint16_t*)&buffer[i];
+    //   //   value = ((uint32_t)value * periodRegister) >> OUTPUT_BITS;
+    //   //   *(uint16_t*)&buffer[i] = value;
+    //     char msg[8];
+    //     snprintf(msg, sizeof(msg), "%u ", value);
+    //     sendSerial(msg, strlen(msg));
+    //   }
+    //   sendSerial("\r\n\r\n", 4);
     // }
 
     nextBuffer = ManagedBuffer();

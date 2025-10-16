@@ -216,8 +216,10 @@ ManagedBuffer SoundEmojiSynthesizer::pull()
     {
         playbackCompleteIn--;
 
-        if (playbackCompleteIn == 0)
+        if (playbackCompleteIn == 0){
             Event(id, DEVICE_SOUND_EMOJI_SYNTHESIZER_EVT_PLAYBACK_COMPLETE);
+            status &= ~EMOJI_SYNTHESIZER_STATUS_ACTIVE;
+        }
     }
 
     return output;
@@ -283,7 +285,7 @@ ManagedBuffer SoundEmojiSynthesizer::fillOutputBuffer()
         {
             float skip = ((EMOJI_SYNTHESIZER_TONE_WIDTH_F * frequency) / sampleRate);
             float gain = (sampleRange * volume) / 1024.0f;
-            float offset = 512.0f - (512.0f * gain);
+            int offset = (gain >= 1.f) ? 0 : (512 - (int)(512 * gain));
 
             int effectStepEnd[EMOJI_SYNTHESIZER_TONE_EFFECTS];
 
@@ -309,7 +311,10 @@ ManagedBuffer SoundEmojiSynthesizer::fillOutputBuffer()
                 float s = effect->tone.tonePrint(effect->tone.parameter, (int) position);
 
                 // Apply volume scaling and OR mask (if specified).
-                *sample = ((uint16_t) ((s * gain) + offset)) | orMask;
+                int s_ = (int)(s * gain) + offset;
+                if (s_ < 0) s_ = 0;
+                else if (s_ > sampleRange) s_ = sampleRange;
+                *sample = ((uint16_t)s_) | orMask;
 
                 // Move on our pointers.
                 sample++;

@@ -16,7 +16,7 @@ XirkaBitSound::XirkaBitSound(void) :
   if (XirkaBitSound::instance == nullptr)
     XirkaBitSound::instance = this;
 
-  synth.allowEmptyBuffers(true);
+  // synth.allowEmptyBuffers(true);
 }
 
 void XirkaBitSound::requestActivation(void){
@@ -28,13 +28,14 @@ int XirkaBitSound::enable(void){
   if(pwmDac != nullptr) return DEVICE_OK;
 
   // pwmDac = new PwmDac(*LOOKUP_PIN(SPEAKER_AMP), mixer, SAMPLE_RATE);
-  pwmDac = new PwmDac(*LOOKUP_PIN(SPEAKER_AMP), dummySource, SAMPLE_RATE);
+  // pwmDac = new PwmDac(*LOOKUP_PIN(SPEAKER_AMP), dummySource, SAMPLE_RATE);
+  pwmDac = new PwmDac(*LOOKUP_PIN(SPEAKER_AMP), synth, SAMPLE_RATE);
   
-  mixer.setSampleRange(pwmDac->getSampleRange());
-  mixer.setSampleRate(SAMPLE_RATE);
+  synth.setSampleRange(pwmDac->getSampleRange());
+  synth.setSampleRate(SAMPLE_RATE);
   // if(soundExpressionChannel == nullptr)
-  //   // soundExpressionChannel = mixer.addChannel(synth);
-  //   soundExpressionChannel = mixer.addChannel(dummySource);
+  //   // soundExpressionChannel = mixer.addChannel(dummySource);
+  //   soundExpressionChannel = mixer.addChannel(synth);
 
   {
     static const char msg[] = "Sound enabled.\r\n";
