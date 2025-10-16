@@ -23,6 +23,7 @@
         "visuals/buttons.ts",
         "state/ledmatrix.ts",
         "state/misc.ts",
+        "state/soundexpression.ts",
         "../libs/*/sim/*.ts"
     ]
 }
