@@ -187,5 +187,51 @@ declare namespace basic {
     //% parts="ledmatrix" interval.defl=400 shim=basic::showAnimation
     function showAnimation(leds: string, interval?: int32): void;
 }
+declare namespace control {
+
+    /**
+     * Schedules code that run in the background.
+     */
+    //% help=control/in-background blockAllowMultiple=1 afterOnStart=true
+    //% blockId="control_in_background" block="run in background" blockGap=8 shim=control::inBackground
+    function inBackground(a: () => void): void;
+
+    /**
+     * Returns the major version of the microbit
+     */
+    //% help=control/hardware-version shim=control::hardwareVersion
+    function hardwareVersion(): string;
+}
+
+
+    /**
+     * Events and data from sensors
+     */
+    //% color=#D400D4 weight=111 icon="\uf192"
+declare namespace input {
+
+    /**
+     * Do something when a button (A, B or both A+B) is pushed down and released again.
+     * @param button the button that needs to be pressed
+     * @param body code to run when event is raised
+     */
+    //% help=input/on-button-pressed weight=85 blockGap=16
+    //% blockId=device_button_event block="on button|%NAME|pressed"
+    //% parts="buttonpair" shim=input::onButtonPressed
+    function onButtonPressed(button: Button, body: () => void): void;
+}
+
+
+declare interface DigitalInOutPin {}
+declare namespace pins {
+
+    /**
+     * Sets the digital pin status
+     * @param pin
+     * @param value 
+     */
+    //% deprecated=1 shim=pins::digitalWritePin
+    function digitalWritePin(pin: int32, value: int32): void;
+}
 
 // Auto-generated. Do not edit. Really.
