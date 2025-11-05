@@ -3,8 +3,6 @@ declare namespace images {
 }
 declare namespace basic {
 }
-declare namespace input {
-}
 
 
     declare const enum DigitalPin {
