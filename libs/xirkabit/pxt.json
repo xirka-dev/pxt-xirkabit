@@ -22,7 +22,6 @@
         "basic.cpp",
         "serialXirkabit.cpp",
         "control.cpp",
-        "control.ts",
         "input.cpp",
         "pinscompat.cpp",
         "pinscompat.ts"

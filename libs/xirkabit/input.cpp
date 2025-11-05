@@ -1,7 +1,9 @@
 #include "pxt.h"
 #include "pxtAddon.h"
 
-
+/**
+ * Events and data from sensors
+ */
 //% color=#D400D4 weight=111 icon="\uf192"
 namespace input {
 

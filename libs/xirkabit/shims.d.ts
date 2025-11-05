@@ -129,7 +129,9 @@ declare interface BlocklyImage {
 }
 
 
-
+    /**
+     * Events and data from sensors
+     */
     //% color=#D400D4 weight=111 icon="\uf192"
 declare namespace input {
 
@@ -220,7 +222,9 @@ declare namespace control {
 }
 
 
-
+    /**
+     * Events and data from sensors
+     */
     //% color=#D400D4 weight=111 icon="\uf192"
 declare namespace input {
 
