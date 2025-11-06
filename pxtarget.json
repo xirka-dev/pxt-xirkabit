@@ -15,7 +15,8 @@
         "libs/radio-broadcast---samd",
         "libs/serial",
         "libs/buttons",
-        "libs/xirkabit"
+        "libs/xirkabit",
+        "libs/ws2812b"
     ],
     "cloud": {
         "workspace": false,

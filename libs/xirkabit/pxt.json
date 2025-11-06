@@ -36,7 +36,8 @@
     },
     "cppDependencies": {
         "music---pwm": "file:../music---pwm",
-        "microbit-soundexpression": "file:../microbit-soundexpression"
+        "microbit-soundexpression": "file:../microbit-soundexpression",
+        "ws2812b": "file:../ws2812b"
     },
     "public": true,
     "dalDTS": {
