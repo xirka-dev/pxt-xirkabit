@@ -197,7 +197,4 @@ declare namespace control {
     function inBackground(a: () => void): void;
 }
 
-
-declare interface DigitalInOutPin {}
-
 // Auto-generated. Do not edit. Really.

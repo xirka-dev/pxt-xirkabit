@@ -15,6 +15,7 @@
         "libs/radio-broadcast---samd",
         "libs/serial",
         "libs/buttons",
+        "libs/xirkabit-pincompat",
         "libs/xirkabit",
         "libs/ws2812b"
     ],

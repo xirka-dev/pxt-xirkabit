@@ -1,0 +1,15 @@
+{
+    "name": "xirkabit-pincompat",
+    "description": "Pin compatibility methods for xirka:bit",
+    "files": [
+        "pinscompat.cpp",
+        "pinscompat.ts",
+        "shims.d.ts",
+        "enums.d.ts"
+    ],
+    "dependencies": {
+        "core---samd": "file:../core---samd"
+    },
+    "public": true,
+    "compileServiceVariant": "samd21"
+}
