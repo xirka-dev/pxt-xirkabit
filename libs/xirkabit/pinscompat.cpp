@@ -55,32 +55,19 @@ namespace DigitalInOutPinMethods {
 }
 
 namespace pins {
+    DigitalInOutPin pinByCfg(int key);
 
-
-DigitalInOutPin pinByCfg(int key) ;
-
-
-    /**
-     * Sets the digital pin status
-     * @param pin
-     * @param value 
-     */
-    //% deprecated=1
+    //%
     void digitalWritePin (int pin,  int value) {
-    // void pins::digitalWritePin (DigitalPin pin,  int value) {
-        // const auto p = pins.pinByCfg(pin);
         auto p = pins::pinByCfg(pin);
         if (p){
-            // p.digitalWrite(!!value);
             DigitalInOutPinMethods::digitalWrite(p, !!value);
         }
     }
-
 
     //%
     DevicePin *getPinAddress(int id) {
         return getPin(id);
     }
-
 }
 

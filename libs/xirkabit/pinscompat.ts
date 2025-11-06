@@ -24,7 +24,7 @@
 //}
 
 
-enum AnalogPin {
+const enum AnalogPin {
     P0 = DAL.CFG_PIN_P0,
     P1 = DAL.CFG_PIN_P1,
     P2 = DAL.CFG_PIN_P2,
@@ -59,17 +59,17 @@ namespace pins {
             p.setPull(mode);
     }
 
-//    /**
-//     * Sets the digital pin status
-//     * @param pin
-//     * @param value 
-//     */
-//    //% deprecated=1
-//    export function digitalWritePin(pin: DigitalPin, value: number) {
-//        const p = pins.pinByCfg(pin);
-//        if (p)
-//            p.digitalWrite(!!value);
-//    }
+   /**
+    * Sets the digital pin status
+    * @param pin
+    * @param value 
+    */
+   //% deprecated=1 shim=pins::digitalWritePin
+   export function digitalWritePin(pin: DigitalPin, value: number) {
+       const p = pins.pinByCfg(pin);
+       if (p)
+           p.digitalWrite(!!value);
+   }
 
     /**
      * Reads the pin status

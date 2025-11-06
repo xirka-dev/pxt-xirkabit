@@ -20,6 +20,7 @@
         "images.h",
         "basic.cpp",
         "serialXirkabit.cpp",
+        "control.ts",
         "control.cpp",
         "input.ts",
         "pinscompat.cpp",
