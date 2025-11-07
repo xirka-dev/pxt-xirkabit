@@ -27,11 +27,10 @@
         "music---pwm": "file:../music---pwm",
         "microbit-soundexpression": "file:../microbit-soundexpression",
         "radio-broadcast---samd": "file:../radio-broadcast---samd",
-        "serial": "file:../serial"
+        "serial": "file:../serial",
+        "edge-connector": "file:../edge-connector"
     },
     "cppDependencies": {
-        "music---pwm": "file:../music---pwm",
-        "microbit-soundexpression": "file:../microbit-soundexpression"
     },
     "public": true,
     "dalDTS": {
