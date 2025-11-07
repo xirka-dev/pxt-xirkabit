@@ -38,7 +38,7 @@ declare namespace pins {
     const BTN_B: DigitalInOutPin;
 }
 
-declare namespace Button {
+declare namespace input {
     /**
      * Left button.
      */

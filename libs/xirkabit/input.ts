@@ -5,10 +5,6 @@ const enum TouchPin {
     P2 = DAL.CFG_PIN_P2
 }
 
-/**
- * Events and data from sensors
- */
-//% color=#D400D4 weight=111 icon="\uf192"
 namespace input {
     /**
      * Do something when a button (A, B or both A+B) is pushed down and released again.
