@@ -22,7 +22,8 @@
         "serialXirkabit.cpp",
         "control.ts",
         "pinscompat.cpp",
-        "pinscompat.ts"
+        "pinscompat.ts",
+        "input.ts"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
@@ -30,7 +31,8 @@
         "music---pwm": "file:../music---pwm",
         "microbit-soundexpression": "file:../microbit-soundexpression",
         "radio-broadcast---samd": "file:../radio-broadcast---samd",
-        "serial": "file:../serial"
+        "serial": "file:../serial",
+        "buttons": "file:../buttons"
     },
     "cppDependencies": {
     },

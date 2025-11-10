@@ -1296,4 +1296,8 @@ declare const enum DAL {
     // /pxtapp/xirkabit/XirkaBitCompat.h
     MICROBIT_FONT_ASCII_END = 126,
     MICROBIT_FONT_ASCII_START = 32,
+    MICROBIT_ID_BUTTON_A = 1,
+    MICROBIT_ID_BUTTON_B = 2,
+    MICROBIT_ID_BUTTON_AB = 3,
+    MICROBIT_BUTTON_EVT_CLICK = 3,
 }
