@@ -22,7 +22,9 @@
         "serialXirkabit.cpp",
         "control.ts",
         "control.cpp",
-        "input.ts"
+        "input.ts",
+        "pinscompat.cpp",
+        "pinscompat.ts"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
@@ -31,11 +33,9 @@
         "microbit-soundexpression": "file:../microbit-soundexpression",
         "radio-broadcast---samd": "file:../radio-broadcast---samd",
         "serial": "file:../serial",
-        "buttons": "file:../buttons",
-        "xirkabit-pincompat": "file:../xirkabit-pincompat"
+        "buttons": "file:../buttons"
     },
     "cppDependencies": {
-        "ws2812b": "file:../ws2812b"
     },
     "public": true,
     "dalDTS": {

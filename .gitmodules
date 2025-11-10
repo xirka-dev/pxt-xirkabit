@@ -1,3 +1,0 @@
-[submodule "libs/ws2812b"]
-	path = libs/ws2812b
-	url = ../../xirka-dev/pxt-ws2812b
