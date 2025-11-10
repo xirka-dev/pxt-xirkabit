@@ -19,7 +19,10 @@
         "DoNotInclude.h",
         "images.h",
         "basic.cpp",
-        "serialXirkabit.cpp"
+        "serialXirkabit.cpp",
+        "control.ts",
+        "pinscompat.cpp",
+        "pinscompat.ts"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
@@ -27,8 +30,7 @@
         "music---pwm": "file:../music---pwm",
         "microbit-soundexpression": "file:../microbit-soundexpression",
         "radio-broadcast---samd": "file:../radio-broadcast---samd",
-        "serial": "file:../serial",
-        "edge-connector": "file:../edge-connector"
+        "serial": "file:../serial"
     },
     "cppDependencies": {
     },

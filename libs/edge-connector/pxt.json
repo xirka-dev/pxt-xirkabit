@@ -1,6 +1,0 @@
-{
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/edge-connector",
-    "dependencies": {
-        "core---samd": "file:../core---samd"
-    }
-}

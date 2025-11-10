@@ -14,7 +14,6 @@
         "libs/radio---samd",
         "libs/radio-broadcast---samd",
         "libs/serial",
-        "libs/edge-connector",
         "libs/xirkabit"
     ],
     "cloud": {
@@ -87,6 +86,12 @@
                         "core": "core---samd",
                         "radio": "radio---samd",
                         "microphone": "core---samd"
+                    }
+                },
+                {
+                    "type": "api",
+                    "map": {
+                        "control\\s*\\.\\s*inBackground\\s*\\(": "control.runInParallel("
                     }
                 }
             ]
