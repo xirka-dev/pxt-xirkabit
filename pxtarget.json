@@ -14,7 +14,9 @@
         "libs/radio---samd",
         "libs/radio-broadcast---samd",
         "libs/serial",
-        "libs/xirkabit"
+        "libs/xirkabit",
+        "libs/color",
+        "libs/neopixel"
     ],
     "cloud": {
         "workspace": false,
@@ -24,9 +26,7 @@
         "publishing": true,
         "importing": true,
         "showBadges": false,
-        "preferredPackages": [
-            "Microsoft/pxt-neopixel"
-        ],
+        "preferredPackages": [],
         "githubPackages": true,
         "apiRoot": "https://www.makecode.com/api/",
         "cloudProviders": {

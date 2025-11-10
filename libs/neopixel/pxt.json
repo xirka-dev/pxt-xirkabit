@@ -1,0 +1,8 @@
+{
+    "name": "neopixel",
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/light",
+    "dependencies": {
+        "xirkabit": "file:../xirkabit",
+        "color": "file:../color"
+    }
+}

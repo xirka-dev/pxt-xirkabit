@@ -1,4 +1,7 @@
 {
     "hidden": true,
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/color"
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/color",
+    "dependencies": {
+        "core---samd": "file:../core---samd"
+    }
 }
