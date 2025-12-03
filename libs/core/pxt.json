@@ -28,7 +28,6 @@
         "basic.ts",
         "icons.ts",
         "icons.jres",
-        "input.cpp",
         "input.ts",
         "gestures.jres",
         "control.ts",
