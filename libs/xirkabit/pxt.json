@@ -12,7 +12,6 @@
     },
     "files": [
         "README.md",
-        "config.json",
         "config.ts",
         "device.d.ts",
         "targetoverrides.d.ts",
