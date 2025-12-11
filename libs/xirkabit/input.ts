@@ -52,7 +52,7 @@ namespace input {
 
         // 1. CEK SIMULATOR (Safety Check)
         // Kita pakai metode "KTP" (Who Am I)
-        // Jika Simulator, kita return animasi putar biar gak bosan (angka 0)
+        // Jika Simulator, return animasi putar biar gak bosan (angka 0)
         pins.i2cWriteNumber(MAG_ADDR, WHO_AM_I_REG, NumberFormat.UInt8BE);
         let whoami = pins.i2cReadNumber(MAG_ADDR, NumberFormat.UInt8LE);
 
