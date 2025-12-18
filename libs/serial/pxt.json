@@ -1,22 +1,6 @@
 {
-    "name": "serial",
-    "description": "UART communication",
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/serial",
     "dependencies": {
         "core---samd": "file:../core---samd"
-    },
-    "files": [
-        "serial-target.h",
-        "serial-common.h",
-        "serial-target.cpp",
-        "serial-common.cpp",
-        "serial-target.ts",
-        "serial.ts",
-        "enums.d.ts",
-        "shims.d.ts"
-    ],
-    "testFiles": [
-        "test.ts"
-    ],
-    "public": true,
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/serial"
+    }
 }

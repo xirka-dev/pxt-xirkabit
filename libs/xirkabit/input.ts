@@ -1,3 +1,4 @@
+
 const enum TouchPin {
     P0 = DAL.CFG_PIN_P0,
     P1 = DAL.CFG_PIN_P1,
@@ -14,9 +15,11 @@ namespace input {
     const CHIP_ID_LSM303 = 0x40;
 
     // DATA KALIBRASI (XirkaBit Specific)
-    const OFFSET_X = -206; 
-    const OFFSET_Y = -259;
-    const ROTATION_OFFSET = 190; 
+    const OFFSET_X = -86; 
+    const OFFSET_Y = -137;
+    const SCALE_X = 1;
+    const SCALE_Y = 1.03634;
+    const ROTATION_OFFSET = 180; 
 
     let isMagInitialized = false;
 
@@ -64,24 +67,22 @@ namespace input {
         // 1. Centering (Hard Iron Calibration)
         let x_centered = x_raw - OFFSET_X;
         let y_centered = y_raw - OFFSET_Y;
+        // Apply Scale (Soft Iron Calibration)
+        x_centered = x_centered * SCALE_X;
+        y_centered = y_centered * SCALE_Y;
 
         // 2. Hitung Sudut
         let heading = Math.atan2(y_centered, x_centered) * 180 / Math.PI;
 
-        // 3. Normalisasi (0-360)
-        if (heading < 0) heading += 360;
-        
-        // 4. Rotasi Board
-        heading = (heading + ROTATION_OFFSET) % 360;
+        // 3. Rotasi Board
+        heading = heading - ROTATION_OFFSET;
 
+        // 4. Normalisasi (0-360)
+        while (heading < 0) heading += 360;
+        
         return Math.floor(heading);
     }
 
-    // ==========================================
-    // 3. SYSTEM FUNCTIONS (RESTORED FROM ORIGINAL)
-    // ==========================================
-    // Bagian ini dikembalikan ke bentuk asli agar BLOK MakeCode muncul kembali
-    
     /**
      * Do something when a button (A, B or both A+B) is pushed down and released again.
      * @param button the button that needs to be pressed
