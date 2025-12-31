@@ -24,7 +24,8 @@
         "pinscompat.cpp",
         "pinscompat.ts",
         "input.ts",
-        "input.cpp"
+        "input.cpp",
+        "lightlevel.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",

@@ -62,4 +62,51 @@ namespace pxt::serialXirkabit {
     Buffer dummy = mkBuffer("                  \r\n", 20);
     serialXirkabit->writeBuffer(dummy);
   }
+  // -----------------------------
+  // READ RAW RESPONSE
+  // -----------------------------
+  int readResponse() {
+    if (!initSerial())
+        return -1;
+
+    Buffer buf = serialXirkabit->readBuffer();
+    if (!buf || buf->length == 0){
+      static const char msg[]="buffer is empty\r\n";
+      sendSerial(msg, sizeof(msg)-1);
+        return -1;
+    }
+
+    //sendSerial((char*)(buf->data),buf->length);
+
+    char *raw = (char*)buf->data;
+    int len = buf->length;
+
+    // cari '{'
+    char *start = nullptr;
+    for (int i = 0; i < len; i++) {
+        if (raw[i] == '{') {
+            start = raw + i;
+            break;
+        }
+    }
+    if (!start) return -1;
+    
+    // cari "RSP":
+    char *p = strstr(start, "\"RSP\":");
+    if (!p) return -1;
+    p += 6; // panjang "\"RSP\":"
+    int value = 0;
+    bool found = false;
+    while (*p >= '0' && *p <= '9') {
+        value = value * 10 + (*p - '0');
+        p++;
+        found = true;
+    }
+
+    if (!found) return -1;
+
+    return value;
+    //return 0;
+  }
+
 }
