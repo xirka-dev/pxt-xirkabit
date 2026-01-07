@@ -160,3 +160,61 @@ namespace input {
         return pin.digitalRead() == false;
     }
 }
+
+// ==========================================
+// 4. AI CAMERA (NAMESPACE BARU - I2C MODE)
+// ==========================================
+// Menangani komunikasi I2C dengan ESP32-CAM (Address 0x20)
+//% color="#d65cd6" weight=20 icon="\uf030" block="AI Camera"
+namespace camera {
+    
+    // Konstanta Alamat I2C
+    const CAMERA_I2C_ADDR = 0x20;
+
+    /**
+     * Enum untuk objek yang dideteksi.
+     * Mapping: 0=None, 1=Open Hand, 2=Closed Hand.
+     */
+    export enum DetectedObject {
+        //% block="None"
+        None = 0,
+        //% block="Open Hand"
+        Open = 1,
+        //% block="Closed Hand"
+        Closed = 2
+    }
+
+    /**
+     * Membaca data deteksi terbaru dari ESP32 via I2C.
+     * Mengembalikan status objek yang terdeteksi.
+     */
+    //% block="get detected object"
+    //% weight=100
+    export function getObject(): DetectedObject {
+        // REFACTOR NOTE: 
+        // Di MakeCode hardware, try-catch seringkali tidak menangkap error I2C 
+        // seperti di bahasa pemrograman biasa. pins.i2cReadNumber biasanya 
+        // mengembalikan 0 jika gagal, atau nilai 255 (0xFF) jika bus floating.
+        
+        let val = pins.i2cReadNumber(CAMERA_I2C_ADDR, NumberFormat.UInt8LE, false);
+
+        // Validasi data (Filter Noise)
+        // Jika data di luar range enum (misal 255 atau angka acak), anggap None.
+        if (val < 0 || val > 2) {
+            return DetectedObject.None;
+        }
+
+        return val;
+    }
+
+    /**
+     * Mengecek apakah objek spesifik sedang terdeteksi.
+     * Berguna untuk logika kondisional (If ... then).
+     */
+    //% block="is %obj detected?"
+    //% weight=90
+    export function isDetected(obj: DetectedObject): boolean {
+        // Menggunakan fungsi getObject() agar validasi terpusat di satu tempat
+        return getObject() == obj;
+    }
+}
