@@ -112,13 +112,14 @@ namespace input {
     //% blockId=xirkabit_rotation
     //% block="rotation %rot"
     export function rotation(rot: XirkabitRotation): number {
-        const [x, y, z] = readAccelRaw();
-        const radToDeg = 180 / Math.PI;
+        const [x, y, z] = readAccelRaw()
+        const radToDeg = 180 / Math.PI
 
-        if (rot == XirkabitRotation.Pitch)
-            return -Math.atan2(x, Math.sqrt(y * y + z * z)) * radToDeg;
-        else
-            return -Math.atan2(y, Math.sqrt(x * x + z * z)) * radToDeg;
+        if (rot == XirkabitRotation.Pitch) {
+            return Math.atan2(-x, -z) * radToDeg
+        } else {
+            return Math.atan2(-y, -z) * radToDeg
+        }
     }
 
     // ===== 2. Raw acceleration block =====
