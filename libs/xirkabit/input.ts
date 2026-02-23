@@ -162,19 +162,16 @@ namespace input {
 }
 
 // ==========================================
-// 4. AI CAMERA (NAMESPACE BARU - I2C MODE)
+// XIRKA AI CAMERA EXTENSION (BINARY MODE)
 // ==========================================
-// Menangani komunikasi I2C dengan ESP32-CAM (Address 0x20)
+
 //% color="#d65cd6" weight=20 icon="\uf030" block="AI Camera"
 namespace camera {
-    
-    // Konstanta Alamat I2C
-    const CAMERA_I2C_ADDR = 0x20;
 
-    /**
-     * Enum untuk objek yang dideteksi.
-     * Mapping: 0=None, 1=Open Hand, 2=Closed Hand.
-     */
+    // --- ALAMAT I2C ---
+    const ADDR_HAND = 0x20; // Alamat Legacy (Tangan)
+    const ADDR_FACE = 0x21; // Alamat ESP32-CAM (33 Desimal)
+
     export enum DetectedObject {
         //% block="None"
         None = 0,
@@ -184,37 +181,56 @@ namespace camera {
         Closed = 2
     }
 
+    // ==========================================
+    // BAGIAN 1: DETEKSI TANGAN (LEGACY)
+    // ==========================================
+    
     /**
-     * Membaca data deteksi terbaru dari ESP32 via I2C.
-     * Mengembalikan status objek yang terdeteksi.
+     * Membaca status tangan dari modul lama (0x20)
      */
-    //% block="get detected object"
-    //% weight=100
-    export function getObject(): DetectedObject {
-        // REFACTOR NOTE: 
-        // Di MakeCode hardware, try-catch seringkali tidak menangkap error I2C 
-        // seperti di bahasa pemrograman biasa. pins.i2cReadNumber biasanya 
-        // mengembalikan 0 jika gagal, atau nilai 255 (0xFF) jika bus floating.
-        
-        let val = pins.i2cReadNumber(CAMERA_I2C_ADDR, NumberFormat.UInt8LE, false);
-
-        // Validasi data (Filter Noise)
-        // Jika data di luar range enum (misal 255 atau angka acak), anggap None.
-        if (val < 0 || val > 2) {
-            return DetectedObject.None;
+    //% block="get hand object"
+    //% group="Hand Detection"
+    export function getHandObject(): DetectedObject {
+        let val = 0;
+        try {
+            val = pins.i2cReadNumber(ADDR_HAND, NumberFormat.UInt8LE, false);
+        } catch (e) {
+            val = 0;
         }
-
-        return val;
+        return val; 
     }
 
+    //% block="is hand %obj detected?"
+    //% group="Hand Detection"
+    export function isHandDetected(obj: DetectedObject): boolean {
+        return getHandObject() == obj;
+    }
+
+    // ==========================================
+    // BAGIAN 2: DETEKSI WAJAH (BINARY - ESP32)
+    // ==========================================
+
     /**
-     * Mengecek apakah objek spesifik sedang terdeteksi.
-     * Berguna untuk logika kondisional (If ... then).
+     * Mengecek apakah ada wajah terdeteksi oleh ESP32.
+     * Mengembalikan TRUE jika ESP32 mengirim angka 1 (Ada Wajah).
+     * Mengembalikan FALSE jika ESP32 mengirim angka 0 (Kosong) atau Error.
      */
-    //% block="is %obj detected?"
-    //% weight=90
-    export function isDetected(obj: DetectedObject): boolean {
-        // Menggunakan fungsi getObject() agar validasi terpusat di satu tempat
-        return getObject() == obj;
+    //% block="is face detected?"
+    //% group="Face Detection"
+    //% weight=80
+    export function isFaceDetected(): boolean {
+        let val = 0;
+        
+        try {
+            // Membaca 1 Byte (Angka 0-255) dari alamat 0x21
+            // ESP32 diprogram untuk mengirim 0 atau 1 saja.
+            val = pins.i2cReadNumber(ADDR_FACE, NumberFormat.UInt8LE, false);
+        } catch (e) {
+            // Jika kabel putus atau I2C error, kembalikan 0 (False)
+            val = 0;
+        }
+
+        // Validasi: Hanya return True jika nilainya mutlak 1
+        return val == 1;
     }
 }
