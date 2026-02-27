@@ -171,4 +171,6 @@ namespace input {
 
     //% shim=pxt::lightLevelInternal
     declare function lightLevelInternal(): number;
+
+    
 }
