@@ -25,7 +25,11 @@
         "pinscompat.ts",
         "input.ts",
         "input.cpp",
-        "lightlevel.cpp"
+        "lightlevel.cpp",
+        "plot.ts",
+        "plot.cpp",
+        "brightness.ts",
+        "brightness.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",

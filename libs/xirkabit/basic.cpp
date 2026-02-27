@@ -41,8 +41,8 @@ namespace basic {
   //% blockId=device_clear_display block="clear screen"
   //% parts="ledmatrix"
   void clearScreen() {
-    serialXirkabit::sendCommand("ICON", "\"BLANK\"");
-  }
+    led::clearMatrix();
+}
 
   /**
    * Display text on the display, one character at a time. If the string fits on the screen (i.e. is one letter), does not scroll.
@@ -67,9 +67,14 @@ namespace basic {
       // uBit.display.scroll(MSTR(text), interval);
     } else {
       // uBit.display.printChar(text->getUTF8Data()[0], interval * 5);
+      while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
+      pxt::serialXirkabit::serialBusy = true;
       serialXirkabit::sendCommand("STR", PXT_STRING_DATA(text), true);
+      pxt::serialXirkabit::serialBusy = false;
+
       int length = PXT_STRING_DATA_LENGTH(text);
       loops::pause(interval * length * 5);
+      fiber_sleep(200);
     }
   }
 
@@ -82,5 +87,10 @@ namespace basic {
   //% parts="ledmatrix"
   void showAnimation(ImageLiteral_ leds, int interval = 400) {
     // uBit.display.animate(MicroBitImage(imageBytes(leds)), interval, 5, 0, 0);
+  }
+
+  void pause(int ms) {
+    led::tickMatrix();
+    fiber_sleep(ms);
   }
 }

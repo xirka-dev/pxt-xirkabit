@@ -171,4 +171,6 @@ namespace input {
 
     //% shim=xirkabit::lightLevelInternal
     declare function lightLevelInternal(): number;
+
+    
 }

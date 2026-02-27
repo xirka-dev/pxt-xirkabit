@@ -2,6 +2,7 @@
 #include "pxtAddon.h"
 
 namespace pxt::serialXirkabit {
+  volatile bool serialBusy = false;
   static SerialDevice serialXirkabit = nullptr;
 
   bool initSerial(void){
@@ -65,36 +66,41 @@ namespace pxt::serialXirkabit {
   // -----------------------------
   // READ RAW RESPONSE
   // -----------------------------
-  int readResponse() {
-    if (!initSerial())
-        return -1;
+  int readResponse(int timeoutMs) {
+    if (!initSerial()) return -1;
 
-    Buffer buf = serialXirkabit->readBuffer();
-    if (!buf || buf->length == 0){
-      static const char msg[]="buffer is empty\r\n";
-      sendSerial(msg, sizeof(msg)-1);
-        return -1;
+    char raw[64] = {0};
+    int idx = 0;
+    bool started = false;
+    uint32_t start = current_time_ms();
+
+    while ((int)(current_time_ms() - start) < timeoutMs) {
+      int c = serialXirkabit->read();
+      if (c < 0) {
+          // tidak ada data, yield supaya scheduler jalan
+          fiber_sleep(1);
+          continue;
+      }
+
+      if ((char)c == '{') {
+          started = true;
+          idx = 0;  // reset buffer, buang apapun sebelum '{'
+      }
+      if (!started) continue;
+
+      if (idx < 63)
+          raw[idx++] = (char)c;
+
+      if ((char)c == '}') break;
     }
 
-    //sendSerial((char*)(buf->data),buf->length);
+    if (idx == 0) return -1;  // timeout, tidak ada data
 
-    char *raw = (char*)buf->data;
-    int len = buf->length;
-
-    // cari '{'
-    char *start = nullptr;
-    for (int i = 0; i < len; i++) {
-        if (raw[i] == '{') {
-            start = raw + i;
-            break;
-        }
-    }
-    if (!start) return -1;
-    
-    // cari "RSP":
-    char *p = strstr(start, "\"RSP\":");
+    // parse RSP
+    char *p = strstr(raw, "\"RSP\":");
     if (!p) return -1;
-    p += 6; // panjang "\"RSP\":"
+    p += 6;
+
     int value = 0;
     bool found = false;
     while (*p >= '0' && *p <= '9') {
@@ -103,10 +109,7 @@ namespace pxt::serialXirkabit {
         found = true;
     }
 
-    if (!found) return -1;
-
-    return value;
-    //return 0;
+    return found ? value : -1;
   }
 
 }
