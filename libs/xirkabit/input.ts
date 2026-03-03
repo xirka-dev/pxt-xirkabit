@@ -201,6 +201,9 @@ namespace input {
         if (heading < 0) heading += 360;
         heading = (heading + ROTATION_OFFSET) % 360;
 
+        // 4. Normalisasi (0-360)
+        while (heading < 0) heading += 360;
+        
         return Math.floor(heading);
     }
     

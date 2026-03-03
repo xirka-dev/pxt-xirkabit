@@ -64,16 +64,16 @@ namespace music {
             if(this.tempo) {
                 music.setTempo(this.tempo);
             }
-    //         if (playbackMode == PlaybackMode.InBackground) {
-    //             startMelodyInternal(this.notes, MelodyOptions.OnceInBackground);
-    //         }
-    //         else if (playbackMode == PlaybackMode.LoopingInBackground) {
-    //             startMelodyInternal(this.notes, MelodyOptions.ForeverInBackground);
-    //         }
-    //         else {
-    //             startMelodyInternal(this.notes, MelodyOptions.Once);
-    //             waitForMelodyEnd();
-    //         }
+            if (playbackMode == PlaybackMode.InBackground) {
+                startMelodyInternal(this.notes, MelodyOptions.OnceInBackground);
+            }
+            else if (playbackMode == PlaybackMode.LoopingInBackground) {
+                startMelodyInternal(this.notes, MelodyOptions.ForeverInBackground);
+            }
+            else {
+                startMelodyInternal(this.notes, MelodyOptions.Once);
+                waitForMelodyEnd();
+            }
         }
     }
 
@@ -138,9 +138,9 @@ namespace music {
     //% melody.shadow=melody_editor
     //% bpm.min=40 bpm.max=500
     //% bpm.defl=120
-    // export function stringPlayable(melody: string, bpm: number): Playable {
-    //     return new StringArrayPlayable(music.getMelodyNotes(melody), bpm);
-    // }
+    export function stringPlayable(melody: string, bpm: number): Playable {
+        return new StringArrayPlayable(music.getMelodyNotes(melody), bpm);
+    }
 
     /**
      * Plays a tone through pin ``P0`` for the given duration.
@@ -228,4 +228,45 @@ namespace music {
 
         return out;
     }
+
+    /**
+     * Play a melody from the melody editor.
+     * @param melody string of up to eight notes [C D E F G A B C5] or rests [-] separated by spaces, which will be played one at a time, ex: "E D G F B A C5 B "
+     * @param tempo number in beats per minute (bpm), dictating how long each note will play for
+     */
+    //% block="play melody $melody at tempo $tempo|(bpm)" blockId=playMelody
+    //% weight=85 blockGap=8 help=music/play-melody
+    //% melody.shadow="melody_editor"
+    //% tempo.min=40 tempo.max=500
+    //% tempo.defl=120
+    //% parts=headphone
+    //% group="Melody"
+    //% deprecated=1
+    export function playMelody(melody: string, tempo: number) {
+        melody = melody || "";
+        setTempo(tempo);
+        let notes = getMelodyNotes(melody);
+
+        music.startMelodyInternal(notes, MelodyOptions.Once)
+        waitForMelodyEnd();
+    }
+
+    /**
+     * Create a melody with the melody editor.
+     * @param melody
+     */
+    //% block="$melody" blockId=melody_editor
+    //% blockHidden = true
+    //% weight=85 blockGap=8
+    //% duplicateShadowOnDrag
+    //% melody.fieldEditor="melody"
+    //% melody.fieldOptions.decompileLiterals=true
+    //% melody.fieldOptions.decompileIndirectFixedInstances="true"
+    //% melody.fieldOptions.onParentBlock="true"
+    //% shim=TD_ID
+    //% group="Melody"
+    export function melodyEditor(melody: string): string {
+        return melody;
+    }
+
 }
