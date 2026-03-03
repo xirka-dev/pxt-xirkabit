@@ -59,6 +59,7 @@ namespace serial {
 namespace led {
     void clearMatrix();
     void tickMatrix();
+    extern bool matrixState[5][5]; 
     extern bool matrixDirty;
 }
 #endif

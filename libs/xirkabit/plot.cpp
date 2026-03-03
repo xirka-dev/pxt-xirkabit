@@ -4,7 +4,7 @@
 
 namespace led
 {
-    static bool matrixState[5][5] = {false};
+    bool matrixState[5][5] = {false};
     bool matrixDirty = false;
 
     static void flushMatrix() {
@@ -62,12 +62,39 @@ namespace led
         if (x < 0 || x > 4 || y < 0 || y > 4) return;
         matrixState[y][x] = !matrixState[y][x];
         matrixDirty = true;
-        sendSerial("toggle dirty\r\n", 14);
     }
 
     //% blockHidden=true
     void clearMatrix() {
         memset(matrixState, 0, sizeof(matrixState));
         flushMatrix();
+    }
+
+    //% help=led/plot-bar-graph weight=20
+    //% blockId=device_plot_bar_graph block="plot bar graph of %value up to %high"
+    //% parts="ledmatrix"
+    void plotBarGraph(int value, int high) {
+        if (high <= 0) high = 1;
+        if (value < 0) value = -value;
+
+        float v = (float)value / high;
+        float dv = 1.0f / 16.0f;
+        float k = 0;
+
+        for (int y = 4; y >= 0; y--) {
+            for (int x = 0; x < 3; x++) {
+                if (k > v) {
+                    matrixState[y][2 - x] = false;
+                    matrixState[y][2 + x] = false;
+                } else {
+                    matrixState[y][2 - x] = true;
+                    matrixState[y][2 + x] = true;
+                }
+                k += dv;
+            }
+        }
+
+        matrixDirty = true;
+        tickMatrix(); 
     }
 }
