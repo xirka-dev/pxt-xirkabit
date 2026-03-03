@@ -162,15 +162,15 @@ namespace input {
 }
 
 // ==========================================
-// XIRKA AI CAMERA EXTENSION (BINARY MODE)
+// XIRKA AI CAMERA EXTENSION (HUSKYLENS PROTOCOL)
 // ==========================================
 
 //% color="#d65cd6" weight=20 icon="\uf030" block="AI Camera"
 namespace camera {
 
     // --- ALAMAT I2C ---
-    const ADDR_HAND = 0x20; // Alamat Legacy (Tangan)
-    const ADDR_FACE = 0x21; // Alamat ESP32-CAM (33 Desimal)
+    const ADDR_HAND = 0x20; // Alamat ESP32-CAM (Hand Detection)
+    const ADDR_FACE = 0x21; // Alamat ESP32-CAM (Face Detection)
 
     export enum DetectedObject {
         //% block="None"
@@ -181,56 +181,98 @@ namespace camera {
         Closed = 2
     }
 
+    // Variabel untuk menyimpan informasi kotak objek terakhir
+    let _lastX = 0;
+    let _lastY = 0;
+    let _lastW = 0;
+    let _lastH = 0;
+
+    /**
+     * Fungsi Internal: Membaca dan membedah paket 16-Byte dari ESP32
+     */
+    function readHuskyPacket(addr: number): number {
+        try {
+            // Membaca 16 Byte dari ESP32-CAM
+            let buf = pins.i2cReadBuffer(addr, 16, false);
+            
+            // 1. Cek Header Protokol (0x55, 0xAA)
+            if (buf[0] == 0x55 && buf[1] == 0xAA) {
+                
+                // 2. Cek Checksum (Validasi Data)
+                let sum = 0;
+                for (let i = 0; i < 15; i++) {
+                    sum += buf[i];
+                }
+                
+                // Jika Checksum cocok, ekstrak data (Little Endian)
+                if ((sum & 0xFF) == buf[15]) {
+                    _lastX = buf[5] | (buf[6] << 8);
+                    _lastY = buf[7] | (buf[8] << 8);
+                    _lastW = buf[9] | (buf[10] << 8);
+                    _lastH = buf[11] | (buf[12] << 8);
+                    let id = buf[13] | (buf[14] << 8);
+                    
+                    return id;
+                }
+            }
+        } catch (e) {
+            // I2C error / kabel terputus
+        }
+        return 0; // Return 0 (None) jika gagal / tidak ada objek
+    }
+
     // ==========================================
-    // BAGIAN 1: DETEKSI TANGAN (LEGACY)
+    // BAGIAN 1: DETEKSI TANGAN (ESP32 0x20)
     // ==========================================
     
-    /**
-     * Membaca status tangan dari modul lama (0x20)
-     */
     //% block="get hand object"
     //% group="Hand Detection"
+    //% weight=90
     export function getHandObject(): DetectedObject {
-        let val = 0;
-        try {
-            val = pins.i2cReadNumber(ADDR_HAND, NumberFormat.UInt8LE, false);
-        } catch (e) {
-            val = 0;
-        }
-        return val; 
+        let id = readHuskyPacket(ADDR_HAND);
+        
+        // Sesuai kode Arduino Hand: ID 1 = Open, ID 2 = Closed
+        if (id == 1) return DetectedObject.Open;
+        if (id == 2) return DetectedObject.Closed;
+        return DetectedObject.None;
     }
 
     //% block="is hand %obj detected?"
     //% group="Hand Detection"
+    //% weight=80
     export function isHandDetected(obj: DetectedObject): boolean {
         return getHandObject() == obj;
     }
 
     // ==========================================
-    // BAGIAN 2: DETEKSI WAJAH (BINARY - ESP32)
+    // BAGIAN 2: DETEKSI WAJAH (ESP32 0x21)
     // ==========================================
 
-    /**
-     * Mengecek apakah ada wajah terdeteksi oleh ESP32.
-     * Mengembalikan TRUE jika ESP32 mengirim angka 1 (Ada Wajah).
-     * Mengembalikan FALSE jika ESP32 mengirim angka 0 (Kosong) atau Error.
-     */
     //% block="is face detected?"
     //% group="Face Detection"
-    //% weight=80
+    //% weight=90
     export function isFaceDetected(): boolean {
-        let val = 0;
+        let id = readHuskyPacket(ADDR_FACE);
         
-        try {
-            // Membaca 1 Byte (Angka 0-255) dari alamat 0x21
-            // ESP32 diprogram untuk mengirim 0 atau 1 saja.
-            val = pins.i2cReadNumber(ADDR_FACE, NumberFormat.UInt8LE, false);
-        } catch (e) {
-            // Jika kabel putus atau I2C error, kembalikan 0 (False)
-            val = 0;
-        }
+        // Sesuai kode Arduino Face: ID 1 = Face
+        return id == 1; 
+    }
 
-        // Validasi: Hanya return True jika nilainya mutlak 1
-        return val == 1;
+    // ==========================================
+    // BAGIAN 3: KOORDINAT OBJEK (FITUR BARU)
+    // ==========================================
+    
+    //% block="get detected X position"
+    //% group="Object Info"
+    //% weight=70
+    export function getX(): number {
+        return _lastX;
+    }
+
+    //% block="get detected Y position"
+    //% group="Object Info"
+    //% weight=60
+    export function getY(): number {
+        return _lastY;
     }
 }
