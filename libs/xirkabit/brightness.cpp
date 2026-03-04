@@ -20,32 +20,37 @@ namespace led
         brightnessDirty = true;
     }
 
-    //% blockHidden=true
-    void flushBrightness()
-    {
-        char buf[160];
+    int mergePixel(int y, int x) {
         float scale = globalBrightness / 255.0f;
+        if (fb_brightness[y][x] > 0)
+            return (int)(fb_brightness[y][x] * scale);
+        if (matrixState[y][x])
+            return (int)(globalBrightness);
+        return 0;
+    }
 
+    //% blockHidden=true
+    void flushBrightness() {
+        char buf[160];
         snprintf(buf, 159, "[%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d]",
-            fb_brightness[0][0], fb_brightness[0][1], fb_brightness[0][2], fb_brightness[0][3], fb_brightness[0][4],
-            fb_brightness[1][0], fb_brightness[1][1], fb_brightness[1][2], fb_brightness[1][3], fb_brightness[1][4],
-            fb_brightness[2][0], fb_brightness[2][1], fb_brightness[2][2], fb_brightness[2][3], fb_brightness[2][4],
-            fb_brightness[3][0], fb_brightness[3][1], fb_brightness[3][2], fb_brightness[3][3], fb_brightness[3][4],
-            fb_brightness[4][0], fb_brightness[4][1], fb_brightness[4][2], fb_brightness[4][3], fb_brightness[4][4]
+            mergePixel(0,0), mergePixel(0,1), mergePixel(0,2), mergePixel(0,3), mergePixel(0,4),
+            mergePixel(1,0), mergePixel(1,1), mergePixel(1,2), mergePixel(1,3), mergePixel(1,4),
+            mergePixel(2,0), mergePixel(2,1), mergePixel(2,2), mergePixel(2,3), mergePixel(2,4),
+            mergePixel(3,0), mergePixel(3,1), mergePixel(3,2), mergePixel(3,3), mergePixel(3,4),
+            mergePixel(4,0), mergePixel(4,1), mergePixel(4,2), mergePixel(4,3), mergePixel(4,4)
         );
 
         while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
         pxt::serialXirkabit::serialBusy = true;
         pxt::serialXirkabit::sendCommand("LBMTRX", buf, false);
         pxt::serialXirkabit::serialBusy = false;
-
         memset(dirty, 0, sizeof(dirty));
     }
 
     void tickBrightness() {
         if (!brightnessDirty) return;
+        matrixDirty = true;
         brightnessDirty = false;
-        flushBrightness();
     }
 
     //% blockId=led_point_brightness

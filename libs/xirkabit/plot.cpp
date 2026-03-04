@@ -9,25 +9,24 @@ namespace led
 
     static void flushMatrix() {
         char buf[160];
-        uint8_t onVal = (uint8_t)((globalBrightness));  // 0-255
-
         snprintf(buf, 159, "[%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d]",
-            matrixState[0][0]?onVal:0, matrixState[0][1]?onVal:0, matrixState[0][2]?onVal:0, matrixState[0][3]?onVal:0, matrixState[0][4]?onVal:0,
-            matrixState[1][0]?onVal:0, matrixState[1][1]?onVal:0, matrixState[1][2]?onVal:0, matrixState[1][3]?onVal:0, matrixState[1][4]?onVal:0,
-            matrixState[2][0]?onVal:0, matrixState[2][1]?onVal:0, matrixState[2][2]?onVal:0, matrixState[2][3]?onVal:0, matrixState[2][4]?onVal:0,
-            matrixState[3][0]?onVal:0, matrixState[3][1]?onVal:0, matrixState[3][2]?onVal:0, matrixState[3][3]?onVal:0, matrixState[3][4]?onVal:0,
-            matrixState[4][0]?onVal:0, matrixState[4][1]?onVal:0, matrixState[4][2]?onVal:0, matrixState[4][3]?onVal:0, matrixState[4][4]?onVal:0
+            mergePixel(0,0), mergePixel(0,1), mergePixel(0,2), mergePixel(0,3), mergePixel(0,4),
+            mergePixel(1,0), mergePixel(1,1), mergePixel(1,2), mergePixel(1,3), mergePixel(1,4),
+            mergePixel(2,0), mergePixel(2,1), mergePixel(2,2), mergePixel(2,3), mergePixel(2,4),
+            mergePixel(3,0), mergePixel(3,1), mergePixel(3,2), mergePixel(3,3), mergePixel(3,4),
+            mergePixel(4,0), mergePixel(4,1), mergePixel(4,2), mergePixel(4,3), mergePixel(4,4)
         );
 
         while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
         pxt::serialXirkabit::serialBusy = true;
-        pxt::serialXirkabit::sendCommand("LBMTRX", buf, false);  // ganti dari LMTRX
+        pxt::serialXirkabit::sendCommand("LBMTRX", buf, false);
         pxt::serialXirkabit::serialBusy = false;
     }
 
     void tickMatrix() {
-        if (!matrixDirty) return;
+        if (!matrixDirty && !brightnessDirty) return;
         matrixDirty = false;
+        brightnessDirty = false;
         flushMatrix();
     }
 
