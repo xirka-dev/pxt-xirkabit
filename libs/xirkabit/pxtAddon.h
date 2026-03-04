@@ -57,9 +57,12 @@ namespace serial {
 }
 
 namespace led {
-    void clearMatrix();
-    void tickMatrix();
-    extern bool matrixState[5][5]; 
-    extern bool matrixDirty;
+  void clearMatrix();
+  void tickMatrix();
+  void tickBrightness();
+  extern uint8_t globalBrightness;
+  extern bool matrixState[5][5]; 
+  extern bool matrixDirty;
+  extern bool brightnessDirty;
 }
 #endif

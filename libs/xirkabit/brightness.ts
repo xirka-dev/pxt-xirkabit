@@ -1,43 +1,42 @@
 //% color=#7600A8 weight=100 icon="\uf042"
 namespace led {
 
-    let dirty = false
-    let scheduled = false
-
     //% blockId=led_plot_brightness
-    //% block="plot brightness x %x y %y b %b"
-    //% x.min=0 x.max=4 y.min=0 y.max=4
-    //% b.min=0 b.max=255
-    export function plotBrightness(x: number, y: number, b: number): void {
-        plotBrightnessNative(x, y, b)
-        dirty = true
-
-        if (!scheduled) {
-            scheduled = true
-            control.runInParallel(() => {
-                basic.pause(0)   // tunggu semua block selesai
-                if (dirty) {
-                    flushBrightnessNative()
-                    dirty = false
-                }
-                scheduled = false
-            })
-        }
-    }
-
-    //% blockId=led_brightness
-    export function brightness(x: number, y: number): number {
-        return brightnessNative(x, y)
-    }
-
-    // ===== native =====
+    //% block="plot brightness x %x y %y brightness %b"
+    //% x.min=0 x.max=4 y.min=0 y.max=4 b.min=0 b.max=255 b.defl=255
     //% shim=led::plotBrightness
-    declare function plotBrightnessNative(x: number, y: number, b: number): void
+    //% advanced=true
+    //% weight=95 
+    export function plotBrightness(x: number, y: number, b: number): void {
+        return
+    }
 
-    //% shim=led::getbrightness
-    declare function brightnessNative(x: number, y: number): number
+    //% blockId=led_point_brightness
+    //% block="point x %x y %y brightness"
+    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% shim=led::pointBrightness
+    //% advanced=true
+    //% weight=90
+    export function pointBrightness(x: number, y: number): number {
+        return 0
+    }
 
-    //% shim=led::flushBrightness
-    //% blockHidden=true
-    declare function flushBrightnessNative(): void
+    //% blockId=led_brightness_value
+    //% block="brightness"
+    //% shim=led::getBrightness
+    //% advanced=true
+    //% weight=85
+    export function getBrightness(): number {
+        return 0
+    }
+
+    //% blockId=led_set_brightness
+    //% block="set brightness %b"
+    //% b.min=0 b.max=255 b.defl=255
+    //% shim=led::setBrightness
+    //% advanced=true
+    //% weight=80
+    export function setBrightness(b: number): void {
+        return
+    }
 }
