@@ -60,6 +60,7 @@ namespace led {
   void clearMatrix();
   void tickMatrix();
   void tickBrightness();
+  int mergePixel(int y, int x);
   extern uint8_t globalBrightness;
   extern bool matrixState[5][5]; 
   extern bool matrixDirty;

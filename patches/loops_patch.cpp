@@ -7,7 +7,6 @@ namespace loops {
         while (true) {
             runAction0((Action)a);
             led::tickMatrix();
-            led::tickBrightness();
             fiber_sleep(20);
         }
     }
@@ -37,7 +36,6 @@ namespace loops {
     void pause(int ms) {
         if (ms < 0) return;
         led::tickMatrix();
-        led::tickBrightness();
         sleep_ms(ms);      
     }
 
