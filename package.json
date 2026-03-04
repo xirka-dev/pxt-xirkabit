@@ -1,6 +1,9 @@
 {
     "name": "pxt-microbit",
     "version": "8.0.13",
+    "scripts": {
+        "postinstall": "cp patches/loops_patch.cpp node_modules/pxt-common-packages/libs/base/loops.cpp"
+    },
     "description": "micro:bit target for Microsoft MakeCode (PXT)",
     "keywords": [
         "JavaScript",

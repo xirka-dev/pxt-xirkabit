@@ -88,9 +88,4 @@ namespace basic {
   void showAnimation(ImageLiteral_ leds, int interval = 400) {
     // uBit.display.animate(MicroBitImage(imageBytes(leds)), interval, 5, 0, 0);
   }
-
-  void pause(int ms) {
-    led::tickMatrix();
-    fiber_sleep(ms);
-  }
 }
