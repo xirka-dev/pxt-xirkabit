@@ -179,6 +179,9 @@ void showImage(BlocklyImage sprite, int xOffset, int interval = 400) {
 #endif
     plotImage(sprite, xOffset);
     loops::pause(interval);
+
+    led::matrixDirty = true;
+    led::tickMatrix();
 }
 
 /**

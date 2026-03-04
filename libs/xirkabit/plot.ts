@@ -6,17 +6,9 @@ namespace led {
      */
     //% blockId=led_plot block="plot x %x y %y"
     //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=95 
     export function plot(x: number, y: number): void {
         plotNative(x, y)
-    }
-
-    /**
-     * Turn off an LED at position (x, y)
-     */
-    //% blockId=led_unplot block="unplot x %x y %y"
-    //% x.min=0 x.max=4 y.min=0 y.max=4
-    export function unplot(x: number, y: number): void {
-        unplotNative(x, y)
     }
 
     /**
@@ -24,14 +16,26 @@ namespace led {
      */
     //% blockId=led_toggle block="toggle x %x y %y"
     //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=90
     export function toggle(x: number, y: number): void {
         toggleNative(x, y)
+    }
+    
+    /**
+     * Turn off an LED at position (x, y)
+     */
+    //% blockId=led_unplot block="unplot x %x y %y"
+    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=85
+    export function unplot(x: number, y: number): void {
+        unplotNative(x, y)
     }
 
     /**
      * Check if LED at (x,y) is on
      */
     //% blockId=led_point block="point x %x y %y"
+    //% weight=80
     export function point(x: number, y: number): boolean {
         return pointNative(x, y)
     }
@@ -41,6 +45,7 @@ namespace led {
     //% parts="ledmatrix" shim=led::plotBarGraph
     //% valueToConsole.shadow=toggleOnOff
     //% valueToConsole.defl=true
+    //% weight=75
     export function plotBarGraph(value: number, high: number): void
     {
         return
@@ -49,11 +54,11 @@ namespace led {
     //% shim=led::plot
     declare function plotNative(x: number, y: number): void
 
-    //% shim=led::unplot
-    declare function unplotNative(x: number, y: number): void
-
     //% shim=led::toggle
     declare function toggleNative(x: number, y: number): void
+    
+    //% shim=led::unplot
+    declare function unplotNative(x: number, y: number): void
 
     //% shim=led::point
     declare function pointNative(x: number, y: number): boolean

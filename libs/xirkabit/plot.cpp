@@ -8,18 +8,20 @@ namespace led
     bool matrixDirty = false;
 
     static void flushMatrix() {
-        char buf[32];
-        snprintf(buf, sizeof(buf), "[%d,%d,%d,%d,%d]",
-            (matrixState[0][0]<<4)|(matrixState[0][1]<<3)|(matrixState[0][2]<<2)|(matrixState[0][3]<<1)|matrixState[0][4],
-            (matrixState[1][0]<<4)|(matrixState[1][1]<<3)|(matrixState[1][2]<<2)|(matrixState[1][3]<<1)|matrixState[1][4],
-            (matrixState[2][0]<<4)|(matrixState[2][1]<<3)|(matrixState[2][2]<<2)|(matrixState[2][3]<<1)|matrixState[2][4],
-            (matrixState[3][0]<<4)|(matrixState[3][1]<<3)|(matrixState[3][2]<<2)|(matrixState[3][3]<<1)|matrixState[3][4],
-            (matrixState[4][0]<<4)|(matrixState[4][1]<<3)|(matrixState[4][2]<<2)|(matrixState[4][3]<<1)|matrixState[4][4]
+        char buf[160];
+        uint8_t onVal = (uint8_t)((globalBrightness));  // 0-255
+
+        snprintf(buf, 159, "[%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d]",
+            matrixState[0][0]?onVal:0, matrixState[0][1]?onVal:0, matrixState[0][2]?onVal:0, matrixState[0][3]?onVal:0, matrixState[0][4]?onVal:0,
+            matrixState[1][0]?onVal:0, matrixState[1][1]?onVal:0, matrixState[1][2]?onVal:0, matrixState[1][3]?onVal:0, matrixState[1][4]?onVal:0,
+            matrixState[2][0]?onVal:0, matrixState[2][1]?onVal:0, matrixState[2][2]?onVal:0, matrixState[2][3]?onVal:0, matrixState[2][4]?onVal:0,
+            matrixState[3][0]?onVal:0, matrixState[3][1]?onVal:0, matrixState[3][2]?onVal:0, matrixState[3][3]?onVal:0, matrixState[3][4]?onVal:0,
+            matrixState[4][0]?onVal:0, matrixState[4][1]?onVal:0, matrixState[4][2]?onVal:0, matrixState[4][3]?onVal:0, matrixState[4][4]?onVal:0
         );
 
         while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
         pxt::serialXirkabit::serialBusy = true;
-        pxt::serialXirkabit::sendCommand("LMTRX", buf, false);
+        pxt::serialXirkabit::sendCommand("LBMTRX", buf, false);  // ganti dari LMTRX
         pxt::serialXirkabit::serialBusy = false;
     }
 
@@ -85,10 +87,10 @@ namespace led
             for (int x = 0; x < 3; x++) {
                 if (k > v) {
                     matrixState[y][2 - x] = false;
-                    matrixState[y][2 + x] = false;
+                    if ( x!= 0) matrixState[y][2 + x] = false;
                 } else {
                     matrixState[y][2 - x] = true;
-                    matrixState[y][2 + x] = true;
+                    if ( x != 0) matrixState[y][2 + x] = true;
                 }
                 k += dv;
             }

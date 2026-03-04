@@ -198,19 +198,5 @@ declare namespace input {
     //% parts="thermometer" shim=input::temperature
     function temperature(): int32;
 }
-declare namespace led {
-
-    /**
-     * Get the brightness state of the specified LED using x, y coordinates. (0,0) is upper left.
-     * @param x the horizontal coordinate of the LED
-     * @param y the vertical coordinate of the LED
-     */
-    //% blockHidden=true
-    //% blockId=led_get_brightness block="point|x %x|y %y brightness"
-    //% x.min=0 x.max=4
-    //% y.min=0 y.max=4
-    //% weight=85 shim=led::getbrightness
-    function getbrightness(x: int32, y: int32): int32;
-}
 
 // Auto-generated. Do not edit. Really.
