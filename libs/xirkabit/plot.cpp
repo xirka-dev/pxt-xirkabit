@@ -69,7 +69,7 @@ namespace led
     //% blockHidden=true
     void clearMatrix() {
         memset(matrixState, 0, sizeof(matrixState));
-        flushMatrix();
+        matrixDirty = true; 
     }
 
     //% help=led/plot-bar-graph weight=20
