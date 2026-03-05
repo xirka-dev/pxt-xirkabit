@@ -25,6 +25,8 @@
         "pinscompat.ts",
         "input.ts",
         "compass.ts"
+        "camera.ts",
+        "input.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
