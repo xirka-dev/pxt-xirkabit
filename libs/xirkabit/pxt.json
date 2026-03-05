@@ -1,15 +1,6 @@
 {
     "name": "xirkabit",
     "description": "Support for xirka:bit",
-    "dependencies": {
-        "core---samd": "file:../core---samd",
-        "storage": "file:../storage",
-        "music---pwm": "file:../music---pwm",
-        "microbit-soundexpression": "file:../microbit-soundexpression",
-        "radio-broadcast---samd": "file:../radio-broadcast---samd",
-        "serial": "file:../serial",
-        "buttons": "file:../buttons"
-    },
     "files": [
         "README.md",
         "config.ts",
@@ -35,8 +26,18 @@
         "input.ts",
         "compass.ts"
     ],
+    "dependencies": {
+        "core---samd": "file:../core---samd",
+        "storage": "file:../storage",
+        "music---pwm": "file:../music---pwm",
+        "microbit-soundexpression": "file:../microbit-soundexpression",
+        "radio-broadcast---samd": "file:../radio-broadcast---samd",
+        "serial": "file:../serial",
+        "buttons": "file:../buttons"
+    },
+    "cppDependencies": {
+    },
     "public": true,
-    "cppDependencies": {},
     "dalDTS": {
         "corePackage": "../core---samd",
         "compileServiceVariant": "samd21",
@@ -44,17 +45,24 @@
             "JD_",
             "USB_",
             "REQUEST_",
+            "LIS3DH_",
+            "FXOS8700_",
             "HF2_",
             "PXT_REF_TAG_",
             "MS_",
             "SCSI_",
+            "MAG_",
+            "MAG3",
+            "MPU6",
+            "MADCTL",
+            "MMA8",
             "DEBUG"
         ]
     },
     "compileServiceVariant": "samd21",
     "yotta": {
         "config": {
-            "USB_DEFAULT_VID": "0x239B",
+            "USB_DEFAULT_VID": "0x239B", 
             "USB_DEFAULT_PID": "0x0002"
         }
     }

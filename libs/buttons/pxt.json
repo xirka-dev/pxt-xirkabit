@@ -1,18 +1,6 @@
 {
-    "name": "buttons",
-    "description": "Button A and B drivers",
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/buttons",
     "dependencies": {
         "core---samd": "file:../core---samd"
-    },
-    "files": [
-        "README.md",
-        "buttons.cpp",
-        "shims.d.ts",
-        "enums.d.ts"
-    ],
-    "testFiles": [
-        "test.ts"
-    ],
-    "public": true,
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/buttons"
+    }
 }

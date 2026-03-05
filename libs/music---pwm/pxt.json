@@ -1,24 +1,6 @@
 {
-    "name": "music---pwm",
-    "description": "The music library",
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/music---pwm",
     "dependencies": {
         "core---samd": "file:../core---samd"
-    },
-    "files": [
-        "README.md",
-        "music.cpp",
-        "enums.d.ts",
-        "shims.d.ts",
-        "melodies.ts",
-        "music.ts",
-        "piano.ts",
-        "ns.ts",
-        "headphone.svg",
-        "pxtparts.json"
-    ],
-    "testFiles": [
-        "test.ts"
-    ],
-    "public": true,
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/music---pwm"
+    }
 }
