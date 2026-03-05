@@ -24,6 +24,7 @@
         "pinscompat.cpp",
         "pinscompat.ts",
         "input.ts",
+        "camera.ts",
         "input.cpp"
     ],
     "dependencies": {
