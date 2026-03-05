@@ -32,7 +32,8 @@
         "control.ts",
         "pinscompat.cpp",
         "pinscompat.ts",
-        "input.ts"
+        "input.ts",
+        "compass.ts"
     ],
     "public": true,
     "cppDependencies": {},
