@@ -24,7 +24,11 @@
         "pinscompat.cpp",
         "pinscompat.ts",
         "input.ts",
-        "compass.ts"
+        "input.cpp",
+        "sensor/on.ts",
+        "sensor/accel.ts",
+        "sim/accel.ts",
+        "compass.ts",
         "camera.ts",
         "input.cpp"
     ],
@@ -37,8 +41,7 @@
         "serial": "file:../serial",
         "buttons": "file:../buttons"
     },
-    "cppDependencies": {
-    },
+    "cppDependencies": {},
     "public": true,
     "dalDTS": {
         "corePackage": "../core---samd",
@@ -64,7 +67,7 @@
     "compileServiceVariant": "samd21",
     "yotta": {
         "config": {
-            "USB_DEFAULT_VID": "0x239B", 
+            "USB_DEFAULT_VID": "0x239B",
             "USB_DEFAULT_PID": "0x0002"
         }
     }
