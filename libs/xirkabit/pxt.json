@@ -27,7 +27,10 @@
         "input.cpp",
         "sensor/on.ts",
         "sensor/accel.ts",
-        "sim/accel.ts"
+        "sim/accel.ts",
+        "compass.ts",
+        "camera.ts",
+        "input.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
