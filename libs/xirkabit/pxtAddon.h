@@ -14,6 +14,8 @@ namespace pxt {
 // Serial comms to ATtiny on board
 namespace serialXirkabit {
   void sendCommand(const char *cmd, const char *value, bool addQuote = false);
+  int readResponse(int timeoutMs = 500);
+  extern volatile bool serialBusy;
 }
 
 // Image handling
@@ -54,4 +56,14 @@ namespace serial {
   SerialDevice internalCreateSerialDevice(DigitalInOutPin tx, DigitalInOutPin rx, int id);
 }
 
+namespace led {
+  void clearMatrix();
+  void tickMatrix();
+  void tickBrightness();
+  int mergePixel(int y, int x);
+  extern uint8_t globalBrightness;
+  extern bool matrixState[5][5]; 
+  extern bool matrixDirty;
+  extern bool brightnessDirty;
+}
 #endif

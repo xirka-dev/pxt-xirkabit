@@ -2,6 +2,7 @@
 #include "pxtAddon.h"
 
 namespace pxt::serialXirkabit {
+  volatile bool serialBusy = false;
   static SerialDevice serialXirkabit = nullptr;
 
   bool initSerial(void){
@@ -27,16 +28,16 @@ namespace pxt::serialXirkabit {
   void sendCommand(const char *cmd, const char *value, bool addQuote){
     if(!initSerial()) return;
 
-    char msg[128];
+    char msg[192];
 
     if(value == nullptr){
-      snprintf(msg, 127, "{\"CMD\":\"%s\"}", cmd);
+      snprintf(msg, 191, "{\"CMD\":\"%s\"}", cmd);
     }
     else if(addQuote){
-      snprintf(msg, 127, "{\"CMD\":\"%s\",\"DATA\":\"%s\"}", cmd, value);
+      snprintf(msg, 191, "{\"CMD\":\"%s\",\"DATA\":\"%s\"}", cmd, value);
     }
     else {
-      snprintf(msg, 127, "{\"CMD\":\"%s\",\"DATA\":%s}", cmd, value);
+      snprintf(msg, 191, "{\"CMD\":\"%s\",\"DATA\":%s}", cmd, value);
     }
 #if DEBUG_ATTINY
     sendSerial(msg, strlen(msg));
@@ -62,4 +63,53 @@ namespace pxt::serialXirkabit {
     Buffer dummy = mkBuffer("                  \r\n", 20);
     serialXirkabit->writeBuffer(dummy);
   }
+  // -----------------------------
+  // READ RAW RESPONSE
+  // -----------------------------
+  int readResponse(int timeoutMs) {
+    if (!initSerial()) return -1;
+
+    char raw[64] = {0};
+    int idx = 0;
+    bool started = false;
+    uint32_t start = current_time_ms();
+
+    while ((int)(current_time_ms() - start) < timeoutMs) {
+      int c = serialXirkabit->read();
+      if (c < 0) {
+          // tidak ada data, yield supaya scheduler jalan
+          fiber_sleep(1);
+          continue;
+      }
+
+      if ((char)c == '{') {
+          started = true;
+          idx = 0;  // reset buffer, buang apapun sebelum '{'
+      }
+      if (!started) continue;
+
+      if (idx < 63)
+          raw[idx++] = (char)c;
+
+      if ((char)c == '}') break;
+    }
+
+    if (idx == 0) return -1;  // timeout, tidak ada data
+
+    // parse RSP
+    char *p = strstr(raw, "\"RSP\":");
+    if (!p) return -1;
+    p += 6;
+
+    int value = 0;
+    bool found = false;
+    while (*p >= '0' && *p <= '9') {
+        value = value * 10 + (*p - '0');
+        p++;
+        found = true;
+    }
+
+    return found ? value : -1;
+  }
+
 }
