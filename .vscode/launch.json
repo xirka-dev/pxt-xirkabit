@@ -1,46 +1,67 @@
 {
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/../pxt/built/pxt.js",
+      "stopOnEntry": false,
+      "args": [
+        "serve"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false,
+      "outDir": null
+    },
+    {
+      "name": "Attach",
+      "type": "node",
+      "request": "attach",
+      "port": 5858,
+      "address": "localhost",
+      "restart": false,
+      "sourceMaps": false,
+      "outDir": null,
+      "localRoot": "${workspaceRoot}",
+      "remoteRoot": null
+    },
+    {
+      "name": "Attach to Process",
+      "type": "node",
+      "request": "attach",
+      "processId": "${command.PickProcess}",
+      "port": 5858,
+      "sourceMaps": false,
+      "outDir": null
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "d:/Bluetooth/pxt-xirkabit/node_modules/pxt-common-packages/libs/base",
+      "program": "d:/Bluetooth/pxt-xirkabit/node_modules/pxt-common-packages/libs/base/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
         {
-            "name": "Launch",
-            "type": "node",
-            "request": "launch",
-            "program": "${workspaceRoot}/../pxt/built/pxt.js",
-            "stopOnEntry": false,
-            "args": ["serve"],
-            "cwd": "${workspaceRoot}",
-            "preLaunchTask": null,
-            "runtimeExecutable": null,
-            "runtimeArgs": [
-                "--nolazy"
-            ],
-            "env": {
-                "NODE_ENV": "development"
-            },
-            "console": "internalConsole",
-            "sourceMaps": false,
-            "outDir": null
-        },
-        {
-            "name": "Attach",
-            "type": "node",
-            "request": "attach",
-            "port": 5858,
-            "address": "localhost",
-            "restart": false,
-            "sourceMaps": false,
-            "outDir": null,
-            "localRoot": "${workspaceRoot}",
-            "remoteRoot": null
-        },
-        {
-            "name": "Attach to Process",
-            "type": "node",
-            "request": "attach",
-            "processId": "${command.PickProcess}",
-            "port": 5858,
-            "sourceMaps": false,
-            "outDir": null
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ]
+    }
+  ]
 }
