@@ -38,8 +38,7 @@
         "sensor/accel.ts",
         "sim/accel.ts",
         "compass.ts",
-        "camera.ts",
-        "input.cpp"
+        "camera.ts"
     ],
     "public": true,
     "cppDependencies": {},

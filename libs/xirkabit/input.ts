@@ -31,7 +31,6 @@ namespace input {
         button.onEvent(ButtonEvent.Click, body);
     }
 
-namespace input {
   const DEVICE_ID_MICROPHONE = 3001;
   let soundInitialized = false;
 
@@ -86,7 +85,7 @@ namespace input {
   //% weight=10
   //% blockId=device_heading block="compass heading (°)"
   //% parts="magnetometer"initMicrophone
-  export function compassHeading(): number {
+  export function compassHeading2(): number {
     if (!isMagInitialized) {
       initMagnetometer();
       basic.pause(20);
@@ -127,18 +126,6 @@ namespace input {
     while (heading < 0) heading += 360;
 
     return Math.floor(heading);
-  }
-
-  /**
-   * Do something when a button (A, B or both A+B) is pushed down and released again.
-   * @param button the button that needs to be pressed
-   * @param body code to run when event is raised
-   */
-  //% help=input/on-button-pressed weight=85 blockGap=16
-  //% blockId=device_button_event block="on button|%NAME|pressed"
-  //% parts="buttonpair"
-  export function onButtonPressed(button: Button, body: () => void): void {
-    button.onEvent(ButtonEvent.Click, body);
   }
 
   /**

@@ -198,16 +198,5 @@ declare namespace input {
     //% parts="thermometer" shim=input::temperature
     function temperature(): int32;
 }
-declare namespace input {
-
-    /**
-     * Gets the temperature in Celsius degrees (°C).
-     */
-    //% weight=55
-    //% help=input/temperature
-    //% blockId=device_temperature block="temperature (°C)" blockGap=8
-    //% parts="thermometer" shim=input::temperature
-    function temperature(): int32;
-}
 
 // Auto-generated. Do not edit. Really.
