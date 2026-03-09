@@ -82,18 +82,4 @@ namespace input {
         pin.setPull(PinPullMode.PullUp);
         return pin.digitalRead() == false;
     }
-    /**
-     * Reads the light level applied to the LED screen in a range from ``0`` (dark) to ``255`` bright.
-     */
-    //% help=input/light-level weight=57
-    //% blockId=device_get_light_level block="light level" blockGap=8
-    //% parts="ledmatrix"
-    export function lightLevel(): number {
-        return lightLevelInternal();
-    }
-
-    //% shim=xirkabit::lightLevelInternal
-    declare function lightLevelInternal(): number;
-
-    
 }

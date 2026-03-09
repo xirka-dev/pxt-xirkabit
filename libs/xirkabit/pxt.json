@@ -25,11 +25,6 @@
         "pinscompat.ts",
         "input.ts",
         "input.cpp",
-        "lightlevel.cpp",
-        "plot.ts",
-        "plot.cpp",
-        "brightness.ts",
-        "brightness.cpp"
         "sensor/on.ts",
         "sensor/accel.ts",
         "sim/accel.ts",
