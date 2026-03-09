@@ -17,7 +17,8 @@
         "libs/buttons",
         "libs/xirkabit",
         "libs/color",
-        "libs/neopixel"
+        "libs/neopixel",
+        "libs/bluetoothjs"
     ],
     "cloud": {
         "workspace": false,

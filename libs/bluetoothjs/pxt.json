@@ -1,0 +1,12 @@
+{
+    "name": "bluetoothjs",
+    "version": "0.1.0",
+    "description": "JDY-23 Driver",
+    "dependencies": {
+        "xirkabit": "file:../xirkabit"
+    },
+    "files": [
+        "main.ts",
+        "serialXirkabitBt.cpp"
+    ]
+}

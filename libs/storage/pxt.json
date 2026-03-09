@@ -1,6 +1,23 @@
 {
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/storage",
+    "name": "storage",
+    "description": "USB Pen-drive support and flash storage",
     "dependencies": {
         "core---samd": "file:../core---samd"
+    },
+    "files": [
+        "SNORFS.cpp",
+        "SNORFS.h",
+        "GhostSNORFS.cpp",
+        "GhostSNORFS.h",
+        "storage.cpp",
+        "storage.ts",
+        "shims.d.ts"
+    ],
+    "public": true,
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/storage",
+    "yotta": {
+        "config": {
+            "DEVICE_USB": 1
+        }
     }
 }
