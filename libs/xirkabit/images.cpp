@@ -147,10 +147,6 @@ void plotImage(BlocklyImage sprite, int xOffset = 0) {
 #endif
     }
 
-    for(int i=0; i<5; i++)
-        for(int j=0; j<5; j++)
-            led::matrixState[i][j] = (image.data[i] & (1<<(4-j))) ? true : false; 
-
     char jsonData[128];
     snprintf(jsonData, 127, "[%u,%u,%u,%u,%u]",
         image.data[0],
@@ -179,9 +175,6 @@ void showImage(BlocklyImage sprite, int xOffset, int interval = 400) {
 #endif
     plotImage(sprite, xOffset);
     loops::pause(interval);
-
-    led::matrixDirty = true;
-    led::tickMatrix();
 }
 
 /**
