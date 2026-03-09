@@ -51,8 +51,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/lenovo/OneDrive/Dokumen/xirka/pxt-xirkabit/libs/xirkabit",
-      "program": "c:/Users/lenovo/OneDrive/Dokumen/xirka/pxt-xirkabit/libs/xirkabit/build/Debug/outDebug",
+      "cwd": "d:/Bluetooth/pxt-xirkabit/node_modules/pxt-common-packages/libs/base",
+      "program": "d:/Bluetooth/pxt-xirkabit/node_modules/pxt-common-packages/libs/base/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
