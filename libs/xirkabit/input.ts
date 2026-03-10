@@ -4,6 +4,17 @@ const enum TouchPin {
   P2 = DAL.CFG_PIN_P2,
 }
 
+enum TouchEvent {
+  //% block="pressed"
+  Pressed = 1,
+  //% block="released"
+  Released = 2,
+  //% block="touched"
+  Touched = 3,
+  //% block="long pressed"
+  LongPressed = 4,
+}
+
 // Enum untuk UI Dropdown
 const enum DetectedSound {
   //% block="quiet"
@@ -31,20 +42,107 @@ namespace input {
         button.onEvent(ButtonEvent.Click, body);
     }
 
-  const DEVICE_ID_MICROPHONE = 3001;
-  let soundInitialized = false;
+namespace input {
+  let adcBusy = false;
+  const DEVICE_ID_MICROPHONE = 3001; // ID unik untuk event suara
+  const DEVICE_ID_LOGO = 3002;
 
-  function initMicrophone(): void {
-    if (soundInitialized) return;
-    soundInitialized = true;
+  let sensorsInitialized = false;
+  let currentLogoValue = 0;
+  let isLogoPressed = false;
+  let logoStartTime = 0;
+  let longPressDone = false;
+
+  let logoBaseline = 933; // Default, akan diupdate otomatis
+
+  function initSensors(): void {
+    if (sensorsInitialized) return;
+    sensorsInitialized = true;
 
     control.inBackground(() => {
+      const logoPin = pins.pinByCfg(DAL.CFG_PIN_B2) as AnalogInPin;
+      if (!logoPin) return;
+
+      // --- TAHAP KALIBRASI OTOMATIS ---
+      // Ambil rata-rata 5 sampel saat startup sebagai baseline baru
+      let sum = 0;
+      for (let i = 0; i < 5; i++) {
+        sum += logoPin.analogRead();
+        basic.pause(50);
+      }
+      logoBaseline = sum / 5;
+      // -------------------------------
+
       while (true) {
-        soundLevel();
-        // Menggunakan pause(1) untuk kecepatan maksimal yang diizinkan scheduler
-        basic.pause(1);
+        if (!adcBusy) {
+          adcBusy = true;
+          let val = logoPin.analogRead();
+          adcBusy = false;
+
+          if (val > 0) {
+            currentLogoValue = val;
+            processLogoLogic(val);
+          }
+        }
+        basic.pause(20); // Dipercepat ke 20ms agar lebih responsif di EduBit
       }
     });
+  }
+  let releaseCounter = 0;
+  function processLogoLogic(currentVal: number) {
+    let now = control.millis();
+    let delta = Math.abs(currentVal - logoBaseline);
+
+    const TOUCH_THRESHOLD = 50;
+    const RELEASE_THRESHOLD = 30;
+    const LONG_PRESS_MS = 1000;
+
+    if (!isLogoPressed) {
+      // --- FASE 1: MENYENTUH (TOUCHED) ---
+      if (delta > TOUCH_THRESHOLD) {
+        isLogoPressed = true;
+        logoStartTime = now;
+        releaseCounter = 0;
+        // Kirim event Touched
+        control.raiseEvent(DEVICE_ID_LOGO, TouchEvent.Touched);
+      }
+    } else {
+      // --- FASE 2: SEDANG MENEMPEL ---
+      // Kita membiarkan loop berjalan tanpa mengirim event
+      // agar tidak menumpuk di antrian micro:bit.
+
+      // --- FASE 3: MELEPASKAN JARI ---
+      if (delta < RELEASE_THRESHOLD) {
+        releaseCounter++;
+
+        // Gunakan verifikasi yang lebih kuat (5x pembacaan = 100ms)
+        // agar layar LED punya waktu untuk bernapas
+        if (releaseCounter >= 5) {
+          let duration = now - logoStartTime;
+          isLogoPressed = false;
+          releaseCounter = 0;
+
+          // URUTAN EVENT YANG BENAR:
+          // 1. Kirim Released dulu
+          control.raiseEvent(DEVICE_ID_LOGO, TouchEvent.Released);
+
+          // 2. Beri jeda sangat singkat agar event Released sempat diproses
+          control.waitMicros(1000);
+
+          // 3. Kirim Pressed atau LongPressed
+          if (duration >= LONG_PRESS_MS) {
+            control.raiseEvent(DEVICE_ID_LOGO, TouchEvent.LongPressed);
+          } else {
+            // Pastikan bukan noise (min 100ms)
+            if (duration > 100) {
+              control.raiseEvent(DEVICE_ID_LOGO, TouchEvent.Pressed);
+            }
+          }
+        }
+      } else {
+        releaseCounter = 0;
+      }
+    }
   }
 
   /**
@@ -113,15 +211,29 @@ namespace input {
   }
 
   /**
+   * Panggil fungsi C++ melalui shim
+   */
+  //% shim=input::getRawSoundLevel
+  function getRawSoundLevel(): number {
+    // Baris ini akan diabaikan oleh compiler saat dijalankan di hardware,
+    // karena akan langsung memanggil fungsi di input.cpp
+    return 0;
+  }
+
+  /**
    * Membaca tingkat suara (0-255).
    */
   //% help=input/sound-level
   //% blockId=device_get_sound_level block="sound level"
   //% parts="microphone" weight=34 group="microphone"
-  //% shim=input::getRawSoundLevel
   export function soundLevel(): number {
-    // Simulator akan mengembalikan 0, hardware akan memanggil C++
-    return 0;
+    // Beri jeda kecil agar ADC tidak dikunci terus menerus oleh Logo
+    if (adcBusy) {
+      basic.pause(5);
+      if (adcBusy) return 0;
+    }
+    // Panggil shim C++ (getRawSoundLevel)
+    return getRawSoundLevel();
   }
 
   /**
@@ -130,7 +242,7 @@ namespace input {
   //% blockId=input_on_sound block="on %sound sound"
   //% group="microphone" weight=88
   export function onSound(sound: DetectedSound, handler: () => void): void {
-    initMicrophone();
+    initSensors(); // Pastikan loop berjalan
     control.onEvent(DEVICE_ID_MICROPHONE, <number>sound, handler);
   }
 
@@ -143,8 +255,29 @@ namespace input {
   //% shim=input::setSoundThresholdCpp
   export function setSoundThreshold(
     sound: SoundThreshold,
-    value: number
+    value: number,
   ): void {
     return;
+  }
+
+  /**
+   * Jalankan kode ketika logo disentuh.
+   */
+  //% blockId=device_on_logo_event block="on logo %event"
+  //% weight=95
+  export function onLogoEvent(event: TouchEvent, handler: () => void) {
+    initSensors();
+    // Menggunakan control.onEvent dengan ID unik dan nilai event
+    control.onEvent(DEVICE_ID_LOGO, event, handler);
+  }
+
+  /**
+   * Membaca nilai analog logo.
+   */
+  //% blockId=device_get_logo_level block="logo level"
+  //% weight=34 group="logo"
+  export function logoLevel(): number {
+    initSensors();
+    return currentLogoValue;
   }
 }
