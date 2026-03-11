@@ -42,7 +42,7 @@ namespace input {
         button.onEvent(ButtonEvent.Click, body);
     }
 
-namespace input {
+
   let adcBusy = false;
   const DEVICE_ID_MICROPHONE = 3001; // ID unik untuk event suara
   const DEVICE_ID_LOGO = 3002;
