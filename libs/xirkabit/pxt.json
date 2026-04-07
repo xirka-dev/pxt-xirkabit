@@ -1,6 +1,15 @@
 {
     "name": "xirkabit",
     "description": "Support for xirka:bit",
+    "dependencies": {
+        "core---samd": "file:../core---samd",
+        "storage": "file:../storage",
+        "music---pwm": "file:../music---pwm",
+        "microbit-soundexpression": "file:../microbit-soundexpression",
+        "radio-broadcast---samd": "file:../radio-broadcast---samd",
+        "serial": "file:../serial",
+        "buttons": "file:../buttons"
+    },
     "files": [
         "README.md",
         "config.ts",
@@ -28,25 +37,19 @@
         "input.cpp"
 =======
         "input.cpp",
+        "sensor/on.ts",
+        "sensor/accel.ts",
+        "sim/accel.ts",
+        "compass.ts",
+        "camera.ts",
         "lightlevel.cpp",
         "plot.ts",
         "plot.cpp",
         "brightness.ts",
         "brightness.cpp"
->>>>>>> 07906beb (plot, plotbrightness)
     ],
-    "dependencies": {
-        "core---samd": "file:../core---samd",
-        "storage": "file:../storage",
-        "music---pwm": "file:../music---pwm",
-        "microbit-soundexpression": "file:../microbit-soundexpression",
-        "radio-broadcast---samd": "file:../radio-broadcast---samd",
-        "serial": "file:../serial",
-        "buttons": "file:../buttons"
-    },
-    "cppDependencies": {
-    },
     "public": true,
+    "cppDependencies": {},
     "dalDTS": {
         "corePackage": "../core---samd",
         "compileServiceVariant": "samd21",
@@ -71,7 +74,7 @@
     "compileServiceVariant": "samd21",
     "yotta": {
         "config": {
-            "USB_DEFAULT_VID": "0x239B", 
+            "USB_DEFAULT_VID": "0x239B",
             "USB_DEFAULT_PID": "0x0002"
         }
     }

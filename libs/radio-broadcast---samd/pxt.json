@@ -1,7 +1,12 @@
 {
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/radio-broadcast",
+    "name": "radio-broadcast",
+    "description": "Adds new blocks for message communication in the radio category",
     "dependencies": {
         "core---samd": "file:../core---samd",
         "radio---samd": "file:../radio---samd"
-    }
+    },
+    "files": [
+        "radio-broadcast.ts"
+    ],
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/radio-broadcast"
 }
