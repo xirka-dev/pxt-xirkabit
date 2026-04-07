@@ -33,9 +33,6 @@
         "pinscompat.cpp",
         "pinscompat.ts",
         "input.ts",
-<<<<<<< HEAD
-        "input.cpp"
-=======
         "input.cpp",
         "sensor/on.ts",
         "sensor/accel.ts",
