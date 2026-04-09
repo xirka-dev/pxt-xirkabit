@@ -45,23 +45,25 @@ namespace pxt::serialXirkabit {
 #endif
 
     Buffer data = mkBuffer(msg, strlen(msg));
-    registerGCObj(data);
     if(data == nullptr){
-#if DEBUG_ATTINY
+      #if DEBUG_ATTINY
       static const char msg[] = "serialXirkabit::sendCommand: Failed to allocate buffer!\r\n";
       sendSerial(msg, sizeof(msg));
-#endif
+      #endif
       return;
     }
-#if DEBUG_ATTINY
+    #if DEBUG_ATTINY
     snprintf(msg, 127, "data ptr: %p\r\n", data);
     sendSerial(msg, strlen(msg));
-#endif
+    #endif
+    registerGCObj(data);
     serialXirkabit->writeBuffer(data);
     unregisterGCObj(data);
 
     Buffer dummy = mkBuffer("                  \r\n", 20);
+    registerGCObj(dummy);  
     serialXirkabit->writeBuffer(dummy);
+    unregisterGCObj(dummy);
   }
   // -----------------------------
   // READ RAW RESPONSE

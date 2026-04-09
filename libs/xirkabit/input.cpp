@@ -170,9 +170,16 @@ namespace pxt {
 
     //%
     int lightLevelInternal() {
-        pxt::serialXirkabit::sendCommand("ALED", nullptr, false);
-
-        int raw = pxt::serialXirkabit::readResponse();
+        while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
+        int raw = -1;
+        int retry = 3;
+        while (raw < 0 && retry-- > 0) {
+            pxt::serialXirkabit::serialBusy = true;
+            pxt::serialXirkabit::sendCommand("ALED", nullptr, false);
+            raw = pxt::serialXirkabit::readResponse(1500);
+            pxt::serialXirkabit::serialBusy = false;
+        }
+        
         if (raw < 0) raw = 0;
         if (raw > 255 ) raw = 255;
 

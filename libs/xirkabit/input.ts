@@ -219,6 +219,6 @@ namespace input {
         return lightLevelInternal();
     }
 
-    //% shim=xirkabit::lightLevelInternal
+    //% shim=pxt::lightLevelInternal
     declare function lightLevelInternal(): number;
 }
