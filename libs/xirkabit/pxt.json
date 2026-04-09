@@ -39,7 +39,6 @@
         "sim/accel.ts",
         "compass.ts",
         "camera.ts",
-        "lightlevel.cpp",
         "plot.ts",
         "plot.cpp",
         "brightness.ts",
