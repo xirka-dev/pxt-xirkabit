@@ -27,7 +27,7 @@ namespace xirkabt {
         // --- Hardware Init ---
         serial.writeString('{"CMD":"BTRST","DATA":"1"}');        
         serial.writeString('{"CMD":"BTPWRC","DATA":"0"}');
-        device().serialDevice.setBaudRate(BaudRate.BaudRate9600);
+        device().serialDevice.setBaudRate(BaudRate.BaudRate4800);
 
         // --- Background Listener ---
         control.runInParallel(function() {
