@@ -42,7 +42,6 @@ namespace input {
         button.onEvent(ButtonEvent.Click, body);
     }
 
-
   let adcBusy = false;
   const DEVICE_ID_MICROPHONE = 3001; // ID unik untuk event suara
   const DEVICE_ID_LOGO = 3002;
@@ -196,29 +195,88 @@ namespace input {
     }
   }
 
-    /**
-     * Get the pin state (pressed or not). Requires to hold the ground to close the circuit.
-     * @param name pin used to detect the touch, eg: TouchPin.P0
-     */
-    //% help=input/pin-is-pressed weight=58
-    //% blockId="device_pin_is_pressed" block="pin %NAME|is pressed"
-    //% blockGap=8
-    export function pinIsPressed(name: TouchPin): boolean {
-        const pin = pins.pinByCfg(name) as DigitalInOutPin;
-        if(!pin) return false;
-        pin.setPull(PinPullMode.PullUp);
-        return pin.digitalRead() == false;
-    }
-    /**
-     * Reads the light level applied to the LED screen in a range from ``0`` (dark) to ``255`` bright.
-     */
-    //% help=input/light-level weight=57
-    //% blockId=device_get_light_level block="light level" blockGap=8
-    //% parts="ledmatrix"
-    export function lightLevel(): number {
-        return lightLevelInternal();
-    }
+  /**
+   * Get the pin state (pressed or not). Requires to hold the ground to close the circuit.
+   * @param name pin used to detect the touch, eg: TouchPin.P0
+   */
+  //% help=input/pin-is-pressed weight=58
+  //% blockId="device_pin_is_pressed" block="pin %NAME|is pressed"
+  //% blockGap=8
+  export function pinIsPressed(name: TouchPin): boolean {
+    const pin = pins.pinByCfg(name) as DigitalInOutPin;
+    if (!pin) return false;
+    pin.setPull(PinPullMode.PullUp);
+    return pin.digitalRead() == false;
+  }
 
-    //% shim=pxt::lightLevelInternal
-    declare function lightLevelInternal(): number;
+  /**
+   * Panggil fungsi C++ melalui shim
+   */
+  //% shim=input::getRawSoundLevel
+  function getRawSoundLevel(): number {
+    // Baris ini akan diabaikan oleh compiler saat dijalankan di hardware,
+    // karena akan langsung memanggil fungsi di input.cpp
+    return 0;
+  }
+
+  /**
+   * Membaca tingkat suara (0-255).
+   */
+  //% help=input/sound-level
+  //% blockId=device_get_sound_level block="sound level"
+  //% parts="microphone" weight=34 group="microphone"
+  export function soundLevel(): number {
+    // Beri jeda kecil agar ADC tidak dikunci terus menerus oleh Logo
+    if (adcBusy) {
+      basic.pause(5);
+      if (adcBusy) return 0;
+    }
+    // Panggil shim C++ (getRawSoundLevel)
+    return getRawSoundLevel();
+  }
+
+  /**
+   * Beraksi ketika suara keras atau pelan terdengar.
+   */
+  //% blockId=input_on_sound block="on %sound sound"
+  //% group="microphone" weight=88
+  export function onSound(sound: DetectedSound, handler: () => void): void {
+    initSensors(); // Pastikan loop berjalan
+    control.onEvent(DEVICE_ID_MICROPHONE, <number>sound, handler);
+  }
+
+  /**
+   * Mengatur ambang batas suara di sisi C++.
+   */
+  //% blockId=input_set_sound_threshold block="set %sound sound threshold to %value"
+  //% value.min=0 value.max=255 value.defl=128
+  //% group="microphone" weight=10
+  //% shim=input::setSoundThresholdCpp
+  export function setSoundThreshold(
+    sound: SoundThreshold,
+    value: number,
+  ): void {
+    return;
+  }
+
+  /**
+   * Jalankan kode ketika logo disentuh.
+   */
+  //% blockId=device_on_logo_event block="on logo %event"
+  //% weight=95
+  export function onLogoEvent(event: TouchEvent, handler: () => void) {
+    initSensors();
+    // Menggunakan control.onEvent dengan ID unik dan nilai event
+    control.onEvent(DEVICE_ID_LOGO, event, handler);
+  }
+
+  /**
+   * Membaca nilai analog logo.
+   */
+  //% blockId=device_get_logo_level block="logo level"
+  //% weight=34 group="logo"
+  export function logoLevel(): number {
+    initSensors();
+    return currentLogoValue;
+  }
 }
