@@ -45,7 +45,9 @@
         "brightness.cpp"
     ],
     "public": true,
-    "cppDependencies": {},
+    "cppDependencies": {
+        "bluetoothjs": "file:../bluetoothjs"
+    },
     "dalDTS": {
         "corePackage": "../core---samd",
         "compileServiceVariant": "samd21",
