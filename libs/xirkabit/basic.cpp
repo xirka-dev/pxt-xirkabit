@@ -42,7 +42,11 @@ namespace basic {
   //% parts="ledmatrix"
   void clearScreen() {
     led::clearMatrix();
+<<<<<<< HEAD
     //led::tickMatrix();
+=======
+    // led::tickMatrix();
+>>>>>>> 06e27dba (bugfix)
 }
 
   /**
