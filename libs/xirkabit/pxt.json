@@ -31,7 +31,6 @@
         "storage": "file:../storage",
         "music---pwm": "file:../music---pwm",
         "microbit-soundexpression": "file:../microbit-soundexpression",
-        "radio-broadcast---samd": "file:../radio-broadcast---samd",
         "serial": "file:../serial",
         "buttons": "file:../buttons"
     },

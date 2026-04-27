@@ -11,8 +11,6 @@
         "libs/storage",
         "libs/music---pwm",
         "libs/microbit-soundexpression",
-        "libs/radio---samd",
-        "libs/radio-broadcast---samd",
         "libs/serial",
         "libs/buttons",
         "libs/xirkabit",
