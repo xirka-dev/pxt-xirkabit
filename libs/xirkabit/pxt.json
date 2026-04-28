@@ -24,7 +24,16 @@
         "pinscompat.cpp",
         "pinscompat.ts",
         "input.ts",
-        "input.cpp"
+        "input.cpp",
+        "sensor/on.ts",
+        "sensor/accel.ts",
+        "sim/accel.ts",
+        "compass.ts",
+        "camera.ts",
+        "plot.ts",
+        "plot.cpp",
+        "brightness.ts",
+        "brightness.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
@@ -35,6 +44,7 @@
         "buttons": "file:../buttons"
     },
     "cppDependencies": {
+        "bluetoothjs": "file:../bluetoothjs"
     },
     "public": true,
     "dalDTS": {
@@ -61,7 +71,7 @@
     "compileServiceVariant": "samd21",
     "yotta": {
         "config": {
-            "USB_DEFAULT_VID": "0x239B", 
+            "USB_DEFAULT_VID": "0x239B",
             "USB_DEFAULT_PID": "0x0002"
         }
     }

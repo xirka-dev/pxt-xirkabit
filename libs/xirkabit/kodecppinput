@@ -34,113 +34,122 @@ namespace pxt {
   };
 }
 
+
+
+
 namespace input {
+
+  
 using namespace pxt;
+
     static int loudThreshold = 150;
     static int quietThreshold = 50;
-    static int lastEvent = 0;
-    static float smoothedLevel = 0;
+    static int lastEvent = 0; 
+    static float smoothedLevel = 0; 
 
+    //% shim=input::getRawSoundLevel
 //% shim=input::getRawSoundLevel
 int getRawSoundLevel() {
-    // Mengambil konfigurasi pin analog A2 dari sistem MakeCode
+    // 1. Mencari tahu pin mana yang terhubung ke mikrofon (A2 pada XirkaBit)
     int pinName = pxt::getConfig(CFG_PIN_A2, -1);
-    if (pinName == -1) return 0; // Jika pin tidak terdefinisi, kembalikan 0
-    // Inisialisasi deskriptor ADC (Analog to Digital Converter) secara statis
-    static adc_sync_descriptor adc_descriptor;
-    _pm_enable_bus_clock(PM_BUS_APBC, ADC);      // Mengaktifkan jalur data bus ke ADC
-    _gclk_enable_channel(ADC_GCLK_ID, CLK_GEN_8MHZ); // Memberikan clock 8MHz agar ADC bisa bekerja
-    adc_sync_init(&adc_descriptor, ADC, (void *)NULL); // Inisialisasi hardware ADC
+    if (pinName == -1) return 0;
 
-    // Mencari objek pin dan channel ADC yang sesuai dengan pin A2
+    static adc_sync_descriptor adc_descriptor;
+    Adc *adc = ADC;
+
+    // 2. Mengaktifkan jam (clock) dan bus listrik untuk komponen ADC
+    _pm_enable_bus_clock(PM_BUS_APBC, ADC);
+    _gclk_enable_channel(ADC_GCLK_ID, CLK_GEN_8MHZ);
+    adc_sync_init(&adc_descriptor, adc, (void *)NULL);
+
+    // 3. Menghubungkan pin fisik ke saluran ADC mikrokontroler
     auto pin_obj = samd_peripherals_get_pin(pinName);
     uint8_t channel = pin_obj->adc_input[0];
 
-    // Konfigurasi parameter ADC
-    adc_sync_set_reference(&adc_descriptor, ADC_REFCTRL_REFSEL_INTVCC1_Val); // Referensi tegangan VCC
-    adc_sync_set_channel_gain(&adc_descriptor, channel, ADC_INPUTCTRL_GAIN_2X_Val); // Perkuat sinyal mikrofon 2x
-    adc_sync_set_resolution(&adc_descriptor, ADC_CTRLB_RESSEL_10BIT_Val); // Resolusi 10-bit (0-1023)
-    adc_sync_enable_channel(&adc_descriptor, channel); // Aktifkan channel pembacaan
-    adc_sync_set_inputs(&adc_descriptor, channel, ADC_INPUTCTRL_MUXNEG_GND_Val, channel); // Input negatif ke Ground
+    // 4. Konfigurasi ADC: Mengatur Gain 2X agar lebih sensitif dan resolusi 10-bit (0-1023)
+    adc_sync_set_reference(&adc_descriptor, ADC_REFCTRL_REFSEL_INTVCC1_Val);
+    adc_sync_set_channel_gain(&adc_descriptor, channel, ADC_INPUTCTRL_GAIN_2X_Val);
+    adc_sync_set_resolution(&adc_descriptor, ADC_CTRLB_RESSEL_10BIT_Val);
+    adc_sync_enable_channel(&adc_descriptor, channel);
+    adc_sync_set_inputs(&adc_descriptor, channel, ADC_INPUTCTRL_MUXNEG_GND_Val, channel);
 
-    const int numSamples = 64; // Jumlah sampel yang diambil dalam satu siklus pembacaan
+    // 5. Sampling: Mengambil 64 sampel suara dalam waktu sangat cepat
+    const int numSamples = 64;
     uint16_t samples[numSamples];
     long sum = 0;
     uint16_t maxV = 0; uint16_t minV = 1023;
 
-    // Proses Sampling: Mengumpulkan data mentah dari mikrofon
     for (int i = 0; i < numSamples; i++) {
         adc_sync_read_channel(&adc_descriptor, channel, (uint8_t*)&samples[i], sizeof(uint16_t));
-        sum += samples[i]; // Total nilai untuk mencari rata-rata (offset DC)
-        if (samples[i] > maxV) maxV = samples[i]; // Mencari titik tertinggi gelombang
-        if (samples[i] < minV) minV = samples[i]; // Mencari titik terendah gelombang
+        sum += samples[i];
+        // Mencari titik tertinggi (max) dan terendah (min) untuk menghitung Peak-to-Peak
+        if (samples[i] > maxV) maxV = samples[i];
+        if (samples[i] < minV) minV = samples[i];
     }
-    adc_sync_deinit(&adc_descriptor); // Matikan ADC untuk menghemat daya setelah selesai sampling
+    adc_sync_deinit(&adc_descriptor); // Mematikan ADC untuk hemat daya
 
-    // Menghitung RMS (Root Mean Square) untuk mendapatkan kekuatan energi suara sesungguhnya
-    int average = sum / numSamples; // Nilai tengah sinyal (Bias DC)
+    // 6. Menghitung rata-rata (baseline) suara
+    int average = sum / numSamples;
     long long sumSquares = 0;
+
+    // 7. Menghitung variansi sinyal (selisih setiap sampel terhadap rata-rata)
     for (int i = 0; i < numSamples; i++) {
-        long diff = (long)samples[i] - average; // Mencari simpangan tiap sampel dari titik tengah
-        sumSquares += (long long)diff * diff;  // Menguadratkan simpangan (menghilangkan nilai negatif)
+        long diff = (long)samples[i] - average;
+        sumSquares += (long long)diff * diff;
     }
-    float rmsBase = sqrt(sumSquares / numSamples); // Akar rata-rata kuadrat (Energi murni suara)
-    float peakToPeakBase = (float)(maxV - minV);   // Jarak puncak ke puncak
 
-    if (rmsBase < 1.0f) rmsBase = 0; // Pembersihan noise dasar yang sangat kecil
+    // 8. RMS (Energi Suara) dan Peak-to-Peak (Amplitudo Kejutan)
+    float rms = sqrt(sumSquares / numSamples);
+    int peakToPeak = maxV - minV;
 
-    // TAHAP GAIN: Menggabungkan energi RMS dan Peak-to-Peak menjadi level mentah
-    float rawLevel = (rmsBase * 100.0f) + (peakToPeakBase * 2.0f);
-    
-    // TAHAP NOISE GATE: Memotong desis statis (seperti suara AC/kipas)
-    rawLevel -= 85.0f; // Kurangi nilai dasar 85 (Threshold noise statis)
-    if (rawLevel < 0) rawLevel = 0; 
+    // 9. Kalkulasi Level Mentah: Menggabungkan RMS (untuk vokal) dan Peak (untuk tepukan)
+    float rawLevel = (rms * 135.0f) + (peakToPeak * 1.2f);
 
-    // TAHAP SMOOTHING: Agar angka tidak berkedip liar (Exponential Moving Average)
+    // 10. Vocal Enhancer: Memberikan penguatan ekstra 25% khusus untuk rentang suara manusia
+    if (rawLevel > 30.0f && rawLevel < 150.0f) {
+        rawLevel *= 1.4f; 
+    }
+
+    // 11. Noise Suppression: Menggunakan kurva kuadrat untuk menekan noise di bawah agar stabil
+    if (rawLevel < 70.0f) { 
+        rawLevel = (rawLevel * rawLevel) / 70.0f; 
+    }
+
+    // 12. Offset Subtraction: Memotong sisa noise dasar agar angka diam bisa menyentuh 0
+    rawLevel -= 25.0f; 
+    if (rawLevel < 0) rawLevel = 0;
+
+    // 13. Smoothing Filter: Mengatur seberapa cepat grafik naik (Attack) dan turun (Release)
     if (rawLevel > smoothedLevel) {
-        // Attack: Respon saat suara muncul (Naik 20% dari nilai baru)
-        smoothedLevel = (rawLevel * 0.2f) + (smoothedLevel * 0.8f);
+        // Attack 0.5: Grafik naik cukup cepat saat ada suara mendadak
+        smoothedLevel = (rawLevel * 0.5f) + (smoothedLevel * 0.5f);
     } else {
-        // Release: Respon saat suara hilang (Turun 10% agar halus/efek fade)
-        smoothedLevel = (rawLevel * 0.1f) + (smoothedLevel * 0.9f);
-    }
+        // Release Dinamis: Jika suara hilang, grafik turun perlahan (melandai)
+  smoothedLevel = (rawLevel * 0.08f) + (smoothedLevel * 0.92f);
+  }
 
-    // Pembersihan akhir agar benar-benar menyentuh angka 0 saat sunyi
-    if (smoothedLevel < 1.5f) smoothedLevel = 0;
-    if (smoothedLevel > 255.0f) smoothedLevel = 255.0f; // Batas maksimal standar micro:bit
-
-    int finalLevel = (int)smoothedLevel;
-
-    // TAHAP WARM-UP: Mencegah trigger palsu saat alat baru dinyalakan
-    static int warmUp = 0;
-    if (warmUp < 200) {
-        warmUp++;
-        lastEvent = 99; // Mengunci status event selama masa pemanasan
-        return 0;
-    }
+    // 14. Final Snapping: Memastikan angka di bawah 1 langsung menjadi 0 agar tidak mengambang
+    if (smoothedLevel < 1.0f) smoothedLevel = 0;
     
-    if (warmUp == 200) {
-        warmUp = 201; // Selesai warm-up
-        lastEvent = 0; // Kembalikan ke status netral
-    }
+    // 15. Output Akhir: Mengonversi ke angka 0-255 untuk digunakan di MakeCode
+    int finalLevel = (int)smoothedLevel;
+    if (finalLevel > 255) finalLevel = 255;
 
-    // LOGIKA EVENT HYSTERESIS: Mencegah pengiriman event berulang-ulang pada titik ambang
+    // 16. Event Logic: Mengecek apakah level suara melewati batas Loud atau Quiet
+    static int warmUpCounter = 0;
+    if (warmUpCounter < 50) { warmUpCounter++; return finalLevel; } // Menunggu sensor stabil
+
     if (finalLevel > loudThreshold) {
-        if (lastEvent != 2) {
-            lastEvent = 2; // Set status ke "Suara Keras"
-            pxt::raiseEvent(3001, 2); // Kirim event ke MakeCode (ID 3001, VAL 2)
-        }
-    } else if (finalLevel < quietThreshold) {
-        if (lastEvent != 1) {
-            lastEvent = 1; // Set status ke "Suara Tenang"
-            pxt::raiseEvent(3001, 1); // Kirim event ke MakeCode (ID 3001, VAL 1)
-        }
-    } else if (finalLevel < (loudThreshold - 30)) {
-        // Jarak 30 poin adalah "Hysteresis" agar status tidak flip-flop (berubah-ubah cepat)
-        lastEvent = 0; 
+        if (lastEvent != 2) { lastEvent = 2; pxt::raiseEvent(3001, 2); } // Memicu blok "on loud sound"
+    } 
+    else if (finalLevel < (quietThreshold)) {
+        if (lastEvent != 1) { lastEvent = 1; pxt::raiseEvent(3001, 1); } // Memicu blok "on quiet sound"
+    }
+    else if (finalLevel < (loudThreshold - 15)) {
+        lastEvent = 0; // Reset status jika suara sudah turun
     }
 
-    return finalLevel; // Kembalikan angka 0-255 untuk blok MakeCode
+    return finalLevel;
 }
 
     //% shim=input::setSoundThresholdCpp
@@ -151,7 +160,7 @@ int getRawSoundLevel() {
             quietThreshold = value;
         }
     }
-
+    
   SamdInternalTemperatureSensor *samdTemperature = nullptr;
 
   /**
@@ -169,38 +178,6 @@ int getRawSoundLevel() {
   }
 }
 
-namespace pxt {
-
-    //%
-    int lightLevelInternal() {
-        while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
-        int raw = -1;
-        int retry = 3;
-        while (raw < 0 && retry-- > 0) {
-            pxt::serialXirkabit::serialBusy = true;
-            pxt::serialXirkabit::sendCommand("ALED", nullptr, false);
-            raw = pxt::serialXirkabit::readResponse(1500);
-            pxt::serialXirkabit::serialBusy = false;
-        }
-        
-        if (raw < 0) raw = 0;
-        if (raw > 255 ) raw = 255;
-
-        float norm = raw / 255.0f;
-        float gamma = sqrt(norm);
-
-        int lv = (int)(gamma * 255.0f);
-
-        if (lv > 255) lv = 255;
-        if (lv < 0) lv = 0;
-        /*
-        if (lv < 0) lv = 0;
-        if (lv > 255) lv = 255;
-        */
-        return lv;
-    }
-
-}
 
 int pxt::SamdInternalTemperatureSensor::getTemperature(void){
   if(!_initialized){
