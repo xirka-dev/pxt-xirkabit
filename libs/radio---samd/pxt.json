@@ -1,17 +1,6 @@
 {
-    "name": "radio",
-    "description": "The radio services",
+    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/radio",
     "dependencies": {
         "core---samd": "file:../core---samd"
-    },
-    "files": [
-        "README.md",
-        "shims.d.ts",
-        "enums.d.ts",
-        "radio.cpp",
-        "radio.ts",
-        "targetoverrides.ts"
-    ],
-    "public": true,
-    "additionalFilePath": "../../node_modules/pxt-common-packages/libs/radio"
+    }
 }

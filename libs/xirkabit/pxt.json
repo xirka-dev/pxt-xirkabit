@@ -1,15 +1,6 @@
 {
     "name": "xirkabit",
     "description": "Support for xirka:bit",
-    "dependencies": {
-        "core---samd": "file:../core---samd",
-        "storage": "file:../storage",
-        "music---pwm": "file:../music---pwm",
-        "microbit-soundexpression": "file:../microbit-soundexpression",
-        "radio-broadcast---samd": "file:../radio-broadcast---samd",
-        "serial": "file:../serial",
-        "buttons": "file:../buttons"
-    },
     "files": [
         "README.md",
         "config.ts",
@@ -44,10 +35,19 @@
         "brightness.ts",
         "brightness.cpp"
     ],
-    "public": true,
+    "dependencies": {
+        "core---samd": "file:../core---samd",
+        "storage": "file:../storage",
+        "music---pwm": "file:../music---pwm",
+        "microbit-soundexpression": "file:../microbit-soundexpression",
+        "serial": "file:../serial",
+        "buttons": "file:../buttons"
+    },
     "cppDependencies": {
+        "radio---samd": "file:../radio---samd",
         "bluetoothjs": "file:../bluetoothjs"
     },
+    "public": true,
     "dalDTS": {
         "corePackage": "../core---samd",
         "compileServiceVariant": "samd21",
