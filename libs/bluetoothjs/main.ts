@@ -25,11 +25,15 @@ namespace xirkabt {
     //% block="Bluetooth UART Service"
     export function startXirkaBluetooth(): void {
         // --- Hardware Init ---
-        serial.writeString('{"CMD":"BTRST","DATA":"1"}');        
-        serial.writeString('{"CMD":"BTPWRC","DATA":"0"}');
+        serial.writeString('{"CMD":"BTRST","DATA":"1"}');
+        serial.writeString("\r\n");
+        serial.writeString("                  \r\n");
+        serial.writeString('{"CMD":"BTPWRC","DATA":"1"}');
+        serial.writeString("\r\n");
+        serial.writeString("                   \r\n");  
         device().serialDevice.setBaudRate(BaudRate.BaudRate4800);
 
-        // --- Background Listener ---
+          // --- Background Listener ---
         control.runInParallel(function() {
             let lastChar = "";
             let lastTime = 0;
@@ -44,7 +48,6 @@ namespace xirkabt {
                     
                     if (rawChunk.includes("+CONNECTED")) {
                         basic.showIcon(IconNames.Happy);
-                        // Stop here. Do not save to buffer.
                         rawChunk = ""; 
                     }
                     else if (rawChunk.includes("+DISCONNECTED")) {
@@ -130,8 +133,6 @@ namespace xirkabt {
         return "";
     }
 
-    // --- Write Functions ---
-
     /**
      * Send text to the connected phone app.
      */
@@ -147,9 +148,7 @@ namespace xirkabt {
      */
     //% block="bluetooth uart write line %msg"
     export function xirkaSendLine(msg: string): void {
-        control.runInParallel(function() {
             device().writeString(msg + "\r\n");
-        })
     } 
 
     /**

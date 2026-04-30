@@ -58,8 +58,10 @@ namespace pxt::serialXirkabitBt {
 #endif
     serialXirkabitBt->writeBuffer(data);
     unregisterGCObj(data);
-
+   
     Buffer dummy = mkBuffer("                  \r\n", 20);
+    registerGCObj(dummy);
     serialXirkabitBt->writeBuffer(dummy);
+    unregisterGCObj(dummy);
   }
 }
