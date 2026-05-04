@@ -33,12 +33,11 @@ control.inBackground(() => {
 ## Bluetooth
 
 ```namespaces
-bluetooth.onBluetoothConnected(() => {});
+xirkabt.startXirkaBluetooth();
 ```
   
 ```package
-radio
-bluetooth
+bluetoothjs
 ```
 
 ## See Also

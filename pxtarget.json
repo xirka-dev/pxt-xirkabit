@@ -8,7 +8,6 @@
     "bundleddirs": [
         "libs/base",
         "libs/core---samd",
-        "libs/storage",
         "libs/music---pwm",
         "libs/microbit-soundexpression",
         "libs/serial",

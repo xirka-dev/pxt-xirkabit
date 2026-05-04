@@ -1289,8 +1289,6 @@ declare const enum DAL {
     Tab = 9,
     Pipe = 124,
     SemiColon = 59,
-    // /pxtapp/storage/SNORFS.h
-    DEVICE_FLASH_ERROR = 950,
     // /pxtapp/uf2hid.h
     UF2_HID_H = 1,
     // /pxtapp/xirkabit/XirkaBitCompat.h
