@@ -283,6 +283,17 @@ namespace input {
   }
   
   /**
+   * Check if the micro:bit logo is currently being pressed.
+   * Returns true if the logo is pressed, false if not.
+   */
+  //% help=input/logo-is-pressed weight=58
+  //% blockId="device_logo_is_pressed" block="logo is pressed"
+  export function logoIsPressed(): boolean {
+    initSensors(); // Pastikan loop sensor sudah berjalan
+    return isLogoPressed;
+  }
+
+  /**
      * Reads the light level applied to the LED screen in a range from ``0`` (dark) to ``255`` bright.
      */
     //% help=input/light-level weight=57

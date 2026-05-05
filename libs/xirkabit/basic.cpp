@@ -42,7 +42,7 @@ namespace basic {
   //% parts="ledmatrix"
   void clearScreen() {
     led::clearMatrix();
-    led::tickMatrix();
+    //led::tickMatrix();
 }
 
   /**
@@ -67,6 +67,7 @@ namespace basic {
     // } else if (l > 1) {
       // uBit.display.scroll(MSTR(text), interval);
     } else {
+      led::tickMatrix();
       // uBit.display.printChar(text->getUTF8Data()[0], interval * 5);
       while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
       pxt::serialXirkabit::serialBusy = true;
