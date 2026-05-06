@@ -39,4 +39,14 @@ namespace led {
     export function setBrightness(b: number): void {
         return
     }
+
+   //% blockId=device_led_enable
+   //% block="led enable %on"
+   //% shim=led::ledEnable
+   //% advanced=true
+   //% parts="ledmatrix"
+   //% weight=75
+    export function ledEnable(e: boolean): void {
+        return
+    }
 }

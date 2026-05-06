@@ -6,8 +6,10 @@ namespace led
 {
     static uint8_t fb_brightness[5][5];
     static bool dirty[5][5];
+    static bool ledEnabled = true;
     bool brightnessDirty = false;
     uint8_t globalBrightness = 255;  // default full brightness
+    uint8_t lastBrightness = globalBrightness;
 
     //% blockHidden=true
     void plotBrightness(int x, int y, int b)
@@ -77,5 +79,20 @@ namespace led
     //% block="brightness"
     int getBrightness() {
         return (int)globalBrightness;
+    }
+
+    //% blockId=device_led_enable
+    //% block="led enable %on"
+    void ledEnable(bool e) {
+        if(e == ledEnabled) return;
+
+        if (e)
+            setBrightness(lastBrightness);
+        else
+        {
+            lastBrightness = globalBrightness;
+            setBrightness(0);
+        }
+        ledEnabled = e;
     }
 }
