@@ -10,6 +10,7 @@ namespace led
     bool brightnessDirty = false;
     uint8_t globalBrightness = 255;  // default full brightness
     uint8_t lastBrightness = globalBrightness;
+    bool isShowingString = false;
 
     //% blockHidden=true
     void plotBrightness(int x, int y, int b)
@@ -72,7 +73,7 @@ namespace led
         if (b < 0) b = 0;
         if (b > 255) b = 255;
         globalBrightness = (uint8_t)b;
-        matrixDirty = true;   // trigger flush
+        if (!isShowingString) matrixDirty = true;   // trigger flush
     }
 
     //% blockId=led_brightness_value

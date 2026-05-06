@@ -77,6 +77,8 @@ namespace basic {
       pxt::serialXirkabit::serialBusy = true;
       char strCmd[128];
       snprintf(strCmd,sizeof(strCmd),"%s|%d",PXT_STRING_DATA(text),led::globalBrightness);
+
+      led::isShowingString = true;
       serialXirkabit::sendCommand("STR",strCmd,true);
       // serialXirkabit::sendCommand("STR", PXT_STRING_DATA(text), true);
       pxt::serialXirkabit::serialBusy = false;
@@ -84,6 +86,8 @@ namespace basic {
       int length = PXT_STRING_DATA_LENGTH(text);
       loops::pause(interval * length * 5);
       fiber_sleep(200);
+
+      led::isShowingString = false;
     }
   }
 
