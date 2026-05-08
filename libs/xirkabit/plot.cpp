@@ -98,4 +98,18 @@ namespace led
         matrixDirty = true;
         tickMatrix(); 
     }
+
+    //%
+    void stopAnimationInternal()
+    {
+        led::isShowingString = false;  // clear flag
+    
+        while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
+        pxt::serialXirkabit::serialBusy = true;
+        pxt::serialXirkabit::sendCommand("STOP", nullptr, false);
+        pxt::serialXirkabit::serialBusy = false;
+        
+        led::matrixDirty = true;
+        led::tickMatrix();
+    }
 }

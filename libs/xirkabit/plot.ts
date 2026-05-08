@@ -51,6 +51,18 @@ namespace led {
         return
     }
 
+    /**
+     * Cancels the current animation and clears other pending animations.
+     */
+    //% weight=70 help=led/stop-animation
+    //% blockId=device_stop_animation block="stop animation"
+    //% parts="ledmatrix"
+    //% advanced=true
+    export function stopAnimation(): void 
+    {
+        return stopAnimationInternal();
+    }
+
     //% shim=led::plot
     declare function plotNative(x: number, y: number): void
 
@@ -62,4 +74,7 @@ namespace led {
 
     //% shim=led::point
     declare function pointNative(x: number, y: number): boolean
+
+    //% shim=led::stopAnimationInternal
+    declare function stopAnimationInternal(): void
 }
