@@ -7,9 +7,5 @@
     "files": [
         "main.ts",
         "README.md"
-    ],
-    "disablesVariants": [
-        "mbdal",
-        "mbcodal"
     ]
 }

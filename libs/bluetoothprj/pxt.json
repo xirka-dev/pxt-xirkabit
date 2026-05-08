@@ -8,9 +8,5 @@
         "main.blocks",
         "main.ts",
         "README.md"
-    ],
-    "disablesVariants": [
-        "mbdal",
-        "mbcodal"
     ]
 }
