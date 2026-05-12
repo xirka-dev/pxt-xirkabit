@@ -15,7 +15,6 @@ namespace pxt {
 namespace serialXirkabit {
   void sendCommand(const char *cmd, const char *value, bool addQuote = false);
   int readResponse(int timeoutMs = 500);
-  extern volatile bool serialBusy;
 }
 
 // Image handling

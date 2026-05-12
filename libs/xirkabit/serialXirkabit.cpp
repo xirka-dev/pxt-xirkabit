@@ -2,7 +2,7 @@
 #include "pxtAddon.h"
 
 namespace pxt::serialXirkabit {
-  volatile bool serialBusy = false;
+  static volatile bool serialBusy = false;
   static SerialDevice serialXirkabit = nullptr;
 
   bool initSerial(void){
@@ -28,7 +28,10 @@ namespace pxt::serialXirkabit {
   void sendCommand(const char *cmd, const char *value, bool addQuote){
     if(!initSerial()) return;
 
-    char msg[192];
+    while(serialBusy) fiber_sleep(1);
+    serialBusy = true;
+
+    static char msg[192];
 
     if(value == nullptr){
       snprintf(msg, 191, "{\"CMD\":\"%s\"}", cmd);
@@ -64,6 +67,8 @@ namespace pxt::serialXirkabit {
     registerGCObj(dummy);  
     serialXirkabit->writeBuffer(dummy);
     unregisterGCObj(dummy);
+
+    serialBusy = false;
   }
   // -----------------------------
   // READ RAW RESPONSE

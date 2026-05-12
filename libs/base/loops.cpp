@@ -20,7 +20,6 @@ namespace loops {
     void forever(Action a) {
         // runForever(a);
         if (a != 0) {
-            incr(a);
             registerGCPtr(a);
             create_fiber(foreverWithTick, (void *)a);
         }

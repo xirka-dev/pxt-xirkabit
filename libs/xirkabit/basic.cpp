@@ -41,9 +41,25 @@ namespace basic {
   //% blockId=device_clear_display block="clear screen"
   //% parts="ledmatrix"
   void clearScreen() {
-    led::clearMatrix();
+    // led::clearMatrix();
     //led::tickMatrix();
-}
+
+    struct MyImageData {
+      uint16_t refCount;
+      uint16_t width;
+      uint16_t height;
+      uint8_t  data[5][5];
+    };
+    static const MyImageData blank {
+      .refCount = 0xFFFF,
+      .width = 5,
+      .height = 5,
+      .data = {}
+    };
+    static RefMImage blankImage((ImageData*)&blank);
+
+    BlocklyImageMethods::showImage(&blankImage, 0, 0);
+  }
 
   /**
    * Display text on the display, one character at a time. If the string fits on the screen (i.e. is one letter), does not scroll.
@@ -69,10 +85,10 @@ namespace basic {
     } else {
       led::tickMatrix();
       // uBit.display.printChar(text->getUTF8Data()[0], interval * 5);
-      while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
-      pxt::serialXirkabit::serialBusy = true;
+      // while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
+      // pxt::serialXirkabit::serialBusy = true;
       serialXirkabit::sendCommand("STR", PXT_STRING_DATA(text), true);
-      pxt::serialXirkabit::serialBusy = false;
+      // pxt::serialXirkabit::serialBusy = false;
 
       int length = PXT_STRING_DATA_LENGTH(text);
       loops::pause(interval * length * 5);
