@@ -32,7 +32,8 @@
         "plot.ts",
         "plot.cpp",
         "brightness.ts",
-        "brightness.cpp"
+        "brightness.cpp",
+        "onStart.ts"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",

@@ -1,9 +1,7 @@
 #include "pxt.h"
 #include "pxtAddon.h"
 
-#if DEBUG_IMAGES
 #include <cstdio>
-#endif
 
 PXT_VTABLE(RefMImage, ValType::Object)
 

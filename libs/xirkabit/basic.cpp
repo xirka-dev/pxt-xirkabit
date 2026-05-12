@@ -44,21 +44,27 @@ namespace basic {
     // led::clearMatrix();
     //led::tickMatrix();
 
-    struct MyImageData {
-      uint16_t refCount;
-      uint16_t width;
-      uint16_t height;
-      uint8_t  data[5][5];
-    };
-    static const MyImageData blank {
-      .refCount = 0xFFFF,
-      .width = 5,
-      .height = 5,
-      .data = {}
-    };
-    static RefMImage blankImage((ImageData*)&blank);
+    // struct MyImageData {
+    //   uint16_t refCount;
+    //   uint16_t width;
+    //   uint16_t height;
+    //   uint8_t  data[5][5];
+    // };
+    // static const MyImageData blank {
+    //   .refCount = 0xFFFF,
+    //   .width = 5,
+    //   .height = 5,
+    //   .data = {}
+    // };
+    // static RefMImage blankImage((ImageData*)&blank);
 
-    BlocklyImageMethods::showImage(&blankImage, 0, 0);
+    // BlocklyImageMethods::showImage(&blankImage, 0, 0);
+
+    for(int i=0; i<5; i++)
+        for(int j=0; j<5; j++)
+            led::matrixState[i][j] = false; 
+    pxt::serialXirkabit::sendCommand("LMTRX", "[0,0,0,0,0]");
+    pxt::serialXirkabit::sendCommand("LBMTRX", "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]");
   }
 
   /**

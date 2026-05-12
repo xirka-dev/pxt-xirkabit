@@ -1,7 +1,7 @@
 #ifndef PXTADDON_H
 #define PXTADDON_H
 
-#define DEBUG_IMAGES 1
+// #define DEBUG_IMAGES 1
 #define DEBUG_ATTINY 1
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"

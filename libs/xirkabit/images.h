@@ -10,7 +10,7 @@ namespace images {
 
 namespace BlocklyImageMethods {
   void plotImage(BlocklyImage sprite, int xOffset = 0);
-  void showImage(BlocklyImage sprite, int xOffset, int interval = 400);
+  // void showImage(BlocklyImage sprite, int xOffset, int interval = 400);
 }
 
 #endif
