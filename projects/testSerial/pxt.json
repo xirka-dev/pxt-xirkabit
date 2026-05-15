@@ -1,0 +1,11 @@
+{
+    "name": "testSerial",
+    "description": "Tests serial output from CODAL",
+    "dependencies": {
+        "xirkabit": "file:../../libs/xirkabit"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "preferredEditor": "tsprj"
+}

@@ -83,7 +83,7 @@
                     "type": "package",
                     "map": {
                         "core": "core---samd",
-                        "radio": "radio---samd",
+                        "radio": "core---samd",
                         "microphone": "core---samd"
                     }
                 },

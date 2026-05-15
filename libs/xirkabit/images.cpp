@@ -1,9 +1,7 @@
 #include "pxt.h"
 #include "pxtAddon.h"
 
-#if DEBUG_IMAGES
 #include <cstdio>
-#endif
 
 PXT_VTABLE(RefMImage, ValType::Object)
 
@@ -47,15 +45,16 @@ namespace images {
 BlocklyImage createImage(ImageLiteral_ leds) {
 #if DEBUG_IMAGES
     static const char msg[] = "createImage\r\n";
-    sendSerial(msg, sizeof(msg));
+    sendSerial(msg, (sizeof(msg)-1));
 
     char msg2[128];
-    snprintf(msg2, 127, "Ptr: %0p Data: 0x%0X\r\n", leds, *(uint32_t*)leds);
+    uint16_t *ledsPtr = (uint16_t*)leds;
+    snprintf(msg2, 127, "Addr: %010p RefCount: 0x%04X Width: %u Height: %u Data: %010p\r\n", leds, ledsPtr[0], ledsPtr[1], ledsPtr[2], &ledsPtr[3]);
     sendSerial(msg2, strlen(msg2));
 #endif
     BlocklyImage img = NEW_GC(RefMImage, imageBytes(leds));
 #if DEBUG_IMAGES
-    snprintf(msg2, 127, "Created: %0p\r\n", img);
+    snprintf(msg2, 127, "Created: %010p, data: %010p\r\n", img, img->img->data);
     sendSerial(msg2, strlen(msg2));
 #endif
     return img;
@@ -99,10 +98,10 @@ void plotImage(BlocklyImage sprite, int xOffset = 0) {
     // uBit.display.print(MicroBitImage(i->img), -xOffset, 0, 0, 0);
 #if DEBUG_IMAGES
     static const char msg[] = "plotImage\r\n";
-    sendSerial(msg, sizeof(msg));
+    sendSerial(msg, (sizeof(msg)-1));
 
     char msg2[128];
-    snprintf(msg2, 127, "Width: %d Height: %d Ptr: %0p\r\n",
+    snprintf(msg2, 127, "Width: %d Height: %d Ptr: %010p\r\n",
         sprite->img->width,
         sprite->img->height,
         sprite->img->data
@@ -175,7 +174,7 @@ void showImage(BlocklyImage sprite, int xOffset, int interval = 400) {
     // uBit.display.print(MicroBitImage(sprite->img), -xOffset, 0, 0, interval);
 #if DEBUG_IMAGES
     static const char msg[] = "showImage is ";
-    sendSerial(msg, sizeof(msg));
+    sendSerial(msg, (sizeof(msg)-1));
 #endif
     plotImage(sprite, xOffset);
     loops::pause(interval);
@@ -194,7 +193,7 @@ void plotFrame(BlocklyImage i, int xOffset) {
     // TODO showImage() used in original implementation
 #if DEBUG_IMAGES
     static const char msg[] = "plotFrame is ";
-    sendSerial(msg, sizeof(msg));
+    sendSerial(msg, (sizeof(msg)-1));
 #endif
     plotImage(i, xOffset * i->img->height);
 }
@@ -211,7 +210,7 @@ void plotFrame(BlocklyImage i, int xOffset) {
 void scrollImage(BlocklyImage id, int frameOffset, int interval) {
 #if DEBUG_IMAGES
     static const char msg[] = "scrollImage\r\n";
-    sendSerial(msg, sizeof(msg));
+    sendSerial(msg, (sizeof(msg)-1));
 #endif
     MicroBitImage i(id->img);
     // uBit.display.animate(i, interval, frameOffset, MICROBIT_DISPLAY_ANIMATE_DEFAULT_POS, 0);
@@ -297,7 +296,7 @@ bool pixel(BlocklyImage i, int x, int y) {
 void showFrame(BlocklyImage i, int frame, int interval = 400) {
 #if DEBUG_IMAGES
     static const char msg[] = "showFrame is ";
-    sendSerial(msg, sizeof(msg));
+    sendSerial(msg, (sizeof(msg)-1));
 #endif
     showImage(i, frame * i->img->height, interval);
 }

@@ -2,7 +2,7 @@
 #include "pxtAddon.h"
 
 namespace pxt::serialXirkabit {
-  volatile bool serialBusy = false;
+  static volatile bool serialBusy = false;
   static SerialDevice serialXirkabit = nullptr;
 
   bool initSerial(void){
@@ -17,7 +17,7 @@ namespace pxt::serialXirkabit {
     if(!serialXirkabit){
 #if DEBUG_ATTINY
       static const char msg[] = "Failed to init serial to ATtiny!\r\n";
-      sendSerial(msg, sizeof(msg));
+      sendSerial(msg, (sizeof(msg)-1));
 #endif
       return false;
     }
@@ -28,7 +28,10 @@ namespace pxt::serialXirkabit {
   void sendCommand(const char *cmd, const char *value, bool addQuote){
     if(!initSerial()) return;
 
-    char msg[192];
+    while(serialBusy) fiber_sleep(1);
+    serialBusy = true;
+
+    static char msg[192];
 
     if(value == nullptr){
       snprintf(msg, 191, "{\"CMD\":\"%s\"}", cmd);
@@ -48,7 +51,7 @@ namespace pxt::serialXirkabit {
     if(data == nullptr){
       #if DEBUG_ATTINY
       static const char msg[] = "serialXirkabit::sendCommand: Failed to allocate buffer!\r\n";
-      sendSerial(msg, sizeof(msg));
+      sendSerial(msg, (sizeof(msg)-1));
       #endif
       return;
     }
@@ -64,6 +67,8 @@ namespace pxt::serialXirkabit {
     registerGCObj(dummy);  
     serialXirkabit->writeBuffer(dummy);
     unregisterGCObj(dummy);
+
+    serialBusy = false;
   }
   // -----------------------------
   // READ RAW RESPONSE

@@ -8,7 +8,7 @@ namespace led
     bool matrixDirty = false;
 
     static void flushMatrix() {
-        char buf[160];
+        static char buf[160];
         snprintf(buf, 159, "[%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d]",
             mergePixel(0,0), mergePixel(0,1), mergePixel(0,2), mergePixel(0,3), mergePixel(0,4),
             mergePixel(1,0), mergePixel(1,1), mergePixel(1,2), mergePixel(1,3), mergePixel(1,4),
@@ -17,10 +17,10 @@ namespace led
             mergePixel(4,0), mergePixel(4,1), mergePixel(4,2), mergePixel(4,3), mergePixel(4,4)
         );
 
-        while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
-        pxt::serialXirkabit::serialBusy = true;
+        // while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
+        // pxt::serialXirkabit::serialBusy = true;
         pxt::serialXirkabit::sendCommand("LBMTRX", buf, false);
-        pxt::serialXirkabit::serialBusy = false;
+        // pxt::serialXirkabit::serialBusy = false;
     }
 
     void tickMatrix() {

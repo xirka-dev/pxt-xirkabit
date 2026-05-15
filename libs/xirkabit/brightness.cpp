@@ -40,10 +40,10 @@ namespace led
             mergePixel(4,0), mergePixel(4,1), mergePixel(4,2), mergePixel(4,3), mergePixel(4,4)
         );
 
-        while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
-        pxt::serialXirkabit::serialBusy = true;
+        // while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
+        // pxt::serialXirkabit::serialBusy = true;
         pxt::serialXirkabit::sendCommand("LBMTRX", buf, false);
-        pxt::serialXirkabit::serialBusy = false;
+        // pxt::serialXirkabit::serialBusy = false;
         memset(dirty, 0, sizeof(dirty));
     }
 

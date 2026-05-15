@@ -6,7 +6,6 @@ built
 typings
 tmp
 temp
-projects/**
 clients/win10/app/AppPackages
 clients/win10/app/BundlePackages
 clients/win10/app/BundleArtifacts

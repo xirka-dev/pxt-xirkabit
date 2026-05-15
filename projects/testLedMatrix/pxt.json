@@ -1,0 +1,11 @@
+{
+    "name": "testLedMatrix",
+    "description": "Tests LED matrix functionality",
+    "dependencies": {
+        "xirkabit": "file:../../libs/xirkabit"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "preferredEditor": "tsprj"
+}
