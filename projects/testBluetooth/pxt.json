@@ -1,0 +1,12 @@
+{
+    "name": "testBluetooth",
+    "description": "",
+    "dependencies": {
+        "xirkabit": "file:../../libs/xirkabit",
+        "bluetoothjs": "file:../../libs/bluetoothjs"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "preferredEditor": "tsprj"
+}

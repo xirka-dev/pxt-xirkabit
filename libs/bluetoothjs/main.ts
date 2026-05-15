@@ -18,60 +18,72 @@ namespace xirkabt {
         return _device;
     }
 
+    /** 
+     * Resets the JDY-23 Bluetooth module on the XirkaBit.
+     */
+    //% hidden=1 shim=xirkabt::beginJdy23
+    export function beginJdy23(): void {
+        return;
+    }
+
     /**
      * Start the XirkaBit Bluetooth service.
      * With Status Emotes: Ready (✓), Connected (:)), Disconnected (:()
      */
     //% block="Bluetooth UART Service"
     export function startXirkaBluetooth(): void {
-        // --- Hardware Init ---
-        serial.writeString('{"CMD":"BTRST","DATA":"1"}\r\n');
-        serial.writeString("                  \r\n");
-        serial.writeString('{"CMD":"BTPWRC","DATA":"1"}\r\n');
-        serial.writeString("                   \r\n");  
+        // --- Hardware Init --- 
         device().serialDevice.setBaudRate(BaudRate.BaudRate4800);
+        device().serialDevice.read();
+        beginJdy23();
 
           // --- Background Listener ---
         control.runInParallel(function() {
-            let lastChar = "";
-            let lastTime = 0;
+            let statusFrameBuffer = "";
+            let capturingStatusFrame = false;
 
             while(true) {
                 // Read RAW string
                 let rawChunk = device().readString();
 
                 if (rawChunk.length > 0) {
-                    // --- 1. SYSTEM MESSAGE CHECK (The Gatekeeper) ---
-                    // We check the whole chunk for keywords before splitting characters
-                    
-                    if (rawChunk.includes("+CONNECTED")) {
-                        basic.showIcon(IconNames.Happy);
-                        rawChunk = ""; 
-                    }
-                    else if (rawChunk.includes("+DISCONNECTED")) {
-                        basic.showIcon(IconNames.Sad);
-                        rawChunk = "";
-                    }
-                    else if (rawChunk.includes("+READY")) {
-                        basic.showIcon(IconNames.Yes);
-                        rawChunk = "";
-                    }
+                    console.log("Bluetooth: " + rawChunk);
 
-                    // --- 2. DATA PROCESSING ---
-                    // Only proceed if rawChunk wasn't cleared by the Gatekeeper above
-                    if (rawChunk.length > 0) {
-                        for (let i = 0; i < rawChunk.length; i++) {
-                            let singleChar = rawChunk.charAt(i);
-                            let now = input.runningTime();
+                    // if (rawChunk.length > 0) {
+                    for (let i = 0; i < rawChunk.length; i++) {
+                        let singleChar = rawChunk.charAt(i);
 
-                            // Duplicate Blocker
-                            if (singleChar == lastChar && (now - lastTime) < 300) {
-                                // Ignore duplicate
-                            } else {
-                                lastChar = singleChar;
-                                lastTime = now;
-                                _msgBuffer.push(singleChar); // Save to buffer
+                        // --- 1. SYSTEM MESSAGE CHECK (The Gatekeeper) ---
+                        // We check the whole chunk for keywords before splitting characters
+                        if(capturingStatusFrame){
+                            statusFrameBuffer += singleChar;
+                            if(singleChar == "\n"){
+                                console.log("Status frame: " + statusFrameBuffer);
+                                if (statusFrameBuffer.includes("+CONNECTED")) {
+                                    basic.showIcon(IconNames.Happy);
+                                }
+                                else if (statusFrameBuffer.includes("+DISCONNECT")) {
+                                    basic.showIcon(IconNames.Sad);
+                                }
+                                else if (statusFrameBuffer.includes("+Ready")) {
+                                    basic.showIcon(IconNames.Yes);
+                                }
+                                else {
+                                    for(let j = 0; j < statusFrameBuffer.length; j++)
+                                        _msgBuffer.push(statusFrameBuffer.charAt(j));
+                                }
+                                statusFrameBuffer = "";
+                                capturingStatusFrame = false;
                             }
+                        }
+                        else if(singleChar == "+"){
+                            capturingStatusFrame = true;
+                            statusFrameBuffer = "+";
+                        }
+                        // --- 2. DATA PROCESSING ---
+                        // Only proceed if rawChunk wasn't cleared by the Gatekeeper above
+                        else {
+                            _msgBuffer.push(singleChar); // Save to buffer
                         }
                     }
                 }
