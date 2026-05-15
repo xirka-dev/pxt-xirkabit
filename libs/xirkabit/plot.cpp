@@ -30,8 +30,11 @@ namespace led
         flushMatrix();
     }
 
+    /**
+     * Check if LED at (x,y) is on
+     */
     //% blockId=led_point block="point x %x y %y"
-    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% x.min=0 x.max=4 y.min=0 y.max=4 weight=80
     bool point(int x, int y)
     {
         if (x < 0 || x > 4 || y < 0 || y > 4)
@@ -39,8 +42,12 @@ namespace led
         return matrixState[y][x];
     }
 
+    /**
+     * Turn on an LED at position (x, y)
+     */
     //% blockId=led_plot block="plot x %x y %y"
     //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=95 
     void plot(int x, int y)
     {
         if (x < 0 || x > 4 || y < 0 || y > 4) return;
@@ -48,8 +55,12 @@ namespace led
         matrixDirty = true; 
     }
 
+    /**
+     * Turn off an LED at position (x, y)
+     */
     //% blockId=led_unplot block="unplot x %x y %y"
     //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=85
     void unplot(int x, int y)
     {
         if (x < 0 || x > 4 || y < 0 || y > 4) return;
@@ -99,8 +110,14 @@ namespace led
         tickMatrix(); 
     }
 
-    //%
-    void stopAnimationInternal()
+    /**
+     * Cancels the current animation and clears other pending animations.
+     */
+    //% weight=70 help=led/stop-animation
+    //% blockId=device_stop_animation block="stop animation"
+    //% parts="ledmatrix"
+    //% advanced=true
+    void stopAnimation()
     {
         led::isShowingString = false;  // clear flag
     

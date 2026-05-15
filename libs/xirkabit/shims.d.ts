@@ -198,5 +198,39 @@ declare namespace input {
     //% parts="thermometer" shim=input::temperature
     function temperature(): int32;
 }
+declare namespace led {
+
+    /**
+     * Check if LED at (x,y) is on
+     */
+    //% blockId=led_point block="point x %x y %y"
+    //% weight=80 shim=led::point
+    function point(x: int32, y: int32): boolean;
+
+    /**
+     * Turn on an LED at position (x, y)
+     */
+    //% blockId=led_plot block="plot x %x y %y"
+    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=95 shim=led::plot
+    function plot(x: int32, y: int32): void;
+
+    /**
+     * Turn off an LED at position (x, y)
+     */
+    //% blockId=led_unplot block="unplot x %x y %y"
+    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=85 shim=led::unplot
+    function unplot(x: int32, y: int32): void;
+
+    /**
+     * Cancels the current animation and clears other pending animations.
+     */
+    //% weight=70 help=led/stop-animation
+    //% blockId=device_stop_animation block="stop animation"
+    //% parts="ledmatrix"
+    //% advanced=true shim=led::stopAnimation
+    function stopAnimation(): void;
+}
 
 // Auto-generated. Do not edit. Really.

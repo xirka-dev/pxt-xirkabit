@@ -299,10 +299,8 @@ namespace input {
     //% help=input/light-level weight=57
     //% blockId=device_get_light_level block="light level" blockGap=8
     //% parts="ledmatrix"
+    //% shim=input::lightLevel
     export function lightLevel(): number {
-        return lightLevelInternal();
+        return 100;
     }
-
-    //% shim=pxt::lightLevelInternal
-    declare function lightLevelInternal(): number;
 }
