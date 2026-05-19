@@ -149,16 +149,18 @@ void plotImage(BlocklyImage sprite, int xOffset = 0) {
     for(int i=0; i<5; i++)
         for(int j=0; j<5; j++)
             led::matrixState[i][j] = (image.data[i] & (1<<(4-j))) ? true : false; 
+    
+    led::matrixDirty = true;
 
-    char jsonData[128];
-    snprintf(jsonData, 127, "[%u,%u,%u,%u,%u]",
-        image.data[0],
-        image.data[1],
-        image.data[2],
-        image.data[3],
-        image.data[4]
-    );
-    serialXirkabit::sendCommand("LMTRX", jsonData);
+    // char jsonData[128];
+    // snprintf(jsonData, 127, "[%u,%u,%u,%u,%u]",
+    //     image.data[0],
+    //     image.data[1],
+    //     image.data[2],
+    //     image.data[3],
+    //     image.data[4]
+    // );
+    // serialXirkabit::sendCommand("LMTRX", jsonData);
 }
 
 /**

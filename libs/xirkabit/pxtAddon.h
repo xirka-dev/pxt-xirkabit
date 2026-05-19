@@ -64,5 +64,6 @@ namespace led {
   extern bool matrixState[5][5]; 
   extern bool matrixDirty;
   extern bool brightnessDirty;
+  extern bool isShowingString;
 }
 #endif

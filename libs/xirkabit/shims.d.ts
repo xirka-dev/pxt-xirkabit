@@ -198,5 +198,99 @@ declare namespace input {
     //% parts="thermometer" shim=input::temperature
     function temperature(): int32;
 }
+declare namespace led {
+
+    /**
+     * Check if LED at (x,y) is on
+     */
+    //% blockId=led_point block="point x %x y %y"
+    //% x.min=0 x.max=4 y.min=0 y.max=4 weight=80 shim=led::point
+    function point(x: int32, y: int32): boolean;
+
+    /**
+     * Turn on an LED at position (x, y)
+     */
+    //% blockId=led_plot block="plot x %x y %y"
+    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=95 shim=led::plot
+    function plot(x: int32, y: int32): void;
+
+    /**
+     * Turn off an LED at position (x, y)
+     */
+    //% blockId=led_unplot block="unplot x %x y %y"
+    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% weight=85 shim=led::unplot
+    function unplot(x: int32, y: int32): void;
+
+    /**
+     * Cancels the current animation and clears other pending animations.
+     */
+    //% weight=70 help=led/stop-animation
+    //% blockId=device_stop_animation block="stop animation"
+    //% parts="ledmatrix"
+    //% advanced=true shim=led::stopAnimation
+    function stopAnimation(): void;
+}
+
+
+
+    //% color=#7600A8 weight=101 icon="\uf205"
+declare namespace led {
+
+    /**
+     * Turn on the specified LED with specific brightness using x, y coordinates (x is horizontal, y is vertical). (0,0) is upper left.
+     * @param x the horizontal coordinate of the LED starting at 0
+     * @param y the vertical coordinate of the LED starting at 0
+     * @param b the brightness from 0 (off) to 255 (bright), eg:255
+     */
+    //% help=led/plot-brightness weight=78
+    //% blockId=device_plot_brightness block="plot|x %x|y %y|brightness %b" blockGap=8
+    //% parts="ledmatrix"
+    //% x.min=0 x.max=4 y.min=0 y.max=4 b.min=0 b.max=255
+    //% x.fieldOptions.precision=1 y.fieldOptions.precision=1
+    //% advanced=true shim=led::plotBrightness
+    function plotBrightness(x: int32, y: int32, b: int32): void;
+
+    /**
+     * Get the brightness state of the specified LED using x, y coordinates. (0,0) is upper left.
+     * @param x the horizontal coordinate of the LED
+     * @param y the vertical coordinate of the LED
+     */
+    //% help=led/point-brightness weight=76
+    //% blockId=device_point_brightness block="point|x %x|y %y brightness"
+    //% parts="ledmatrix"
+    //% x.min=0 x.max=4 y.min=0 y.max=4
+    //% x.fieldOptions.precision=1 y.fieldOptions.precision=1
+    //% advanced=true shim=led::pointBrightness
+    function pointBrightness(x: int32, y: int32): int32;
+
+    /**
+     * Set the screen brightness from 0 (off) to 255 (full bright).
+     * @param b the brightness value, eg:255, 127, 0
+     */
+    //% help=led/set-brightness weight=59
+    //% blockId=device_set_brightness block="set brightness %b"
+    //% parts="ledmatrix"
+    //% advanced=true
+    //% b.min=0 b.max=255 shim=led::setBrightness
+    function setBrightness(b: int32): void;
+
+    /**
+     * Get the screen brightness from 0 (off) to 255 (full bright).
+     */
+    //% help=led/brightness weight=60
+    //% blockId=device_get_brightness block="brightness" blockGap=8
+    //% parts="ledmatrix"
+    //% advanced=true shim=led::brightness
+    function brightness(): int32;
+
+    /**
+     * Turns on or off the display
+     */
+    //% help=led/enable blockId=device_led_enable block="led enable %on"
+    //% advanced=true parts="ledmatrix" shim=led::enable
+    function enable(on: boolean): void;
+}
 
 // Auto-generated. Do not edit. Really.

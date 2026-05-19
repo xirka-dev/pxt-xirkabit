@@ -93,12 +93,19 @@ namespace basic {
       // uBit.display.printChar(text->getUTF8Data()[0], interval * 5);
       // while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
       // pxt::serialXirkabit::serialBusy = true;
-      serialXirkabit::sendCommand("STR", PXT_STRING_DATA(text), true);
+      char strCmd[128];
+      snprintf(strCmd,sizeof(strCmd),"%s|%d",PXT_STRING_DATA(text),led::globalBrightness);
+
+      led::isShowingString = true;
+      serialXirkabit::sendCommand("STR",strCmd,true);
+      // serialXirkabit::sendCommand("STR", PXT_STRING_DATA(text), true);
       // pxt::serialXirkabit::serialBusy = false;
 
       int length = PXT_STRING_DATA_LENGTH(text);
       loops::pause(interval * length * 5);
       fiber_sleep(200);
+
+      led::isShowingString = false;
     }
   }
 

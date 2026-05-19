@@ -167,12 +167,9 @@ int getRawSoundLevel() {
     }
     return samdTemperature->getTemperature();
   }
-}
-
-namespace pxt {
 
     //%
-    int lightLevelInternal() {
+    int lightLevel() {
         // while (pxt::serialXirkabit::serialBusy) fiber_sleep(1);
         int raw = -1;
         int retry = 3;
@@ -199,7 +196,6 @@ namespace pxt {
         */
         return lv;
     }
-
 }
 
 int pxt::SamdInternalTemperatureSensor::getTemperature(void){
