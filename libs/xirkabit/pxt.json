@@ -31,7 +31,6 @@
         "camera.ts",
         "plot.ts",
         "plot.cpp",
-        "brightness.ts",
         "brightness.cpp"
     ],
     "dependencies": {

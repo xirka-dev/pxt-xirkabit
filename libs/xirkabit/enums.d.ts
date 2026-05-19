@@ -53,5 +53,7 @@ declare namespace basic {
     //% blockHidden=1
     P20 = 420,  // CFG_PIN_P20
     }
+declare namespace led {
+}
 
 // Auto-generated. Do not edit. Really.

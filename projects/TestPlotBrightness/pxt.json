@@ -1,0 +1,11 @@
+{
+    "name": "TestPlotBrightness",
+    "description": "Test project for plot and brightness blocks",
+    "dependencies": {
+        "xirkabit": "file:../../libs/xirkabit"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "preferredEditor": "tsprj"
+}

@@ -53,7 +53,7 @@ namespace pxt::serialXirkabit {
       return;
     }
     #if DEBUG_ATTINY
-    snprintf(msg, 127, "data ptr: %p\r\n", data);
+    snprintf(msg, 127, "data ptr is %010p\r\n", data);
     sendSerial(msg, strlen(msg));
     #endif
     registerGCObj(data);
