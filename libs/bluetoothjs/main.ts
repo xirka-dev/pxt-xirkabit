@@ -21,8 +21,8 @@ namespace xirkabt {
     /** 
      * Resets the JDY-23 Bluetooth module on the XirkaBit.
      */
-    //% hidden=1 shim=xirkabt::beginJdy23
-    export function beginJdy23(): void {
+    //% hidden=1 shim=xirkabt::resetJdy23
+    export function resetJdy23(): void {
         return;
     }
 
@@ -33,8 +33,6 @@ namespace xirkabt {
     //% block="Bluetooth UART Service"
     export function startXirkaBluetooth(): void {
         // --- Hardware Init --- 
-        device().serialDevice.setBaudRate(BaudRate.BaudRate4800);
-        device().serialDevice.read();
         beginJdy23();
 
           // --- Background Listener ---
@@ -180,5 +178,75 @@ namespace xirkabt {
         control.runInParallel(function() {
             device().writeString(name + ":" + value + "\r\n");
         })
+    }
+
+    export function beginJdy23(): void {
+        device().serialDevice.setBaudRate(BaudRate.BaudRate4800);
+        device().serialDevice.read();
+        resetJdy23();
+
+        const readyString = device().readLine(1000);
+        if (!readyString.includes("+Ready")) {
+            console.log("Timed out waiting for Ready signal. Attempting to configure JDY-23...");
+            
+            let jdyBaud : BaudRate | null = null;
+            const bauds = [
+                BaudRate.BaudRate9600,
+                BaudRate.BaudRate115200,
+                BaudRate.BaudRate19200,
+                BaudRate.BaudRate38400,
+                BaudRate.BaudRate57600,
+                BaudRate.BaudRate2400
+            ];
+            for (const baud of bauds) {
+                device().serialDevice.setBaudRate(baud);
+                resetJdy23();
+                const response = device().readLine(1000);
+                if (response.includes("+Ready")) {
+                    console.log("JDY-23 found at baud rate: " + baud);
+                    jdyBaud = baud;
+                    break;
+                }
+            }
+            
+            if (jdyBaud === null) {
+                console.log("JDY-23 not found!");
+                return;
+            }
+            {
+                device().writeString("AT+BAUD5\r\n");
+                const response = device().readLine(1000);
+                console.log("Set baud rate response: " + response);
+            }
+
+            device().serialDevice.setBaudRate(BaudRate.BaudRate4800);
+            resetJdy23();
+            const response = device().readLine(1000);
+            if (response.includes("+Ready")) {
+                basic.showIcon(IconNames.Yes);
+            }
+        }
+        else {
+            basic.showIcon(IconNames.Yes);
+        }
+
+        // Verify device name
+        device().writeString("AT+NAME\r\n");
+        const nameResponse = device().readLine(500);
+        if (!nameResponse.includes("+NAME:xirka:bit")) {
+            console.log("Current name: " + nameResponse);
+
+            device().writeString("AT+MTU2\r\n");
+            const mtuResponse = device().readLine(500);
+            console.log("MTU Response: " + mtuResponse);
+
+            device().writeString("AT+NAMExirka:bit\r\n");
+            const nameSetResponse = device().readLine(500);
+            console.log("Name Set Response: " + nameSetResponse);
+
+            if (!mtuResponse.includes("+OK") || !nameSetResponse.includes("+OK")) {
+                basic.showIcon(IconNames.No);
+            }
+        }
     }
 }
