@@ -1,0 +1,11 @@
+{
+    "name": "TestCompass",
+    "description": "Test project for compass functionality",
+    "dependencies": {
+        "xirkabit": "file:../../libs/xirkabit"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "preferredEditor": "tsprj"
+}

@@ -3,7 +3,8 @@
         "*/*.ts",
         "../libs/xirkabit/*.ts",
         "../libs/base/*.ts",
-        "../node_modules/pxt-common-packages/libs/base/*.ts"
+        "../node_modules/pxt-common-packages/libs/base/*.ts",
+        "../node_modules/pxt-common-packages/libs/settings/*.ts"
     ],
     "exclude": [
         "../node_modules/pxt-common-packages/libs/base/test.ts"

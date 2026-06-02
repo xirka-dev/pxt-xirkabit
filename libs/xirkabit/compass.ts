@@ -58,6 +58,14 @@ namespace input {
         pins.i2cWriteBuffer(MAG_ADDR, buf);
         buf[0] = 0x62; buf[1] = 0x01; // CFG_REG_C_M (BDU enabled)
         pins.i2cWriteBuffer(MAG_ADDR, buf);
+
+        const storedOffsets = settings.readNumberArray("CompassOffsets");
+        if (storedOffsets && storedOffsets.length === 3) {
+            magOffsetX = storedOffsets[0];
+            magOffsetY = storedOffsets[1];
+            magOffsetZ = storedOffsets[2];
+        }
+
         isMagInitialized = true;
     }
 
@@ -160,6 +168,9 @@ namespace input {
             magOffsetX = (maxX + minX) / 2;
             magOffsetY = (maxY + minY) / 2;
             magOffsetZ = (maxZ + minZ) / 2; // Hitung offset Z juga
+
+            const offsetsToStore = [magOffsetX, magOffsetY, magOffsetZ];
+            settings.writeNumberArray("CompassOffsets", offsetsToStore);
             
             basic.clearScreen();
             basic.showIcon(IconNames.Yes);
@@ -199,5 +210,10 @@ namespace input {
         heading = (heading + ROTATION_OFFSET) % 360;
 
         return Math.floor(heading);
+    }
+
+    //% hidden=1
+    export function getCompassOffsets(): number[] {
+        return [magOffsetX, magOffsetY, magOffsetZ];
     }
 }

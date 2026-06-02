@@ -39,7 +39,8 @@
         "music---pwm": "file:../music---pwm",
         "microbit-soundexpression": "file:../microbit-soundexpression",
         "serial": "file:../serial",
-        "buttons": "file:../buttons"
+        "buttons": "file:../buttons",
+        "settings---samd": "file:../settings---samd"
     },
     "cppDependencies": {
         "bluetoothjs": "file:../bluetoothjs"

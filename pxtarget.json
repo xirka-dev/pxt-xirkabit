@@ -15,7 +15,8 @@
         "libs/xirkabit",
         "libs/color",
         "libs/neopixel",
-        "libs/bluetoothjs"
+        "libs/bluetoothjs",
+        "libs/settings---samd"
     ],
     "cloud": {
         "workspace": false,
