@@ -1,0 +1,13 @@
+{
+    "name": "datalogger",
+    "description": "Data logging to flash memory.",
+    "files": [
+        "config.ts",
+        "flashlog.ts",
+        "datalogger.ts"
+    ],
+    "public": true,
+    "dependencies": {
+        "xirkabit": "file:../xirkabit"
+    }
+}
