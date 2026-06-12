@@ -4,7 +4,8 @@
     "files": [
         "config.ts",
         "flashlog.ts",
-        "datalogger.ts"
+        "datalogger.ts",
+        "flashlog.cpp"
     ],
     "public": true,
     "dependencies": {

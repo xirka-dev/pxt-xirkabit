@@ -2,12 +2,20 @@
 #define PXTADDON_H
 
 // #define DEBUG_IMAGES 1
-#define DEBUG_ATTINY 1
+// #define DEBUG_ATTINY 1
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #include "XirkaBitCompat.h"
 #include "serial-target.h"
+#include "GhostFAT.h"
+
+namespace codal {
+  class LogFAT : public GhostFAT {
+  public:
+    void setFileSize(GFATEntry *file, int fileSize);
+  };
+}
 
 namespace pxt {
 

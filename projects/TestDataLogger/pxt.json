@@ -1,0 +1,12 @@
+{
+    "name": "TestDataLogger",
+    "description": "Test project for datalogger functionality",
+    "dependencies": {
+        "xirkabit": "file:../../libs/xirkabit",
+        "datalogger---samd": "file:../../libs/datalogger---samd"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "preferredEditor": "tsprj"
+}

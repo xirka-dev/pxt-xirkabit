@@ -32,7 +32,9 @@
         "plot.ts",
         "plot.cpp",
         "brightness.cpp",
-        "onStart.ts"
+        "onStart.ts",
+        "usbmsc.ts",
+        "usbmsc.cpp"
     ],
     "dependencies": {
         "core---samd": "file:../core---samd",
@@ -43,7 +45,8 @@
         "settings---samd": "file:../settings---samd"
     },
     "cppDependencies": {
-        "bluetoothjs": "file:../bluetoothjs"
+        "bluetoothjs": "file:../bluetoothjs",
+        "datalogger---samd": "file:../datalogger---samd"
     },
     "public": true,
     "dalDTS": {

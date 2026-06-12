@@ -4,6 +4,7 @@
 //%
 namespace flashlog {
   export const DEVICE_LOG_EVT_LOG_FULL = 1;
+  const DEVICE_LOG_DEBUG = false;
   const enum StatusFlags {
     INITIALIZED = (1 << 0),
     ROW_STARTED = (1 << 1),
@@ -18,16 +19,19 @@ namespace flashlog {
   interface SettingEntry {
     [key: string]: Buffer;
   }
+  interface BlockEntry {
+    logNumber: number;
+    logOffset: number;
+  }
 
   let rowCount = 0;
-  let status = StatusFlags.NEW_HEADINGS;
+  let byteCount = 0;
+  let status = 0;
   let keys: string[] = [];
   let entry: LogEntry = {};
+  let blockMap: BlockEntry[] = [{logNumber: 0, logOffset: 0}];
   let timestampFormat: FlashLogTimeStampFormat = FlashLogTimeStampFormat.Seconds;
 
-  function rowCurrent() {
-    return rowCount - 1;
-  }
   function runExclusive<T>(fn: () => T): T {
     while (status & StatusFlags.BUSY) {
       // Wait for any ongoing operations to finish before starting a new one
@@ -55,8 +59,6 @@ namespace flashlog {
       _endRow();
     }
     
-    rowCount++;
-    // entries.length = 0;
     entry = {};
 
     status |= StatusFlags.ROW_STARTED;
@@ -99,6 +101,7 @@ namespace flashlog {
   export function endRow() : number {
     return runExclusive(_endRow);
   }
+
   function _endRow() : number {
     if (!(status & StatusFlags.ROW_STARTED)) {
       // No row has been started, so nothing to end
@@ -118,10 +121,8 @@ namespace flashlog {
           "days"
         })`
       ;
-      const headings = "\n" + timeStampHeading + (timeStampHeading ? "," : "") + keys.join(",");
-      writeString("log" + rowCurrent(), headings);
-      
-      rowCount++;
+      const headings = "\n" + timeStampHeading + (timeStampHeading ? "," : "") + keys.join(",") + "\n";
+      writeRow(headings);
       status &= ~StatusFlags.NEW_HEADINGS;
     }
 
@@ -131,22 +132,125 @@ namespace flashlog {
       ((control.millis() / timestampFormat).toString() + ",")
     ;
     let rowData: string = "";
+    let dataCount = 0;
     keys.forEach(k => {
-      rowData += (!!entry[k] ? entry[k] : "") + ",";
+      if (!entry[k]) return;
+      dataCount += entry[k].length;
+      rowData += entry[k] + ",";
     });
-    writeString("log" + rowCurrent(), "\n" + timeStamp + rowData.slice(0, -1)); // Remove trailing comma
-    settings.writeNumber("logCount", rowCount);
-    
+    if (dataCount > 0) {
+      rowData = timeStamp + rowData.slice(0, -1) + "\n"; // Remove trailing comma
+      writeRow(rowData);
+    }
+
     status &= ~(StatusFlags.ROW_STARTED | StatusFlags.NEW_HEADINGS);
     return DAL.DEVICE_OK;
+  }
+
+  function writeRow(rowData: string): void {
+    writeString("log" + rowCount, rowData);
+    settings.writeNumber("logCount", rowCount+1);
+    if (status & StatusFlags.SERIAL_MIRROR) {
+      const rows = rowData.split("\n");
+      rows.forEach(r => {
+        if (r) console.log("[Log] " + r);
+      });
+    }
+    
+    if ((byteCount + rowData.length) > (blockMap.length * 512)) {
+      blockMap.push({
+        logNumber: rowCount,
+        logOffset: (blockMap.length * 512 - byteCount)
+      });
+    }
+    rowCount++;
+    byteCount += rowData.length;
+    setFileSize(byteCount);
+    if (DEVICE_LOG_DEBUG)
+      console.log(`Completed row ${rowCount-1} with ${rowData.length} bytes, total byte count is now ${byteCount}`);
   }
 
   function init(): void {
     if (status & StatusFlags.INITIALIZED) return;
 
+    setDebug(DEVICE_LOG_DEBUG);
     rowCount = settings.readNumber("logCount") || 0;
+    for (let i = 0; i < rowCount; i++) {
+      const rowBuffer = settings.readBuffer("log" + i);
+      if (!rowBuffer) continue;
+
+      if ((byteCount + rowBuffer.length) > (blockMap.length * 512)) {
+        blockMap.push({
+          logNumber: (i),
+          logOffset: (blockMap.length * 512 - byteCount)
+        });
+      }
+      byteCount += rowBuffer.length;
+    }
+
+    control.enableUsbMsc();
+    addFile(renderFile, "MY_DATA.csv", ((typeof config.SETTINGS_SIZE !== 'undefined') ? config.SETTINGS_SIZE : config.SETTINGS_SIZE_DEFL));
+    setFileSize(byteCount);
+
     status |= StatusFlags.INITIALIZED;
   }
+
+  init();
+
+  //% shim=flashlog::setDebug
+  function setDebug(enabled: boolean): void {
+    return;
+  }
+
+  function renderFile(blockNumber: number, buffer: Buffer) : void {
+    if (DEVICE_LOG_DEBUG) {
+      console.log(`Requested block ${blockNumber} into buffer at ${buffer as any as number} with current log count ${rowCount} and byte count ${byteCount}`);
+      console.log(`Current block map:`);
+      blockMap.forEach((b, i) => {
+        console.log(`  Block ${i}: logNumber=${b.logNumber}, logOffset=${b.logOffset}`);
+      });
+    }
+    if ((blockNumber * 512) > byteCount) {
+        // Requested block is beyond the end of the data, so return an empty block
+        buffer.fill(0);
+        return;
+      }
+
+      let writeCount = 0;
+      for (let i = blockMap[blockNumber].logNumber; i < rowCount; i++) {
+        let rowBuffer = settings.readBuffer("log" + i);
+        if (!rowBuffer) continue;
+
+        if (i === blockMap[blockNumber].logNumber) {
+          // If this is the first row in the block, we may need to slice off the start of it based on the logOffset
+          rowBuffer = rowBuffer.slice(blockMap[blockNumber].logOffset);
+        }
+        if ((writeCount + rowBuffer.length) > 512) {
+          // This row would exceed the block size
+          rowBuffer = rowBuffer.slice(0, 512 - writeCount);
+        }
+
+        buffer.write(writeCount, rowBuffer);
+        writeCount += rowBuffer.length;
+        if (writeCount >= 512) {
+          // We've filled the block, so stop writing more rows
+          break;
+        }
+      }
+      
+      if (DEVICE_LOG_DEBUG)
+        console.log(`Written ${writeCount} bytes`);
+
+      if (writeCount < 512) {
+        // If we have space left in the block after writing all rows, fill the rest with 0s
+        buffer.fill(0, writeCount);
+      }
+
+      if (DEVICE_LOG_DEBUG) {
+        console.log(buffer.toHex());
+        console.log('');
+      }
+    }
 
   //% shim=settings::_set
   function _set(key: string, data: Buffer): int32 {
@@ -159,9 +263,6 @@ namespace flashlog {
     if (_set(key, control.createBufferFromUTF8(value))) {
       control.raiseEvent(DAL.DEVICE_ID_LOG, DEVICE_LOG_EVT_LOG_FULL);
       loops.pause(100); // Allow time for event handler to run and update status before next log entry is attempted
-    }
-    else if (status & StatusFlags.SERIAL_MIRROR) {
-      console.log(`Logged: ${key} = ${value}`);
     }
   }
 
@@ -239,7 +340,8 @@ namespace flashlog {
   */
   //%
   export function getNumberOfRows(fromRowIndex: number = 0): number {
-    return DAL.DEVICE_NOT_IMPLEMENTED;
+    init();
+    return rowCount - fromRowIndex;
   }
 
   /**
@@ -251,6 +353,24 @@ namespace flashlog {
   */
   //%
   export function getRows(fromRowIndex: number, nRows: number): string {
-    return "";
+    init();
+    let rowsString = "";
+    for (let i = fromRowIndex; i < fromRowIndex + nRows && i < rowCount; i++) {
+      const rowData = settings.readString("log" + i);
+      if (rowData) {
+        rowsString += rowData;
+      }
+    }
+    return rowsString;
+  }
+
+  //% shim=flashlog::addFile
+  export function addFile(action: (blockNumber: number, buffer: Buffer) => void, fileName: string, fileSize: number) {
+    return;
+  }
+
+  //% shim=flashlog::setFileSize
+  export function setFileSize(fileSize: number) {
+    return;
   }
 }
