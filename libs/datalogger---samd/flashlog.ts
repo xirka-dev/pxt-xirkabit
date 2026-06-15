@@ -113,7 +113,7 @@ namespace flashlog {
       // If there are new headings, we need to write them before the row data
       const timeStampHeading =
         (timestampFormat === FlashLogTimeStampFormat.None   ) ? "" :
-        `Timestamp (${
+        `Time (${
           (timestampFormat < FlashLogTimeStampFormat.Seconds) ? "ms" :
           (timestampFormat < FlashLogTimeStampFormat.Minutes) ? "sec." :
           (timestampFormat < FlashLogTimeStampFormat.Hours) ? "min." :
@@ -121,7 +121,8 @@ namespace flashlog {
           "days"
         })`
       ;
-      const headings = "\n" + timeStampHeading + (timeStampHeading ? "," : "") + keys.join(",") + "\n";
+      let headings = timeStampHeading + (timeStampHeading ? "," : "") + keys.join(",") + "\n";
+      if (rowCount > 0) headings = "\n" + headings;
       writeRow(headings);
       status &= ~StatusFlags.NEW_HEADINGS;
     }
@@ -129,7 +130,7 @@ namespace flashlog {
     const timeStamp =
       (timestampFormat === FlashLogTimeStampFormat.None) ? "" : 
       (timestampFormat < FlashLogTimeStampFormat.Seconds) ? control.millis().toString() :
-      ((control.millis() / timestampFormat).toString() + ",")
+      ((Math.round(control.millis() / timestampFormat)/100).toString() + ",")
     ;
     let rowData: string = "";
     let dataCount = 0;
@@ -190,6 +191,7 @@ namespace flashlog {
 
     control.enableUsbMsc();
     addFile(renderFile, "MY_DATA.csv", ((typeof config.SETTINGS_SIZE !== 'undefined') ? config.SETTINGS_SIZE : config.SETTINGS_SIZE_DEFL));
+    addFile(renderFileHtml, "MY_DATA.HTM", 0x1F000);
     setFileSize(byteCount);
 
     status |= StatusFlags.INITIALIZED;
@@ -211,47 +213,90 @@ namespace flashlog {
       });
     }
     if ((blockNumber * 512) > byteCount) {
-        // Requested block is beyond the end of the data, so return an empty block
-        buffer.fill(0);
-        return;
-      }
-
-      let writeCount = 0;
-      for (let i = blockMap[blockNumber].logNumber; i < rowCount; i++) {
-        let rowBuffer = settings.readBuffer("log" + i);
-        if (!rowBuffer) continue;
-
-        if (i === blockMap[blockNumber].logNumber) {
-          // If this is the first row in the block, we may need to slice off the start of it based on the logOffset
-          rowBuffer = rowBuffer.slice(blockMap[blockNumber].logOffset);
-        }
-        if ((writeCount + rowBuffer.length) > 512) {
-          // This row would exceed the block size
-          rowBuffer = rowBuffer.slice(0, 512 - writeCount);
-        }
-
-        buffer.write(writeCount, rowBuffer);
-        writeCount += rowBuffer.length;
-        if (writeCount >= 512) {
-          // We've filled the block, so stop writing more rows
-          break;
-        }
-      }
-      
-      if (DEVICE_LOG_DEBUG)
-        console.log(`Written ${writeCount} bytes`);
-
-      if (writeCount < 512) {
-        // If we have space left in the block after writing all rows, fill the rest with 0s
-        buffer.fill(0, writeCount);
-      }
-
-      if (DEVICE_LOG_DEBUG) {
-        console.log(buffer.toHex());
-        console.log('');
-      }
+      // Requested block is beyond the end of the data, so return an empty block
+      buffer.fill(0xFF);
+      return;
     }
 
+    let writeCount = 0;
+    for (let i = blockMap[blockNumber].logNumber; i < rowCount; i++) {
+      let rowBuffer = settings.readBuffer("log" + i);
+      if (!rowBuffer) continue;
+
+      if (i === blockMap[blockNumber].logNumber) {
+        // If this is the first row in the block, we may need to slice off the start of it based on the logOffset
+        rowBuffer = rowBuffer.slice(blockMap[blockNumber].logOffset);
+      }
+      if ((writeCount + rowBuffer.length) > 512) {
+        // This row would exceed the block size
+        rowBuffer = rowBuffer.slice(0, 512 - writeCount);
+      }
+
+      buffer.write(writeCount, rowBuffer);
+      writeCount += rowBuffer.length;
+      if (writeCount >= 512) {
+        // We've filled the block, so stop writing more rows
+        break;
+      }
+    }
+    
+    if (DEVICE_LOG_DEBUG)
+      console.log(`Written ${writeCount} bytes`);
+
+    if (writeCount < 512) {
+      // If we have space left in the block after writing all rows, fill the rest with 0s
+      buffer.fill(0xFF, writeCount);
+    }
+
+    if (DEVICE_LOG_DEBUG) {
+      console.log(buffer.toHex());
+      console.log('.');
+    }
+  }
+
+  function renderFileHtml(blockNumber: number, buffer: Buffer) : void {
+    // File layout:
+    // - 0 to 0x7FF: header
+    // - 0x800 to 0x811: 'UBIT_LOG_FS_V_002' tag and newline
+    // - 0x812 to 0x81C: Location of last 4 bytes of the file, in %010p, null-terminated. Log full tag is saved in the location
+    // - 0x81D to 0x827: Location of CSV data in the file, in %010p, null-terminated.
+    // - 0x828 to 0x82C: '0257', null-terminated. Unknown
+    // - 0x82D to 0xFFF: Column names, newline-terminated then 0xFF.
+    // - 0x1000 to 0x1FFF: '00000000' then 0xFF
+    // - 0x2000 to 0x1EFFB: CSV contents, newline-terminated then 0xFF.
+    // - 0x1EFFC to 0x1EFFF: 4-byte null.
+    
+    const header = '<!doctype html><meta charset=utf-8><style>.bb{display:flex}.bb>*+*{margin-left:10px}body{font-family:sans-serif;margin:1em}table{border-collapse:collapse;margin-top:1em;text-align:right}tr:first-child{font-weight:700}td{border:1px solid #ddd;padding:8px;min-width:8ch}iframe{display:none}</style><script>let w=window,d=document,l=w.location,n=null,csv="",tag=d.createElement.bind(d);w.dl={mode:"default",download:function(){let e=tag("a");e.download="microbit.csv",e.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})),e.click(),e.remove()},copy:function(){navigator.clipboard.writeText(csv.replace(/\\,/g,"\\t"))},update:alert.bind(n,"Unplug your micro:bit, then plug it back in and wait"),clear:alert.bind(n,"The log is cleared when you reflash your micro:bit"),load:function(){let a=d.querySelector("#w"),o=d.documentElement.outerHTML.split("FS_START")[2];if(/^UBIT_LOG_FS_V_002/.test(o)){let t=parseInt;var n=t(o.substr(29,10),16)-2048;let e=0;for(;65533!=o.charCodeAt(n+e);)e++;csv=o.substr(n,e);let r=0;for(let e=0;e<o.length;++e)r=31*r+o.charCodeAt(e),r|=0;var i=l.href.split("?")[1];if(void 0!==i)i!=r&&parent.postMessage("diff","*");else{i=t(o.substr(18,10),16);"FUL"===o.substr(i-2048+1,3)&&(a.appendChild(tag("p")).innerText="LOG FULL");let n=a.appendChild(tag("table"));csv.split("\\n").forEach(function(e){let t=n.insertRow();e&&e.split(",").forEach(function(e){t.insertCell().innerText=e})}),w.onmessage=function(e){"diff"==e.data&&l.reload()};let e;setInterval(function(){e&&e.remove(),e=a.appendChild(tag("iframe")),e.src=l.href+"?"+r},5e3)}}}}</script><base href=https://data.microbit.org><script src=v3/dl.js></script><title>micro:bit data log</title><body onload=dl.load()><div id=w><h1>micro:bit data log</h1><div class=bb><button onclick=dl.download()>Download</button><button onclick=dl.copy()>Copy</button><button onclick=dl.update()>Update data&mldr;</button><button onclick=dl.clear()>Clear log&mldr;</button></div><p id=v>Offline: no visual preview</div>                                                   <!--FS_START'; // size 0x800 = 4 blocks
+
+    if (blockNumber < 4) { // 0 - 0x7FF
+      const headerBuffer = control.createBufferFromUTF8(header);
+      buffer.write(0, headerBuffer.slice(blockNumber*512, 512));
+    }
+    else if (blockNumber == 4) { // 0x800 - 0x9FF
+      const block = control.createBufferFromUTF8("UBIT_LOG_FS_V_002\x0A0x0001EFFC\x000x00002000\x000257\x00");
+      buffer.write(0, block);
+      const header = settings.readBuffer("log0");
+      buffer.write(0x2D, header);
+      buffer.fill(0xFF, 0x2D + header.length);
+    }
+    else if (blockNumber*512 < 0x1000) { // 0xA00 - 0xFFF
+      buffer.fill(0xFF);
+    }
+    else if (blockNumber == (0x1000/512)) { // 0x1000 - 0x11FF
+      buffer.fill(0, 0, 4);
+      buffer.fill(0xFF, 4);
+    }
+    else if (blockNumber < (0x2000/512)) { // 0x1200 - 0x1FFF
+      buffer.fill(0xFF);
+    }
+    else if (blockNumber >= (0x1EE00/512)) { // 0x1EE00 - ...
+      buffer.fill(0xFF);
+      buffer.fill(0, (512-4));
+    }
+    else { // 0x2000 - 0x1EDFF
+      renderFile((blockNumber - (0x2000/512)), buffer);
+    }
+  }
   //% shim=settings::_set
   function _set(key: string, data: Buffer): int32 {
     console.log("Simulation implementation of flashlog._set called!");

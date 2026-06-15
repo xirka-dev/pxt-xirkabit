@@ -7,14 +7,16 @@ namespace pxt {
 }
 
 namespace flashlog {
-  Action logFileCallback = nullptr;
+  Action logFileCallbacks[2] = {};
+  unsigned int callbackCount = 0;
   codal::GFATEntry *logFile = nullptr;
   bool debug = false;
 
   void readLogFile(codal::GFATEntry *ent, unsigned blockAddr, char *dst) {
+    Action logFileCallback = (Action)(ent->userdata);
     if (debug) {
       char msg[128];
-      snprintf(msg, sizeof(msg), "Logfile data requested for block %d into buffer at %010p, callback is at %010p.\r\n", blockAddr, (void*)dst, (void*)logFileCallback);
+      snprintf(msg, sizeof(msg), "Logfile data requested for block %d into buffer at %010p, callback is at %010p.\r\n", blockAddr, dst, logFileCallback);
       sendSerial(msg, strlen(msg));
     }
     if (!logFileCallback){
@@ -29,13 +31,16 @@ namespace flashlog {
 
   //%
   void addFile(Action action, String fileName, int fileSize) {
-    logFileCallback = action;
-    logFile = usbmsc.addFile(readLogFile, nullptr, fileName->getUTF8Data(), fileSize);
+    if (callbackCount >= (sizeof(logFileCallbacks)/sizeof(logFileCallbacks[0]))) return;
+    logFileCallbacks[callbackCount] = action;
+    codal::GFATEntry *file = usbmsc.addFile(readLogFile, logFileCallbacks[callbackCount], fileName->getUTF8Data(), fileSize);
+    if (logFile == nullptr) logFile = file;
     if (debug) {
       char msg[128];
-      snprintf(msg, sizeof(msg), "Added file %s with size %d bytes, callback at %010p\r\n", fileName->getUTF8Data(), fileSize, (void*)logFileCallback);
+      snprintf(msg, sizeof(msg), "Added file %s with size %d bytes, callback at %010p\r\n", fileName->getUTF8Data(), fileSize, logFileCallbacks[callbackCount]);
       sendSerial(msg, strlen(msg));
     }
+    callbackCount++;
   }
 
   //%

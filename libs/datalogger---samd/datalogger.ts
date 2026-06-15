@@ -4,13 +4,13 @@ declare const enum FlashLogTimeStampFormat {
     //% block="milliseconds"
     Milliseconds = 1,
     //% block="seconds"
-    Seconds = 1000,
+    Seconds = 10,
     //% block="minutes"
-    Minutes = 60000,
+    Minutes = 600,
     //% block="hours"
-    Hours = 3600000,
+    Hours = 36000,
     //% block="days"
-    Days = 86400000
+    Days = 864000
 }
 
 /**
